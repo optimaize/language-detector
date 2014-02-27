@@ -25,3 +25,7 @@ Both are on google code, I feel that GitHub is a much better place for contribut
 This fork will probably die also. The goal is to publish my changes. I did not want to start off
 with a non-maven version. And publishing back to the first fork seemed impractical too. So here it is.
 
+#### My changes
+
+* Updated all Maven dependency versions
+* Replaced last lib dependency with Maven (jsonic)
