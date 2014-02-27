@@ -34,17 +34,16 @@ import be.frma.langguess.LangProfileFactory;
 import com.cybozu.labs.langdetect.util.LangProfile;
 
 /**
- * 
- * LangDetect Command Line Interface
- * <p>
- * This is a command line interface of Language Detection Library "LandDetect".
- * 
- * 
+ * LangDetect Command Line Interface.
+ *
+ * <p>This is a command line interface of Language Detection Library "LangDetect".</p>
+ *
  * @author Nakatani Shuyo
  * @author Francois ROLAND
- *
+ * @author Fabian Kessler
  */
-public class Command {
+public class CommandLineInterface {
+
     /** smoothing default parameter (ELE) */
     private static final double DEFAULT_ALPHA = 0.5;
 
@@ -53,6 +52,26 @@ public class Command {
     private HashMap<String, String> values = new HashMap<String, String>();
     private HashSet<String> opt_without_value = new HashSet<String>();
     private ArrayList<String> arglist = new ArrayList<String>();
+
+    /**
+     * Command Line Interface
+     * @param args command line arguments
+     */
+    public static void main(String[] args) {
+        CommandLineInterface cli = new CommandLineInterface();
+        cli.addOpt("-d", "directory", "./");
+        cli.addOpt("-a", "alpha", "" + DEFAULT_ALPHA);
+        cli.addOpt("-s", "seed", null);
+        cli.parse(args);
+
+        if (cli.hasOpt("--genprofile")) {
+            cli.generateProfile();
+        } else if (cli.hasOpt("--detectlang")) {
+            cli.detectLang();
+        } else if (cli.hasOpt("--batchtest")) {
+            cli.batchTest();
+        }
+    }
 
     /**
      * Command line easy parser
@@ -265,28 +284,7 @@ public class Command {
                 totalCount += count;
             }
             System.out.println(String.format("total: %d/%d = %.3f", totalCorrect, totalCount, totalCorrect / (double)totalCount));
-            
-        }
-        
-    }
-
-    /**
-     * Command Line Interface
-     * @param args command line arguments
-     */
-    public static void main(String[] args) {
-        Command command = new Command();
-        command.addOpt("-d", "directory", "./");
-        command.addOpt("-a", "alpha", "" + DEFAULT_ALPHA);
-        command.addOpt("-s", "seed", null);
-        command.parse(args);
-
-        if (command.hasOpt("--genprofile")) {
-            command.generateProfile();
-        } else if (command.hasOpt("--detectlang")) {
-            command.detectLang();
-        } else if (command.hasOpt("--batchtest")) {
-            command.batchTest();
         }
     }
+
 }
