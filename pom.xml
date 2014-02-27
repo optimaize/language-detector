@@ -37,9 +37,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:https://code.google.com/p/lang-guess/</connection>
-        <developerConnection>scm:git:https://code.google.com/p/lang-guess/</developerConnection>
-        <url>https://code.google.com/p/lang-guess/source/browse/</url>
+        <connection>scm:git:https://github.com/fabiankessler/language-detector</connection>
+        <developerConnection>scm:git:https://github.com/fabiankessler/language-detector</developerConnection>
+        <url>https://github.com/fabiankessler/language-detector</url>
     </scm>
 
     <build>
