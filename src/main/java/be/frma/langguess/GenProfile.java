@@ -33,9 +33,10 @@ import com.cybozu.labs.langdetect.util.NGram;
 
 /**
  * Generate a language profile from any given text file.
+ *
+ * TODO this is copy/paste from the other class with the same name. Check if code can be re-used. Rename to something meaningful.
  * 
  * @author François ROLAND
- * 
  */
 public class GenProfile {
 
@@ -60,7 +61,7 @@ public class GenProfile {
             while ((line = reader.readLine()) != null) {
                 NGram ngram = new NGram();
             	for (char c : line.toCharArray()) {
-					ngram.addChar((char) c);
+					ngram.addChar(c);
 					for (int i = 1; i <= NGram.N_GRAM; i++) {
 						profile.add(ngram.get(i));
 					}

@@ -1,21 +1,16 @@
 
 package be.frma.langguess;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-
-import org.junit.Test;
-
 import com.cybozu.labs.langdetect.LangDetectException;
 import com.cybozu.labs.langdetect.util.LangProfile;
+import org.junit.Test;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.Map;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
 public class GenProfileTest extends GenProfile {
 
@@ -35,7 +30,7 @@ public class GenProfileTest extends GenProfile {
 			}
 			
 			LangProfile trucProfile = GenProfile.generate("truc", inputFile);
-			HashMap<String, Integer> freqs = trucProfile.getFreq();
+			Map<String, Integer> freqs = trucProfile.getFreq();
 			assertThat(freqs, is(notNullValue()));
 			assertThat(freqs.get("t"), is(equalTo(8)));
 			assertThat(freqs.get("to"), is(equalTo(4)));

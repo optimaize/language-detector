@@ -22,6 +22,7 @@ import java.io.IOException;
 /**
  * Utils to manage IO streams.
  */
+@Deprecated
 public class IOUtils {
 	/**
 	 * Private constructor to prevent instantiation.
@@ -32,6 +33,7 @@ public class IOUtils {
 	 * Closes a stream without returning any exception.
 	 * 
 	 * @param stream the stream to close. Can be <code>null</code>.
+     * @deprecated use java7 closeable
 	 */
 	public static void closeQuietly(Closeable stream) {
 		if (stream != null) {

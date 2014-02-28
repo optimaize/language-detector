@@ -33,11 +33,9 @@ import com.cybozu.labs.langdetect.util.LangProfile;
 import com.cybozu.labs.langdetect.util.TagExtractor;
 
 /**
- * Load Wikipedia's abstract XML as corpus and
- * generate its language profile in JSON format.
+ * Load Wikipedia's abstract XML as corpus and generate its language profile in JSON format.
  * 
  * @author Nakatani Shuyo
- * 
  */
 public class GenProfile {
 

@@ -23,10 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 import be.frma.langguess.IOUtils;
 import be.frma.langguess.LangProfileFactory;
@@ -38,6 +35,8 @@ import com.cybozu.labs.langdetect.util.LangProfile;
  *
  * <p>This is a command line interface of Language Detection Library "LangDetect".</p>
  *
+ * <p>Renamed: this class was previously known as "Command".</p>
+ *
  * @author Nakatani Shuyo
  * @author Francois ROLAND
  * @author Fabian Kessler
@@ -48,10 +47,10 @@ public class CommandLineInterface {
     private static final double DEFAULT_ALPHA = 0.5;
 
     /** for Command line easy parser */
-    private HashMap<String, String> opt_with_value = new HashMap<String, String>();
-    private HashMap<String, String> values = new HashMap<String, String>();
-    private HashSet<String> opt_without_value = new HashSet<String>();
-    private ArrayList<String> arglist = new ArrayList<String>();
+    private Map<String, String> opt_with_value = new HashMap<>();
+    private Map<String, String> values = new HashMap<>();
+    private Set<String> opt_without_value = new HashSet<>();
+    private List<String> arglist = new ArrayList<>();
 
     /**
      * Command Line Interface
@@ -168,7 +167,7 @@ public class CommandLineInterface {
             return;
         }
 
-        ObjectOutputStream os = null;
+        ObjectOutputStream os = null; //TODO this is wrong, not used. someone needs to close the FileOutputStream instead.
         try {
             LangProfile profile = GenProfile.load(lang, file);
             profile.omitLessFreq();
@@ -227,7 +226,7 @@ public class CommandLineInterface {
      */
     public void batchTest() {
         if (loadProfile()) return;
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
+        Map<String, ArrayList<String>> result = new HashMap<>();
         for (String filename: arglist) {
             BufferedReader is = null;
             try {
@@ -261,14 +260,14 @@ public class CommandLineInterface {
                 IOUtils.closeQuietly(is);
             }
 
-            ArrayList<String> langlist = new ArrayList<String>(result.keySet());
+            List<String> langlist = new ArrayList<>(result.keySet());
             Collections.sort(langlist);
 
             int totalCount = 0, totalCorrect = 0;
             for ( String lang :langlist) {
-                HashMap<String, Integer> resultCount = new HashMap<String, Integer>();
+                Map<String, Integer> resultCount = new HashMap<>();
                 int count = 0;
-                ArrayList<String> list = result.get(lang);
+                List<String> list = result.get(lang);
                 for (String detectedLang: list) {
                     ++count;
                     if (resultCount.containsKey(detectedLang)) {

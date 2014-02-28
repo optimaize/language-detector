@@ -50,7 +50,7 @@ public class TagExtractor {
         }
     }
     public void closeTag(LangProfile profile) {
-        if (profile != null && tag_ == target_ && buf_.length() > threshold_) {
+        if ((profile != null) && tag_.equals(target_) && (buf_.length() > threshold_)) {
             NGram gram = new NGram();
             for(int i=0; i<buf_.length(); ++i) {
                 gram.addChar(buf_.charAt(i));

@@ -23,11 +23,14 @@ package com.cybozu.labs.langdetect.util;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * {@link LangProfile} is a Language Profile Class.
  * Users don't use this class directly.
+ *
+ * TODO split into builder and immutable class.
  * 
  * @author Nakatani Shuyo
  */
@@ -36,7 +39,7 @@ public class LangProfile implements Serializable {
 	private static final int MINIMUM_FREQ = 2;
     private static final int LESS_FREQ_RATIO = 100000;
     private String name = null;
-    private HashMap<String, Integer> freq = new HashMap<String, Integer>();
+    private Map<String, Integer> freq = new HashMap<>();
     private int[] nWords = new int[NGram.N_GRAM];
 
     /**
@@ -113,7 +116,7 @@ public class LangProfile implements Serializable {
 		this.name = name;
 	}
 
-	public HashMap<String, Integer> getFreq() {
+	public Map<String, Integer> getFreq() {
 		return freq;
 	}
 

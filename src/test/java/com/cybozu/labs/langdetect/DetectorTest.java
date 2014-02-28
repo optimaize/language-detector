@@ -16,13 +16,11 @@
 
 package com.cybozu.labs.langdetect;
 
-import static org.junit.Assert.*;
-
-import org.junit.After;
+import com.cybozu.labs.langdetect.util.LangProfile;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cybozu.labs.langdetect.util.LangProfile;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit test for {@link Detector} and {@link DetectorFactory}.
@@ -55,35 +53,32 @@ public class DetectorTest {
         DetectorFactory.addProfile(profile_ja, 2, 3);
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test
     public final void testDetector1() throws LangDetectException {
-        Detector detect = DetectorFactory.create();
-        detect.append("a");
-        assertEquals(detect.detect(), "en");
+        Detector detector = DetectorFactory.create();
+        detector.append("a");
+        assertEquals(detector.detect(), "en");
     }
 
     @Test
     public final void testDetector2() throws LangDetectException {
-        Detector detect = DetectorFactory.create();
-        detect.append("b d");
-        assertEquals(detect.detect(), "fr");
+        Detector detector = DetectorFactory.create();
+        detector.append("b d");
+        assertEquals(detector.detect(), "fr");
     }
 
     @Test
     public final void testDetector3() throws LangDetectException {
-        Detector detect = DetectorFactory.create();
-        detect.append("d e");
-        assertEquals(detect.detect(), "en");
+        Detector detector = DetectorFactory.create();
+        detector.append("d e");
+        assertEquals(detector.detect(), "en");
     }
 
     @Test
     public final void testDetector4() throws LangDetectException {
-        Detector detect = DetectorFactory.create();
-        detect.append("\u3042\u3042\u3042\u3042a");
-        assertEquals(detect.detect(), "ja");
+        Detector detector = DetectorFactory.create();
+        detector.append("\u3042\u3042\u3042\u3042a");
+        assertEquals(detector.detect(), "ja");
     }
 }

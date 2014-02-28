@@ -19,8 +19,10 @@ package com.cybozu.labs.langdetect.util;
 import java.util.HashMap;
 
 /**
- * 
+ * TODO document.
+ *
  * Users don't use this class directly.
+ *
  * @author Nakatani Shuyo
  */
 public class NGram {
@@ -244,7 +246,7 @@ public class NGram {
         Messages.getString("NGram.KANJI_7_37"),
     };
     static {
-        cjk_map = new HashMap<Character, Character>();
+        cjk_map = new HashMap<>();
         for (String cjk_list : CJK_CLASS) {
             char representative = cjk_list.charAt(0);
             for (int i=0;i<cjk_list.length();++i) {

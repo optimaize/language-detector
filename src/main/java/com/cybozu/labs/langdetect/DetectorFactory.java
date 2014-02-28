@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import be.frma.langguess.IOUtils;
 import be.frma.langguess.LangProfileFactory;
@@ -48,14 +50,19 @@ import com.cybozu.labs.langdetect.util.LangProfile;
  * @see Detector
  * @author Nakatani Shuyo
  * @author Francois ROLAND
+ * @author Fabian Kessler
  */
 public class DetectorFactory {
-    public HashMap<String, double[]> wordLangProbMap;
-    public ArrayList<String> langlist;
+
+    //TODO refactor, this is messy.
+
+    public Map<String, double[]> wordLangProbMap;
+    public List<String> langlist;
     public Long seed = null;
+
     private DetectorFactory() {
-        wordLangProbMap = new HashMap<String, double[]>();
-        langlist = new ArrayList<String>();
+        wordLangProbMap = new HashMap<>();
+        langlist = new ArrayList<>();
     }
     static private DetectorFactory instance_ = new DetectorFactory();
 

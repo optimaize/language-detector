@@ -16,17 +16,13 @@
 
 package com.cybozu.labs.langdetect;
 
+import com.cybozu.labs.langdetect.util.NGram;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Pattern;
-
-import com.cybozu.labs.langdetect.util.NGram;
 
 /**
  * {@link Detector} class is to detect language from specified text. 
@@ -38,7 +34,7 @@ import com.cybozu.labs.langdetect.util.NGram;
  * {@link #getProbabilities()} methods returns a list of multiple languages and their probabilities.
  * <p>  
  * The detector has some parameters for language detection.
- * See {@link #setAlpha(double)}, {@link #setMaxTextLength(int)} and {@link #setPriorMap(HashMap)}.
+ * See {@link #setAlpha}, {@link #setMaxTextLength} and {@link #setPriorMap}.
  * 
  * <pre>
  * import java.util.ArrayList;
@@ -55,7 +51,7 @@ import com.cybozu.labs.langdetect.util.NGram;
  *         detector.append(text);
  *         return detector.detect();
  *     }
- *     public ArrayList<Language> detectLangs(String text) throws LangDetectException {
+ *     public List<Language> detectLangs(String text) throws LangDetectException {
  *         Detector detector = DetectorFactory.create();
  *         detector.append(text);
  *         return detector.getProbabilities();
@@ -71,6 +67,9 @@ import com.cybozu.labs.langdetect.util.NGram;
  * @see DetectorFactory
  */
 public class Detector {
+
+    //TODO refactor, this is messy.
+
     private static final double ALPHA_DEFAULT = 0.5;
     private static final double ALPHA_WIDTH = 0.05;
 
@@ -129,7 +128,7 @@ public class Detector {
      * @param priorMap the priorMap to set
      * @throws LangDetectException 
      */
-    public void setPriorMap(HashMap<String, Double> priorMap) throws LangDetectException {
+    public void setPriorMap(Map<String, Double> priorMap) throws LangDetectException {
         this.priorMap = new double[langlist.size()];
         double sump = 0;
         for (int i=0;i<this.priorMap.length;++i) {
@@ -222,20 +221,19 @@ public class Detector {
      *  code = ErrorCode.CantDetectError : Can't detect because of no valid features in text
      */
     public String detect() throws LangDetectException {
-        ArrayList<Language> probabilities = getProbabilities();
-        if (probabilities.size() > 0) return probabilities.get(0).lang;
+        List<DetectedLanguage> probabilities = getProbabilities();
+        if (probabilities.size() > 0) return probabilities.get(0).getLanguage();
         return UNKNOWN_LANG;
     }
 
     /**
      * Get language candidates which have high probabilities
-     * @return possible languages list (whose probabilities are over PROB_THRESHOLD, ordered by probabilities descendently
+     * @return possible languages list (whose probabilities are over PROB_THRESHOLD, ordered by probabilities descending
      * @throws LangDetectException 
      *  code = ErrorCode.CantDetectError : Can't detect because of no valid features in text
      */
-    public ArrayList<Language> getProbabilities() throws LangDetectException {
+    public List<DetectedLanguage> getProbabilities() throws LangDetectException {
         if (langprob == null) detectBlock();
-
         return sortProbability(langprob);
     }
     
@@ -245,7 +243,7 @@ public class Detector {
      */
     private void detectBlock() throws LangDetectException {
         cleaningText();
-        ArrayList<String> ngrams = extractNGrams();
+        List<String> ngrams = extractNGrams();
         if (ngrams.size()==0)
             throw new LangDetectException(ErrorCode.CantDetectError, "no features in text");
         
@@ -290,8 +288,8 @@ public class Detector {
      * Extract n-grams from target text
      * @return n-grams list
      */
-    private ArrayList<String> extractNGrams() {
-        ArrayList<String> list = new ArrayList<String>();
+    private List<String> extractNGrams() {
+        List<String> list = new ArrayList<>();
         NGram ngram = new NGram();
         for(int i=0;i<text.length();++i) {
             ngram.addChar(text.charAt(i));
@@ -332,7 +330,7 @@ public class Detector {
     }
     
     /**
-     * normalize probabilities and check convergence by the maximun probability
+     * normalize probabilities and check convergence by the maximum probability
      * @return maximum of probabilities
      */
     static private double normalizeProb(double[] prob) {
@@ -347,16 +345,17 @@ public class Detector {
     }
 
     /**
-     * @return lanugage candidates order by probabilities descendently
+     * @return language candidates order by probabilities descending
      */
-    private ArrayList<Language> sortProbability(double[] prob) {
-        ArrayList<Language> list = new ArrayList<Language>();
-        for(int j=0;j<prob.length;++j) {
+    @NotNull
+    private List<DetectedLanguage> sortProbability(double[] prob) {
+        List<DetectedLanguage> list = new ArrayList<>();
+        for (int j=0;j<prob.length;++j) {
             double p = prob[j];
             if (p > PROB_THRESHOLD) {
                 for (int i = 0; i <= list.size(); ++i) {
-                    if (i == list.size() || list.get(i).prob < p) {
-                        list.add(i, new Language(langlist.get(j), p));
+                    if (i == list.size() || list.get(i).getProbability() < p) {
+                        list.add(i, new DetectedLanguage(langlist.get(j), p));
                         break;
                     }
                 }
@@ -371,7 +370,7 @@ public class Detector {
      * @return
      */
     static private String unicodeEncode(String word) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int i = 0; i < word.length(); ++i) {
             char ch = word.charAt(i);
             if (ch >= '\u0080') {

@@ -10,8 +10,8 @@ which itself is a fork of the original project https://code.google.com/p/languag
 
 #### Why so much forking?
 
-The original project hasn't seen any commit in a long time. The issue list is long.
-The news page says for 2012 that it now has Maven support, but there is no maven in git.
+The original project hasn't seen any commit in a long time. The issue list is growing.
+The news page says for 2012 that it now has Maven support, but there is no pom in git.
 There is a release in Maven see http://mvnrepository.com/artifact/com.cybozu.labs/langdetect/1.1-20120112
 for version 1.1-20120112 but not in git. So I don't know what's going on here.
 
@@ -20,12 +20,30 @@ It uses Maven.
 
 The 2 projects are not in sync, it looks like they did not integrate changes from each other anymore.
 
-Both are on google code, I feel that GitHub is a much better place for contributing.
+Both are on Google Code, I feel that GitHub is a much better place for contributing.
 
-This fork will probably die also. The goal is to publish my changes. I did not want to start off
-with a non-maven version. And publishing back to the first fork seemed impractical too. So here it is.
+My goals are to bring the code up to current standards, and to update it for Java 7. So I'll touch a
+lot. And with the status of the 2 other projects I fear that my efforts would be a waste of time.
+
+This fork will probably die also. At least it offers an updated code base for those interested.
+
 
 #### My changes
 
 * Updated all Maven dependency versions
 * Replaced last lib dependency with Maven (jsonic)
+* Updated to use Java 7 for compilation, and for syntax. It's 2014, and 7 is the only officially supported version by Oracle.
+* Code quality improvements
+  * Returning interfaces instead of implementations (List instead of ArrayList etc)
+  * String .equals instead of ==
+  * Replaced StringBuffer with StringBuilder
+  * Renamed classes for clarity
+  * Made classes immutable
+  * Made fields private, using accessors
+  * Clear null reference concept: using IntelliJ's @Nullable and @NotNull annotations
+  * Added JavaDoc, fixed typos
+
+
+#### TODO
+
+* Using a logger instead of System.out.println
