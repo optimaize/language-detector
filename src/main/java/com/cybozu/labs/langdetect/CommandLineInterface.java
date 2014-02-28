@@ -26,8 +26,8 @@ import java.io.ObjectOutputStream;
 import java.util.*;
 
 import be.frma.langguess.IOUtils;
-import be.frma.langguess.LangProfileFactory;
 
+import be.frma.langguess.LangProfileWriter;
 import com.cybozu.labs.langdetect.util.LangProfile;
 
 /**
@@ -171,7 +171,7 @@ public class CommandLineInterface {
         try {
             LangProfile profile = GenProfile.load(lang, file);
             profile.omitLessFreq();
-            LangProfileFactory.writeProfile(profile, new FileOutputStream(new File(lang)));
+            new LangProfileWriter().writeProfile(profile, new FileOutputStream(new File(lang)));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (LangDetectException e) {

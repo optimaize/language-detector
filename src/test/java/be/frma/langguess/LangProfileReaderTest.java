@@ -16,20 +16,18 @@
 
 package be.frma.langguess;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import com.cybozu.labs.langdetect.util.LangProfile;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.junit.Test;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
-import com.cybozu.labs.langdetect.util.LangProfile;
-
-public class LangProfileFactoryTest {
+public class LangProfileReaderTest {
 	private static final File PROFILE_DIR = new File(new File(new File(new File("src"), "main"), "resources"), "languages");
 
 	@Test
@@ -51,41 +49,7 @@ public class LangProfileFactoryTest {
 	public void readNlFile() throws IOException {
 		checkProfileFile("nl", 3, 2163);
 	}
-	
-	@Test
-	public void writeEnProfile() throws IOException {
-		checkProfileCopy("en");
-	}
 
-	@Test
-	public void writeFrProfile() throws IOException {
-		checkProfileCopy("fr");
-	}
-
-	@Test
-	public void writeNlProfile() throws IOException {
-		checkProfileCopy("nl");
-	}
-
-	protected void checkProfileCopy(String language) throws FileNotFoundException, IOException {
-		File originalFile = new File(PROFILE_DIR, language);
-		final LangProfile originalProfile = readProfileFile(originalFile);
-		File newFile = File.createTempFile("profile-copy-", null);
-		FileOutputStream output = null;
-		try {
-			output = new FileOutputStream(newFile);
-			LangProfileFactory.writeProfile(originalProfile, output);
-			LangProfile newProfile = readProfileFile(newFile);
-			assertThat(newProfile.getFreq().size(), is(equalTo(originalProfile.getFreq().size())));
-			assertThat(newProfile.getFreq(), is(equalTo(originalProfile.getFreq())));
-			assertThat(newProfile.getNWords(), is(equalTo(originalProfile.getNWords())));
-			assertThat(newProfile.getName(), is(equalTo(originalProfile.getName())));
-		} finally {
-			IOUtils.closeQuietly(output);
-            //noinspection ResultOfMethodCallIgnored
-            newFile.delete();
-		}
-	}
 
 	private static void checkProfileFile(String language, int nWordSize, int freqSize) throws IOException {
 		File profileFile = new File(PROFILE_DIR, language);
@@ -103,7 +67,7 @@ public class LangProfileFactoryTest {
 		final LangProfile langProfile;
 		try {
 			input = new FileInputStream(profileFile);
-			langProfile = LangProfileFactory.readProfile(input);
+			langProfile = new LangProfileReader().readProfile(input);
 		} finally {
 			IOUtils.closeQuietly(input);
 		}

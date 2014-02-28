@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import be.frma.langguess.IOUtils;
-import be.frma.langguess.LangProfileFactory;
+import be.frma.langguess.LangProfileReader;
 
 import com.cybozu.labs.langdetect.util.LangProfile;
 
@@ -90,14 +90,15 @@ public class DetectorFactory {
         File[] listFiles = profileDirectory.listFiles();
         if (listFiles == null)
             throw new LangDetectException(ErrorCode.NeedLoadProfileError, "Not found profile: " + profileDirectory);
-            
+
+        LangProfileReader langProfileReader = new LangProfileReader();
         int langsize = listFiles.length, index = 0;
         for (File file: listFiles) {
             if (file.getName().startsWith(".") || !file.isFile()) continue;
             InputStream is = null;
             try {
                 is = new FileInputStream(file);
-                LangProfile profile = LangProfileFactory.readProfile(is);
+                LangProfile profile = langProfileReader.readProfile(is);
                 addProfile(profile, index, langsize);
                 ++index;
             } catch (IOException e) {
@@ -117,6 +118,7 @@ public class DetectorFactory {
      *                              or profile's format is wrong (error code = {@link ErrorCode#FormatError})
      */
     public static void loadProfile(ClassLoader classLoader, String profileDirectory, String... languages) throws LangDetectException {
+        LangProfileReader langProfileReader = new LangProfileReader();
         int index = 0;
 		for (String language : languages) {
 			InputStream in = null;
@@ -127,7 +129,7 @@ public class DetectorFactory {
 					continue;
 				}
 				assert in.available() > 0;
-                LangProfile profile = LangProfileFactory.readProfile(in);
+                LangProfile profile = langProfileReader.readProfile(in);
                 addProfile(profile, index, languages.length);
                 ++index;
             } catch (IOException e) {

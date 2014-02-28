@@ -16,35 +16,37 @@
 
 package be.frma.langguess;
 
+import com.cybozu.labs.langdetect.util.LangProfile;
+
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.cybozu.labs.langdetect.util.LangProfile;
+/**
+ * Reads {@link LangProfile}s from input stream (files).
+ */
+public class LangProfileReader {
 
-public class LangProfileFactory {
 	private static final Pattern FREQ_PATTERN = Pattern.compile("\"freq\" ?: ?\\{(.+?)\\}");
 	private static final Pattern N_WORDS_PATTERN = Pattern.compile("\"n_words\" ?: ?\\[(.+?)\\]");
 	private static final Pattern NAME_PATTERN = Pattern.compile("\"name\" ?: ?\"(.+?)\"");
 	
-	public static LangProfile readProfile(InputStream input) throws IOException {
+	public LangProfile readProfile(InputStream input) throws IOException {
 		StringBuilder buffer = new StringBuilder();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(input, Charset.forName("utf-8")));
-		String line = null;
-		while((line = reader.readLine()) != null) {
-			if (buffer.length() > 0) {
-				buffer.append(' ');
-			}
-			buffer.append(line);
-		}
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, Charset.forName("utf-8")))) {
+            String line;
+            while((line = reader.readLine()) != null) {
+                if (buffer.length() > 0) {
+                    buffer.append(' ');
+                }
+                buffer.append(line);
+            }
+        }
+
 		String storedProfile = buffer.toString();
 		LangProfile langProfile = new LangProfile();
 
@@ -75,32 +77,4 @@ public class LangProfileFactory {
 		return langProfile;
 	}
 
-	public static void writeProfile(LangProfile langProfile, OutputStream output) throws IOException {
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, Charset.forName("utf-8")));
-		writer.write("{\"freq\":{");
-		boolean first = true;
-		for (Map.Entry<String, Integer> entry : langProfile.getFreq().entrySet()) {
-			if (!first) {
-				writer.write(',');
-			}
-			writer.write('"');
-			writer.write(entry.getKey());
-			writer.write("\":");
-			writer.write(entry.getValue().toString());
-			first = false;
-		}
-		writer.write("},\"n_words\":[");
-		first = true;
-		for (int nWord : langProfile.getNWords()) {
-			if (!first) {
-				writer.write(',');
-			}
-			writer.write(Integer.toString(nWord, 10));
-			first = false;
-		}
-		writer.write("],\"name\":\"");
-		writer.write(langProfile.getName());
-		writer.write("\"}");
-		writer.flush();
-	}
 }
