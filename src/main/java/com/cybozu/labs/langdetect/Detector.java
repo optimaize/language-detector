@@ -17,6 +17,9 @@
 package com.cybozu.labs.langdetect;
 
 import com.cybozu.labs.langdetect.util.NGram;
+import com.cybozu.labs.langdetect.util.Util;
+import com.optimaize.langdetect.DetectedLanguage;
+import com.optimaize.langdetect.ngram.NgramExtractor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -66,6 +69,7 @@ import java.util.regex.Pattern;
  * @author Nakatani Shuyo
  * @see DetectorFactory
  */
+@Deprecated
 public class Detector {
 
     //TODO refactor, this is messy.
@@ -85,7 +89,7 @@ public class Detector {
     private final Map<String, double[]> wordLangProbMap;
     private final List<String> langlist;
 
-    private StringBuffer text;
+    private StringBuilder text;
     private double[] langprob = null;
 
     private double alpha = ALPHA_DEFAULT;
@@ -103,7 +107,7 @@ public class Detector {
     public Detector(DetectorFactory factory) {
         this.wordLangProbMap = factory.wordLangProbMap;
         this.langlist = factory.langlist;
-        this.text = new StringBuffer();
+        this.text = new StringBuilder();
         this.seed  = factory.seed;
     }
 
@@ -128,20 +132,9 @@ public class Detector {
      * @param priorMap the priorMap to set
      * @throws LangDetectException 
      */
-    public void setPriorMap(Map<String, Double> priorMap) throws LangDetectException {
-        this.priorMap = new double[langlist.size()];
-        double sump = 0;
-        for (int i=0;i<this.priorMap.length;++i) {
-            String lang = langlist.get(i);
-            if (priorMap.containsKey(lang)) {
-                double p = priorMap.get(lang);
-                if (p<0) throw new LangDetectException(ErrorCode.InitParamError, "Prior probability must be non-negative.");
-                this.priorMap[i] = p;
-                sump += p;
-            }
-        }
-        if (sump<=0) throw new LangDetectException(ErrorCode.InitParamError, "More one of prior probability must be non-zero.");
-        for (int i=0;i<this.priorMap.length;++i) this.priorMap[i] /= sump;
+    public void setPriorMap(@NotNull Map<String, Double> priorMap) throws LangDetectException {
+        if (langlist==null) throw new IllegalStateException();
+        this.priorMap = Util.makeInternalPrioMap(priorMap, langlist);
     }
     
     /**
@@ -204,7 +197,7 @@ public class Detector {
             }
         }
         if (latinCount * 2 < nonLatinCount) {
-            StringBuffer textWithoutLatin = new StringBuffer();
+            StringBuilder textWithoutLatin = new StringBuilder();
             for(int i = 0; i < text.length(); ++i) {
                 char c = text.charAt(i);
                 if (c > 'z' || c < 'A') textWithoutLatin.append(c);
@@ -259,7 +252,7 @@ public class Detector {
                 int r = rand.nextInt(ngrams.size());
                 updateLangProb(prob, ngrams.get(r), alpha);
                 if (i % 5 == 0) {
-                    if (normalizeProb(prob) > CONV_THRESHOLD || i>=ITERATION_LIMIT) break;
+                    if (Util.normalizeProb(prob) > CONV_THRESHOLD || i>=ITERATION_LIMIT) break;
                     if (verbose) System.out.println("> " + sortProbability(prob));
                 }
             }
@@ -285,20 +278,17 @@ public class Detector {
     }
 
     /**
-     * Extract n-grams from target text
+     * Extract n-grams from target text, except some!
      * @return n-grams list
      */
     private List<String> extractNGrams() {
-        List<String> list = new ArrayList<>();
-        NGram ngram = new NGram();
-        for(int i=0;i<text.length();++i) {
-            ngram.addChar(text.charAt(i));
-            for(int n=1;n<=NGram.N_GRAM;++n){
-                String w = ngram.get(n);
-                if (w!=null && wordLangProbMap.containsKey(w)) list.add(w);
+        return NgramExtractor.extractNGrams(text, new NgramExtractor.Filter() {
+            @Override
+            public boolean use(String gram) {
+                //TODO it looks like the n-gram is skipped if the LanguageProfiles don't know about it. but that's problematic, because it screws up the confidence.
+                return wordLangProbMap.containsKey(gram);
             }
-        }
-        return list;
+        });
     }
 
     /**
@@ -309,7 +299,7 @@ public class Detector {
         if (word == null || !wordLangProbMap.containsKey(word)) return false;
 
         double[] langProbMap = wordLangProbMap.get(word);
-        if (verbose) System.out.println(word + "(" + unicodeEncode(word) + "):" + wordProbToString(langProbMap));
+        if (verbose) System.out.println(word + "(" + Util.unicodeEncode(word) + "):" + Util.wordProbToString(langProbMap, langlist));
 
         double weight = alpha / BASE_FREQ;
         for (int i=0;i<prob.length;++i) {
@@ -318,31 +308,6 @@ public class Detector {
         return true;
     }
 
-    private String wordProbToString(double[] prob) {
-        Formatter formatter = new Formatter();
-        for(int j=0;j<prob.length;++j) {
-            double p = prob[j];
-            if (p>=0.00001) {
-                formatter.format(" %s:%.5f", langlist.get(j), p);
-            }
-        }
-        return formatter.toString();
-    }
-    
-    /**
-     * normalize probabilities and check convergence by the maximum probability
-     * @return maximum of probabilities
-     */
-    static private double normalizeProb(double[] prob) {
-        double maxp = 0, sump = 0;
-        for(int i=0;i<prob.length;++i) sump += prob[i];
-        for(int i=0;i<prob.length;++i) {
-            double p = prob[i] / sump;
-            if (maxp < p) maxp = p;
-            prob[i] = p;
-        }
-        return maxp;
-    }
 
     /**
      * @return language candidates order by probabilities descending
@@ -362,26 +327,6 @@ public class Detector {
             }
         }
         return list;
-    }
-
-    /**
-     * unicode encoding (for verbose mode)
-     * @param word
-     * @return
-     */
-    static private String unicodeEncode(String word) {
-        StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < word.length(); ++i) {
-            char ch = word.charAt(i);
-            if (ch >= '\u0080') {
-                String st = Integer.toHexString(0x10000 + (int) ch);
-                while (st.length() < 4) st = "0" + st;
-                buf.append("\\u").append(st.subSequence(1, 5));
-            } else {
-                buf.append(ch);
-            }
-        }
-        return buf.toString();
     }
 
 }

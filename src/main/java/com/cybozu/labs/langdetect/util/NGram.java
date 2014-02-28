@@ -16,28 +16,34 @@
 
 package com.cybozu.labs.langdetect.util;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * TODO document.
  *
  * Users don't use this class directly.
  *
+ * TODO this class treats a word as "upper case" if the first 2 characters are upper case. That seems like a simplification,
+ * would need documentation.
+ *
  * @author Nakatani Shuyo
  */
 public class NGram {
     private static final String LATIN1_EXCLUDED = Messages.getString("NGram.LATIN1_EXCLUDE");
     public final static int N_GRAM = 3;
-    public static HashMap<Character, Character> cjk_map; 
+    public static Map<Character, Character> cjk_map;
     
-    private StringBuffer grams_;
+    private StringBuilder grams_;
     private boolean capitalword_;
 
     /**
      * 
      */
     public NGram() {
-        grams_ = new StringBuffer(" ");
+        grams_ = new StringBuilder(" ");
         capitalword_ = false;
     }
 
@@ -48,7 +54,7 @@ public class NGram {
         ch = normalize(ch);
         char lastchar = grams_.charAt(grams_.length() - 1);
         if (lastchar == ' ') {
-            grams_ = new StringBuffer(" ");
+            grams_ = new StringBuilder(" ");
             capitalword_ = false;
             if (ch==' ') return;
         } else if (grams_.length() >= N_GRAM) {
@@ -64,10 +70,13 @@ public class NGram {
     }
 
     /**
+     * TODO this method has some weird, undocumented behavior to ignore ngrams with upper case.
+     *
      * Get n-Gram
      * @param n length of n-gram
      * @return n-Gram String (null if it is invalid)
      */
+    @Nullable
     public String get(int n) {
         if (capitalword_) return null;
         int len = grams_.length(); 

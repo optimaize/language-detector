@@ -38,12 +38,15 @@ This fork will probably die also. At least it offers an updated code base for th
   * String .equals instead of ==
   * Replaced StringBuffer with StringBuilder
   * Renamed classes for clarity
-  * Made classes immutable
+  * Made classes immutable, and thus thread safe
   * Made fields private, using accessors
   * Clear null reference concept: using IntelliJ's @Nullable and @NotNull annotations
   * Added JavaDoc, fixed typos
+  * Added interfaces
 
 
 #### TODO
 
 * Using a logger instead of System.out.println
+* Remove old code
+* Simplify loading/storing of profiles, creation of profiles. Update to new profile class.

@@ -30,6 +30,7 @@ import com.cybozu.labs.langdetect.ErrorCode;
 import com.cybozu.labs.langdetect.LangDetectException;
 import com.cybozu.labs.langdetect.util.LangProfile;
 import com.cybozu.labs.langdetect.util.NGram;
+import com.cybozu.labs.langdetect.util.Util;
 
 /**
  * Generate a language profile from any given text file.
@@ -59,13 +60,7 @@ public class GenProfile {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String line;
             while ((line = reader.readLine()) != null) {
-                NGram ngram = new NGram();
-            	for (char c : line.toCharArray()) {
-					ngram.addChar(c);
-					for (int i = 1; i <= NGram.N_GRAM; i++) {
-						profile.add(ngram.get(i));
-					}
-            	}
+                Util.addCharSequence(profile, line);
 			}
         } catch (IOException e) {
             throw new LangDetectException(ErrorCode.CantOpenTrainData, "Can't open training database file '" + textFile.getName() + "'");

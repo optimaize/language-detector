@@ -49,6 +49,7 @@ import java.util.Map;
  * @author Francois ROLAND
  * @author Fabian Kessler
  */
+@Deprecated
 public class DetectorFactory {
 
     //TODO refactor, this is messy.
@@ -91,7 +92,7 @@ public class DetectorFactory {
         LangProfileReader langProfileReader = new LangProfileReader();
         int langsize = listFiles.length, index = 0;
         for (File file: listFiles) {
-            if (file.getName().startsWith(".") || !file.isFile()) { //TODO this is a bit limited... should look for valid file name patterns.
+            if (file.getName().startsWith(".") || !file.isFile()) { //TODO this is a bit limited... should look for valid file name patterns. also, langsize is not reduced.
                 continue;
             }
             try {

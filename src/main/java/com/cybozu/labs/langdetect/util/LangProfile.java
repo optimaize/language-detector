@@ -20,6 +20,8 @@
 
 package com.cybozu.labs.langdetect.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,15 +33,59 @@ import java.util.Set;
  * Users don't use this class directly.
  *
  * TODO split into builder and immutable class.
+ *
+ * TODO currently this only makes n-grams with the space before a word included. no n-gram with the space after the word.
+ * Example: "foo" creates " fo" as 3gram, but not "oo ". Either this is a bug, or if intended then needs documentation.
  * 
  * @author Nakatani Shuyo
+ * @deprecated replaced by LanguageProfile
  */
+@Deprecated
 public class LangProfile implements Serializable {
+
 	private static final long serialVersionUID = 1L;
+
+    /**
+     * n-grams that occur less than this often can be removed using omitLessFreq().
+     * This number can change, see LESS_FREQ_RATIO.
+     */
 	private static final int MINIMUM_FREQ = 2;
+
+    /**
+     * Explanation by example:
+     *
+     * If the most frequent n-gram occurs 1 mio times, then
+     * 1'000'000 / this (100'000) = 10.
+     * 10 is larger than MINIMUM_FREQ (2), thus MINIMUM_FREQ remains at 2.
+     * All n-grams that occur less than 2 times can be removed as noise using omitLessFreq().
+     *
+     * If the most frequent n-gram occurs 5000 times, then
+     * 5'000 / this (100'000) = 0.05.
+     * 0.05 is smaller than MINIMUM_FREQ (2), thus MINIMUM_FREQ becomes 0.
+     * No n-grams are removed because of insignificance when calling omitLessFreq().
+     */
     private static final int LESS_FREQ_RATIO = 100000;
+
+    /**
+     * The language name (identifier).
+     */
     private String name = null;
+
+    /**
+     * Key = ngram, value = count.
+     * All n-grams are in here (1-gram, 2-gram, 3-gram).
+     */
     private Map<String, Integer> freq = new HashMap<>();
+
+    /**
+     * Tells how many occurrences of n-grams exist per gram length.
+     * When making 1grams, 2grams and 3grams (currently) then this contains 3 entries where
+     * element 0 = number occurrences of 1-grams
+     * element 1 = number occurrences of 2-grams
+     * element 2 = number occurrences of 3-grams
+     * Example: if there are 57 1-grams (English language has about that many) and the training text is
+     * fairly long, then this number is in the millions.
+     */
     private int[] nWords = new int[NGram.N_GRAM];
 
     /**
@@ -59,33 +105,43 @@ public class LangProfile implements Serializable {
      * Add n-gram to profile
      * @param gram
      */
-    public void add(String gram) {
-        if (getName() == null || gram == null) return;   // Illegal
+    public void add(@NotNull String gram) {
+        if (name == null) throw new IllegalStateException();
         int len = gram.length();
-        if (len < 1 || len > NGram.N_GRAM) return;  // Illegal
-        ++getNWords()[len - 1];
-        if (getFreq().containsKey(gram)) {
-            getFreq().put(gram, getFreq().get(gram) + 1);
+        if (len < 1 || len > NGram.N_GRAM) {
+            throw new IllegalArgumentException("ngram length must be 1-3 but was "+len+": >>>"+gram+"<<<!");
+        }
+        nWords[len - 1]++;
+        if (freq.containsKey(gram)) {
+            freq.put(gram, freq.get(gram) + 1);
         } else {
-            getFreq().put(gram, 1);
+            freq.put(gram, 1);
         }
     }
 
     /**
-     * Eliminate below less frequency n-grams and noise Latin alphabets
+     * Removes ngrams that occur fewer times than MINIMUM_FREQ to get rid of rare ngrams.
+     *
+     * Also removes ascii ngrams if the total number of ascii ngrams is less than one third of the total.
+     * This is done because non-latin text (such as Chinese) often has some latin noise in between.
+     *
+     * TODO split the 2 cleaning to separate methods.
+     * TODO distinguish ascii/latin, currently it looks for latin only, should include characters with diacritics, eg Vietnamese.
+     * TODO current code counts ascii, but removes any latin. is that desired? if so then this needs documentation.
      */
     public void omitLessFreq() {
-        if (getName() == null) return;   // Illegal
-        int threshold = getNWords()[0] / LESS_FREQ_RATIO;
+        if (name == null) throw new IllegalStateException();
+
+        int threshold = nWords[0] / LESS_FREQ_RATIO;
         if (threshold < MINIMUM_FREQ) threshold = MINIMUM_FREQ;
         
-        Set<String> keys = getFreq().keySet();
+        Set<String> keys = freq.keySet();
         int roman = 0;
         for(Iterator<String> i = keys.iterator(); i.hasNext(); ){
             String key = i.next();
-            int count = getFreq().get(key);
+            int count = freq.get(key);
             if (count <= threshold) {
-                getNWords()[key.length()-1] -= count; 
+                nWords[key.length()-1] -= count;
                 i.remove();
             } else {
                 if (key.matches("^[A-Za-z]$")) {
@@ -95,16 +151,15 @@ public class LangProfile implements Serializable {
         }
 
         // roman check
-        if (roman < getNWords()[0] / 3) {
-            Set<String> keys2 = getFreq().keySet();
+        if (roman < nWords[0] / 3) {
+            Set<String> keys2 = freq.keySet();
             for(Iterator<String> i = keys2.iterator(); i.hasNext(); ){
                 String key = i.next();
                 if (key.matches(".*[A-Za-z].*")) {
-                    getNWords()[key.length()-1] -= getFreq().get(key); 
+                    nWords[key.length()-1] -= freq.get(key);
                     i.remove();
                 }
             }
-            
         }
     }
 

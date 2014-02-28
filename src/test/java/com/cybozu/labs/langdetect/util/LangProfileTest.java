@@ -90,31 +90,23 @@ public class LangProfileTest {
     }
 
     
-    /**
-     * Illegal call test for {@link LangProfile#add(String)}
-     */
-    @Test
+    @Test(expected = IllegalStateException.class)
     public final void testAddIllegally1() {
         LangProfile profile = new LangProfile(); // Illegal ( available for only JSONIC ) but ignore  
-        profile.add("a"); // ignore
-        assertEquals(profile.getFreq().get("a"), null); // ignored
+        profile.add("a");
     }
 
-    /**
-     * Illegal call test for {@link LangProfile#add(String)}
-     */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public final void testAddIllegally2() {
         LangProfile profile = new LangProfile("en");
-        profile.add("a");
-        profile.add("");  // Illegal (string's length of parameter must be between 1 and 3) but ignore
-        profile.add("abcd");  // as well
-        assertEquals((int)profile.getFreq().get("a"), 1);
-        assertEquals(profile.getFreq().get(""), null);     // ignored
-        assertEquals(profile.getFreq().get("abcd"), null); // ignored
-        
+        profile.add("");  // Illegal (string's length of parameter must be between 1 and 3)
     }
-    
+    @Test(expected = IllegalArgumentException.class)
+    public final void testAddIllegally3() {
+        LangProfile profile = new LangProfile("en");
+        profile.add("abcd");  // Illegal (string's length of parameter must be between 1 and 3)
+    }
+
     /**
      * Test method for {@link com.cybozu.labs.langdetect.util.LangProfile#omitLessFreq()}.
      */
@@ -136,13 +128,10 @@ public class LangProfileTest {
         assertEquals(profile.getFreq().get("\u3050"), null); // omitted
     }
 
-    /**
-     * Illegal call test for {@link com.cybozu.labs.langdetect.util.LangProfile#omitLessFreq()}.
-     */
-    @Test
+    @Test(expected = IllegalStateException.class)
     public final void testOmitLessFreqIllegally() {
         LangProfile profile = new LangProfile();
-        profile.omitLessFreq();  // ignore
+        profile.omitLessFreq();
     }
 
 }

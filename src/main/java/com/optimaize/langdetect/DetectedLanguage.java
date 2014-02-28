@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cybozu.labs.langdetect;
+package com.optimaize.langdetect;
 
 import org.jetbrains.annotations.NotNull;
 

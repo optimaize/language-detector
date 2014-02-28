@@ -16,6 +16,7 @@
 
 package com.cybozu.labs.langdetect;
 
+import com.optimaize.langdetect.DetectedLanguage;
 import org.junit.Test;
 
 import java.util.ArrayList;
