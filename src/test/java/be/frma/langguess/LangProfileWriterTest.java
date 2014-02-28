@@ -42,37 +42,21 @@ public class LangProfileWriterTest {
 		checkProfileCopy("nl");
 	}
 
-	protected void checkProfileCopy(String language) throws FileNotFoundException, IOException {
+	protected void checkProfileCopy(String language) throws IOException {
 		File originalFile = new File(PROFILE_DIR, language);
-		final LangProfile originalProfile = readProfileFile(originalFile);
+		final LangProfile originalProfile = new LangProfileReader().readProfile(originalFile);
 		File newFile = File.createTempFile("profile-copy-", null);
-		FileOutputStream output = null;
-		try {
-			output = new FileOutputStream(newFile);
+		try (FileOutputStream output = new FileOutputStream(newFile)) {
 			new LangProfileWriter().writeProfile(originalProfile, output);
-			LangProfile newProfile = readProfileFile(newFile);
+			LangProfile newProfile = new LangProfileReader().readProfile(newFile);
 			assertThat(newProfile.getFreq().size(), is(equalTo(originalProfile.getFreq().size())));
 			assertThat(newProfile.getFreq(), is(equalTo(originalProfile.getFreq())));
 			assertThat(newProfile.getNWords(), is(equalTo(originalProfile.getNWords())));
 			assertThat(newProfile.getName(), is(equalTo(originalProfile.getName())));
 		} finally {
-			IOUtils.closeQuietly(output);
             //noinspection ResultOfMethodCallIgnored
             newFile.delete();
 		}
-	}
-
-
-	private static LangProfile readProfileFile(File profileFile) throws FileNotFoundException, IOException {
-		FileInputStream input = null;
-		final LangProfile langProfile;
-		try {
-			input = new FileInputStream(profileFile);
-			langProfile = new LangProfileReader().readProfile(input);
-		} finally {
-			IOUtils.closeQuietly(input);
-		}
-		return langProfile;
 	}
 
 }

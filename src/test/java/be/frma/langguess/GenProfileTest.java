@@ -18,15 +18,11 @@ public class GenProfileTest extends GenProfile {
 	public void generateProfile() throws IOException, LangDetectException {
 		File inputFile = File.createTempFile("profileInput", ".txt");
 		try {
-			PrintWriter writer = null;
-			try {
-				writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(inputFile), Charset.forName("utf-8")));
+			try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(inputFile), Charset.forName("utf-8")))) {
 				writer.println("Salut tout le monde.");
 				writer.println("Bonjour toi tout seul.");
 				writer.println("Ca va ?");
 				writer.println("Oui ça va. Et toi ?");
-			} finally {
-				IOUtils.closeQuietly(writer);
 			}
 			
 			LangProfile trucProfile = GenProfile.generate("truc", inputFile);

@@ -24,10 +24,16 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Writes a {@link LangProfile} to an output stream (file).
+ *
+ * @author François ROLAND
+ * @author Fabian Kessler
+ */
 public class LangProfileWriter {
 
     /**
-     * Writes a {@link com.cybozu.labs.langdetect.util.LangProfile} to an output stream (file).
+     * Writes a {@link LangProfile} to an output stream (file).
      *
      * @throws IOException
      */

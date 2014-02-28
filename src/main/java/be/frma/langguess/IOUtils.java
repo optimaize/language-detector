@@ -21,6 +21,7 @@ import java.io.IOException;
 
 /**
  * Utils to manage IO streams.
+ * @author François ROLAND
  */
 @Deprecated
 public class IOUtils {

@@ -18,23 +18,40 @@ package be.frma.langguess;
 
 import com.cybozu.labs.langdetect.util.LangProfile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Reads {@link LangProfile}s from input stream (files).
+ * Reads {@link LangProfile}s.
+ *
+ * @author François ROLAND
+ * @author Fabian Kessler
  */
 public class LangProfileReader {
 
 	private static final Pattern FREQ_PATTERN = Pattern.compile("\"freq\" ?: ?\\{(.+?)\\}");
 	private static final Pattern N_WORDS_PATTERN = Pattern.compile("\"n_words\" ?: ?\\[(.+?)\\]");
 	private static final Pattern NAME_PATTERN = Pattern.compile("\"name\" ?: ?\"(.+?)\"");
-	
+
+    /**
+     * Reads a {@link LangProfile} from a File.
+     */
+    public LangProfile readProfile(File profileFile) throws IOException {
+        if (!profileFile.exists()) {
+            throw new IllegalArgumentException("No such file: "+profileFile);
+        } else if (!profileFile.canRead()) {
+            throw new IllegalArgumentException("Cannot read file: "+profileFile);
+        }
+        try (FileInputStream input = new FileInputStream(profileFile)) {
+            return readProfile(input);
+        }
+    }
+
+    /**
+     * Reads a {@link LangProfile} from an InputStream.
+     */
 	public LangProfile readProfile(InputStream input) throws IOException {
 		StringBuilder buffer = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, Charset.forName("utf-8")))) {

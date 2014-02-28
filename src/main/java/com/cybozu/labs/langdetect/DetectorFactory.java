@@ -16,19 +16,16 @@
 
 package com.cybozu.labs.langdetect;
 
+import be.frma.langguess.LangProfileReader;
+import com.cybozu.labs.langdetect.util.LangProfile;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import be.frma.langguess.IOUtils;
-import be.frma.langguess.LangProfileReader;
-
-import com.cybozu.labs.langdetect.util.LangProfile;
 
 /**
  * Language Detector Factory Class
@@ -94,17 +91,15 @@ public class DetectorFactory {
         LangProfileReader langProfileReader = new LangProfileReader();
         int langsize = listFiles.length, index = 0;
         for (File file: listFiles) {
-            if (file.getName().startsWith(".") || !file.isFile()) continue;
-            InputStream is = null;
+            if (file.getName().startsWith(".") || !file.isFile()) { //TODO this is a bit limited... should look for valid file name patterns.
+                continue;
+            }
             try {
-                is = new FileInputStream(file);
-                LangProfile profile = langProfileReader.readProfile(is);
+                LangProfile profile = langProfileReader.readProfile(file);
                 addProfile(profile, index, langsize);
                 ++index;
             } catch (IOException e) {
                 throw new LangDetectException(ErrorCode.FileLoadError, "can't open '" + file.getName() + "'");
-            } finally {
-                IOUtils.closeQuietly(is);
             }
         }
     }
@@ -121,10 +116,8 @@ public class DetectorFactory {
         LangProfileReader langProfileReader = new LangProfileReader();
         int index = 0;
 		for (String language : languages) {
-			InputStream in = null;
 			String languageFileName = profileDirectory + '/' + language;
-			try {
-				in = classLoader.getResourceAsStream(languageFileName);
+			try (InputStream in = classLoader.getResourceAsStream(languageFileName)) {
 				if (in == null) {
 					continue;
 				}
@@ -134,8 +127,6 @@ public class DetectorFactory {
                 ++index;
             } catch (IOException e) {
                 throw new LangDetectException(ErrorCode.FileLoadError, "can't open '" + languageFileName + "'");
-			} finally {
-				IOUtils.closeQuietly(in);
 			}
 		}
     }

@@ -20,8 +20,6 @@ import com.cybozu.labs.langdetect.util.LangProfile;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.*;
@@ -53,25 +51,13 @@ public class LangProfileReaderTest {
 
 	private static void checkProfileFile(String language, int nWordSize, int freqSize) throws IOException {
 		File profileFile = new File(PROFILE_DIR, language);
-		final LangProfile langProfile = readProfileFile(profileFile);
+		final LangProfile langProfile = new LangProfileReader().readProfile(profileFile);
 		assertThat(langProfile, is(notNullValue()));
 		assertThat(langProfile.getName(), is(equalTo(language)));
 		assertThat(langProfile.getNWords(), is(notNullValue()));
 		assertThat(langProfile.getNWords().length, is(equalTo(nWordSize)));
 		assertThat(langProfile.getFreq(), is(notNullValue()));
 		assertThat(langProfile.getFreq().size(), is(equalTo(freqSize)));
-	}
-
-	private static LangProfile readProfileFile(File profileFile) throws FileNotFoundException, IOException {
-		FileInputStream input = null;
-		final LangProfile langProfile;
-		try {
-			input = new FileInputStream(profileFile);
-			langProfile = new LangProfileReader().readProfile(input);
-		} finally {
-			IOUtils.closeQuietly(input);
-		}
-		return langProfile;
 	}
 
 }
