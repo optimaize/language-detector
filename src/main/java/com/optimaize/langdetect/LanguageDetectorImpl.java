@@ -1,6 +1,5 @@
 package com.optimaize.langdetect;
 
-import com.cybozu.labs.langdetect.LangDetectException;
 import com.cybozu.labs.langdetect.util.Util;
 import com.google.common.base.Optional;
 import com.optimaize.langdetect.ngram.NgramExtractor;
@@ -14,8 +13,9 @@ import java.util.*;
  *
  * <p>This class is immutable and thus thread-safe.</p>
  *
- * @author Fabian Kessler
  * @author Nakatani Shuyo
+ * @author Fabian Kessler
+ * @author Elmer Garduno
  */
 public final class LanguageDetectorImpl implements LanguageDetector {
 

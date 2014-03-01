@@ -39,6 +39,12 @@ public class LanguageProfileBuilder {
     }
 
     /**
+     * Shortcut for addGram(ngram, 1).
+     */
+    public LanguageProfileBuilder addGram(String ngram) {
+        return addGram(ngram, 1);
+    }
+    /**
      * If the builder already has this ngram, the given frequency is added to the current count.
      */
     public LanguageProfileBuilder addGram(String ngram, int frequency) {

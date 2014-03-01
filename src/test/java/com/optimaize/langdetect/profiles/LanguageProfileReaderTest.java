@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
@@ -39,7 +40,6 @@ public class LanguageProfileReaderTest {
         checkProfileFile("nl", 3, 2163);
     }
 
-
     private static void checkProfileFile(String language, int nWordSize, int freqSize) throws IOException {
         File profileFile = new File(PROFILE_DIR, language);
         final LanguageProfile languageProfile = new LanguageProfileReader().read(profileFile);
@@ -48,6 +48,30 @@ public class LanguageProfileReaderTest {
         assertEquals(languageProfile.getGramLengths().size(), nWordSize);
         assertEquals(languageProfile.getGramLengths(), ImmutableList.of(1, 2, 3));
         assertEquals(languageProfile.getNumGrams(), freqSize);
+    }
+
+
+    @Test
+    public void readFromDir() throws IOException {
+        List<LanguageProfile> read = new LanguageProfileReader().read(ImmutableList.of("de", "fr"));
+        assertEquals(read.size(), 2);
+    }
+
+    @Test
+    public void readFromDirWithClassloader() throws IOException {
+        List<LanguageProfile> read = new LanguageProfileReader().read(
+                LanguageProfileReaderTest.class.getClassLoader(),
+                "languages",
+                ImmutableList.of("de", "fr")
+        );
+        assertEquals(read.size(), 2);
+    }
+
+
+    @Test
+    public void readAll() throws IOException {
+        List<LanguageProfile> read = new LanguageProfileReader().readAll();
+        assertEquals(read.size(), 47); //adjust this number when adding more languages
     }
 
 }

@@ -107,7 +107,7 @@ public class DetectorFactory {
     
     /**
      * Load profiles from the classpath in a specific directory.
-     * 
+     *
      * @param classLoader the ClassLoader to load the profiles from.
      * @param profileDirectory profile directory path inside the classpath.
      * @throws LangDetectException  Can't open profiles(error code = {@link ErrorCode#FileLoadError})
