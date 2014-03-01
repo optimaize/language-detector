@@ -47,4 +47,13 @@ public class LanguageProfileBuilderTest {
         assertNotEquals(languageProfile1, languageProfile3);
     }
 
+    @Test
+    public void profile_toString() throws Exception {
+        LanguageProfile languageProfile = new LanguageProfileBuilder("de")
+                .addGram("foo", 1)
+                .build();
+        assertTrue(languageProfile.toString().contains("de"));
+        assertTrue(languageProfile.toString().contains("1"));
+    }
+
 }

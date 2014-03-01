@@ -103,7 +103,22 @@ public final class LanguageProfileImpl implements LanguageProfile {
         return Iterables.concat(arr);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("LanguageProfile{lang=");
+        sb.append(language);
+        for (Integer integer : getGramLengths()) {
+            sb.append(",");
+            sb.append(integer);
+            sb.append("-grams=");
+            sb.append(getNumGrams(integer));
+        }
+        sb.append("}");
+        return sb.toString();
+    }
 
+    //generated code
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -117,7 +132,7 @@ public final class LanguageProfileImpl implements LanguageProfile {
 
         return true;
     }
-
+    //generated code
     @Override
     public int hashCode() {
         int result = language.hashCode();
