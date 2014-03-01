@@ -1,7 +1,5 @@
 package com.optimaize.langdetect;
 
-import com.cybozu.labs.langdetect.ErrorCode;
-import com.cybozu.labs.langdetect.LangDetectException;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -112,7 +110,7 @@ public class LanguageDetectorBuilder {
     /**
      * @throws IllegalStateException if no LanguageProfile was {@link #withProfile added}.
      */
-    public LanguageDetector build() throws IllegalStateException, LangDetectException {
+    public LanguageDetector build() throws IllegalStateException {
         if (languageProfiles.isEmpty()) throw new IllegalStateException();
 
         Map<String, double[]> wordLangProbMap = new HashMap<>();
@@ -123,11 +121,7 @@ public class LanguageDetectorBuilder {
         for (LanguageProfile profile : languageProfiles) {
             index++;
 
-            String lang = profile.getLanguage();
-            if (langlist.contains(lang)) {
-                throw new LangDetectException(ErrorCode.DuplicateLangError, "duplicate the same language profile");
-            }
-            langlist.add(lang);
+            langlist.add( profile.getLanguage() );
 
             for (Map.Entry<String, Integer> ngramEntry : profile.iterateGrams()) {
                 String ngram      = ngramEntry.getKey();

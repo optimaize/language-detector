@@ -18,7 +18,9 @@ package com.cybozu.labs.langdetect;
 
 /**
  * @author Nakatani Shuyo
+ * @deprecated I see no use in this -Fabian
  */
+@Deprecated
 public class LangDetectException extends Exception {
     private static final long serialVersionUID = 1L;
     private ErrorCode code;

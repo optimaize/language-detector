@@ -1,6 +1,5 @@
 package com.optimaize.langdetect;
 
-import com.cybozu.labs.langdetect.LangDetectException;
 import com.google.common.base.Optional;
 
 import java.util.List;
@@ -24,14 +23,16 @@ public interface LanguageDetector {
      * @param text You probably want a {@link com.optimaize.langdetect.text.TextObject}.
      * @return The language if confident, absent if not.
      */
-    Optional<String> detect(CharSequence text) throws LangDetectException;
+    Optional<String> detect(CharSequence text);
 
     /**
      * There may be some PROB_THRESHOLD applied to cut unlikely results.
      *
      * @param text You probably want a {@link com.optimaize.langdetect.text.TextObject}.
      * @return Sorted from better to worse. May be empty.
+     *         It's empty if the program failed to detect any language, or if the input text did not
+     *         contain any usable text (just noise).
      */
-    List<DetectedLanguage> getProbabilities(CharSequence text) throws LangDetectException;
+    List<DetectedLanguage> getProbabilities(CharSequence text);
 
 }

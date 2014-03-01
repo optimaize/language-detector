@@ -1,6 +1,5 @@
 package com.optimaize.langdetect;
 
-import com.cybozu.labs.langdetect.ErrorCode;
 import com.cybozu.labs.langdetect.LangDetectException;
 import com.cybozu.labs.langdetect.util.Util;
 import com.google.common.base.Optional;
@@ -66,7 +65,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     LanguageDetectorImpl(@NotNull Map<String, double[]> wordLangProbMap,
                          @NotNull List<String> langlist,
                          boolean verbose, double alpha, boolean skipUnknownNgrams, int shortTextAlgorithm, double borderFactor,
-                         @Nullable Map<String, Double> langWeightingMap) throws LangDetectException {
+                         @Nullable Map<String, Double> langWeightingMap) {
         if (alpha<0d || alpha >1d) throw new IllegalArgumentException(""+alpha);
         if (borderFactor<0d || borderFactor >10d) throw new IllegalArgumentException(""+borderFactor);
         if (langWeightingMap!=null && langWeightingMap.isEmpty()) langWeightingMap = null;
@@ -87,7 +86,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
 
 
     @Override
-    public Optional<String> detect(CharSequence text) throws LangDetectException {
+    public Optional<String> detect(CharSequence text) {
         List<DetectedLanguage> probabilities = getProbabilities(text);
         if (probabilities.isEmpty()) {
             return Optional.absent();
@@ -102,16 +101,24 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     }
 
     @Override
-    public List<DetectedLanguage> getProbabilities(CharSequence text) throws LangDetectException {
+    public List<DetectedLanguage> getProbabilities(CharSequence text) {
         double[] langprob = detectBlock(text);
-        return sortProbability(langprob);
+        if (langprob==null) {
+            return Collections.emptyList();
+        } else {
+            return sortProbability(langprob);
+        }
     }
 
 
-    private double[] detectBlock(CharSequence text) throws LangDetectException {
+    /**
+     * @return null if there are no "features" in the text (just noise).
+     */
+    @Nullable
+    private double[] detectBlock(CharSequence text) {
         List<String> ngrams = extractNGrams(text, skipUnknownNgrams);
         if (ngrams.size()==0) {
-            throw new LangDetectException(ErrorCode.CantDetectError, "no features in text");
+            return null;
         } else if (text.length() <= shortTextAlgorithm) {
             return detectBlockShortText(ngrams);
         } else {

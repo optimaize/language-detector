@@ -1,7 +1,6 @@
 package com.optimaize.langdetect;
 
 import be.frma.langguess.LangProfileReader;
-import com.cybozu.labs.langdetect.LangDetectException;
 import com.cybozu.labs.langdetect.util.LangProfile;
 import com.google.common.collect.ImmutableList;
 import com.optimaize.langdetect.profiles.LanguageProfile;
@@ -12,7 +11,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 public class LanguageDetectorImplTest {
 
     @Test
-    public void german() throws LangDetectException, IOException {
+    public void german() throws IOException {
         LanguageDetector languageDetector = makeNewDetector();
         List<DetectedLanguage> result = languageDetector.getProbabilities("Dies ist eine deutsche Text");
         DetectedLanguage best = result.get(0);
@@ -30,7 +30,7 @@ public class LanguageDetectorImplTest {
     }
 
     @Test
-    public void germanShort() throws LangDetectException, IOException {
+    public void germanShort() throws IOException {
         LanguageDetector languageDetector = makeNewDetector();
         List<DetectedLanguage> result = languageDetector.getProbabilities("deutsche Text");
         DetectedLanguage best = result.get(0);
@@ -39,7 +39,7 @@ public class LanguageDetectorImplTest {
     }
 
     @Test
-    public void germanShortWithUrl() throws LangDetectException, IOException {
+    public void germanShortWithUrl() throws IOException {
         TextObjectFactory textObjectFactory = new TextObjectFactoryBuilder()
                 .maxTextLength(10000)
                 .withTextFilter(RemoveMinorityScriptsTextFilter.forThreshold(0.3))
@@ -54,7 +54,7 @@ public class LanguageDetectorImplTest {
         assertTrue(best.getProbability() >= 0.9999d);
     }
 
-    private LanguageDetector makeNewDetector() throws IOException, LangDetectException {
+    private LanguageDetector makeNewDetector() throws IOException {
         LanguageDetectorBuilder builder = new LanguageDetectorBuilder();
         builder.skipUnknownNgrams(false);
         builder.shortTextAlgorithm(50);

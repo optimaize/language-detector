@@ -1,7 +1,5 @@
 package com.cybozu.labs.langdetect.util;
 
-import com.cybozu.labs.langdetect.ErrorCode;
-import com.cybozu.labs.langdetect.LangDetectException;
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,10 +70,9 @@ public class Util {
 
 
     /**
-     * @throws com.cybozu.labs.langdetect.LangDetectException
      */
     public static double[] makeInternalPrioMap(@NotNull Map<String, Double> langWeightingMap,
-                                                @NotNull List<String> langlist) throws LangDetectException {
+                                                @NotNull List<String> langlist) {
         assert !langWeightingMap.isEmpty();
         double[] priorMap = new double[langlist.size()];
         double sump = 0;
@@ -83,12 +80,12 @@ public class Util {
             String lang = langlist.get(i);
             if (langWeightingMap.containsKey(lang)) {
                 double p = langWeightingMap.get(lang);
-                if (p<0) throw new LangDetectException(ErrorCode.InitParamError, "Prior probability must be non-negative.");
+                assert p>=0 : "Prior probability must be non-negative!";
                 priorMap[i] = p;
                 sump += p;
             }
         }
-        if (sump<=0) throw new LangDetectException(ErrorCode.InitParamError, "More one of prior probability must be non-zero.");
+        assert sump > 0 : "Sum must be greater than zero!";
         for (int i=0;i<priorMap.length;++i) priorMap[i] /= sump;
         return priorMap;
     }
