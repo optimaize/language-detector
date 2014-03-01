@@ -10,7 +10,17 @@ import java.util.List;
  */
 public class TextObjectFactoryBuilder {
 
+    private int maxTextLength = 0;
     private final List<TextFilter> textFilters = new ArrayList<>();
+
+    /**
+     * @param maxTextLength 0 for no limit (that's the default).
+     */
+    public TextObjectFactoryBuilder maxTextLength(int maxTextLength) {
+        this.maxTextLength = maxTextLength;
+        return this;
+    }
+
 
     /**
      * Adds the given TextFilter to be run on {@link TextObject#append} methods.
@@ -24,7 +34,10 @@ public class TextObjectFactoryBuilder {
     }
 
     public TextObjectFactory build() {
-        return new TextObjectFactory(new MultiTextFilter(textFilters));
+        return new TextObjectFactory(
+                new MultiTextFilter(textFilters),
+                maxTextLength
+        );
     }
 
 }

@@ -41,6 +41,7 @@ public class LanguageDetectorImplTest {
     @Test
     public void germanShortWithUrl() throws LangDetectException, IOException {
         TextObjectFactory textObjectFactory = new TextObjectFactoryBuilder()
+                .maxTextLength(10000)
                 .withTextFilter(RemoveMinorityScriptsTextFilter.forThreshold(0.3))
                 .withTextFilter(UrlTextFilter.getInstance())
                 .build();
@@ -52,16 +53,6 @@ public class LanguageDetectorImplTest {
         assertEquals(best.getLanguage(), "de");
         assertTrue(best.getProbability() >= 0.9999d);
     }
-
-//    @Test
-//    public void random() throws LangDetectException, IOException {
-//        LanguageDetector languageDetector = makeNewDetector();
-//        List<DetectedLanguage> result = languageDetector.detect("Aasdf werfasdf adsfaweasdf adsf");
-//        System.out.println(result);
-////        DetectedLanguage best = result.get(0);
-////        assertEquals(best.getLanguage(), "de");
-////        assertTrue(best.getProbability() >= 0.9999d);
-//    }
 
     private LanguageDetector makeNewDetector() throws IOException, LangDetectException {
         LanguageDetectorBuilder builder = new LanguageDetectorBuilder();

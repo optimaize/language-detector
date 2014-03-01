@@ -21,15 +21,17 @@ import java.util.List;
 public interface LanguageDetector {
 
     /**
+     * @param text You probably want a {@link com.optimaize.langdetect.text.TextObject}.
      * @return The language if confident, absent if not.
      */
-    Optional<String> detect(CharSequence charSequence) throws LangDetectException;
+    Optional<String> detect(CharSequence text) throws LangDetectException;
 
     /**
      * There may be some PROB_THRESHOLD applied to cut unlikely results.
      *
+     * @param text You probably want a {@link com.optimaize.langdetect.text.TextObject}.
      * @return Sorted from better to worse. May be empty.
      */
-    List<DetectedLanguage> getProbabilities(CharSequence charSequence) throws LangDetectException;
+    List<DetectedLanguage> getProbabilities(CharSequence text) throws LangDetectException;
 
 }

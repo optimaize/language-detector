@@ -38,11 +38,15 @@ public class TextObject implements CharSequence, Appendable {
     @NotNull
     private StringBuilder stringBuilder;
 
-    private final int maxTextLength = 10000;
+    private final int maxTextLength;
 
 
-    public TextObject(@NotNull TextFilter textFilter) {
+    /**
+     * @param maxTextLength 0 for no limit
+     */
+    public TextObject(@NotNull TextFilter textFilter, int maxTextLength) {
         this.textFilter = textFilter;
+        this.maxTextLength = maxTextLength;
         this.stringBuilder = new StringBuilder();
     }
 
@@ -50,15 +54,15 @@ public class TextObject implements CharSequence, Appendable {
     /**
      * Append the target text for language detection.
      * This method read the text from specified input reader.
-     * If the total size of target text exceeds the limit size ,
-     * the rest is cut down.
+     * If the total size of target text exceeds the limit size,
+     * the rest is ignored.
      *
      * @param reader the input reader (BufferedReader as usual)
      * @throws java.io.IOException Can't read the reader.
      */
     public TextObject append(Reader reader) throws IOException {
-        char[] buf = new char[maxTextLength/2];
-        while (stringBuilder.length() < maxTextLength && reader.ready()) {
+        char[] buf = new char[1024];
+        while (reader.ready() && (maxTextLength==0 || stringBuilder.length()<maxTextLength)) {
             int length = reader.read(buf);
             append(String.valueOf(buf, 0, length));
         }
@@ -74,7 +78,7 @@ public class TextObject implements CharSequence, Appendable {
      */
     @Override
     public TextObject append(CharSequence text) {
-        if (stringBuilder.length()>=maxTextLength) return this;
+        if (maxTextLength>0 && stringBuilder.length()>=maxTextLength) return this;
 
         text = textFilter.filter(text);
 
@@ -83,7 +87,7 @@ public class TextObject implements CharSequence, Appendable {
         //2) the last character of the existing string builder could not be seen. if it is a space, we don't want
         //   to add yet another space.
         char pre = stringBuilder.length()==0 ? 0 : stringBuilder.charAt(stringBuilder.length()-1);
-        for (int i=0; i<text.length() && stringBuilder.length()<maxTextLength; i++) {
+        for (int i=0; i<text.length() && (maxTextLength==0 || stringBuilder.length()<maxTextLength); i++) {
             char c = CharNormalizer.normalize(text.charAt(i));
             if (c != ' ' || pre != ' ') {
                 stringBuilder.append(c);

@@ -16,8 +16,8 @@ import java.util.Map;
  */
 public class Util {
 
-    public static void addCharSequence(LangProfile langProfile, CharSequence charSequence) {
-        for (String s : NgramExtractor.extractNGrams(charSequence, null)) {
+    public static void addCharSequence(LangProfile langProfile, CharSequence text) {
+        for (String s : NgramExtractor.extractNGrams(text, null)) {
             langProfile.add(s);
         }
     }

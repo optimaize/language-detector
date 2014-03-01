@@ -14,7 +14,7 @@ public class OldLangProfileConverter {
     public static LanguageProfile convert(LangProfile langProfile) {
         LanguageProfileBuilder builder = new LanguageProfileBuilder(langProfile.getName());
         for (Map.Entry<String, Integer> entry : langProfile.getFreq().entrySet()) {
-            builder.add(entry.getKey(), entry.getValue());
+            builder.addGram(entry.getKey(), entry.getValue());
         }
         return builder.build();
     }
