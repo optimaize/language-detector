@@ -24,6 +24,7 @@ public class LanguageDetectorBuilder {
     private double alpha = ALPHA_DEFAULT;
     private boolean skipUnknownNgrams = true;
     private int shortTextAlgorithm = 0;
+    private double borderFactor = 1.0d;
 
     @Nullable
     private Map<String, Double> langWeightingMap;
@@ -58,6 +59,21 @@ public class LanguageDetectorBuilder {
      */
     public LanguageDetectorBuilder shortTextAlgorithm(int shortTextAlgorithm) {
         this.shortTextAlgorithm = shortTextAlgorithm;
+        return this;
+    }
+
+    /**
+     * To weight n-grams that are on the left or right border of a word differently from n-grams
+     * in the middle of words, assign a value here.
+     *
+     * Affixes (prefixes and suffixes) often distinguish the specific features of languages.
+     * Giving a value greater than 1.0 weights these n-grams higher. A 2.0 weights them double.
+     *
+     * Defaults to 1.0, which means don't use this feature. That's the old behavior.
+     * @param borderFactor 0.0 to 10.0, a suggested value is 2.0
+     */
+    public LanguageDetectorBuilder borderFactor(double borderFactor) {
+        this.borderFactor = borderFactor;
         return this;
     }
 
@@ -126,7 +142,7 @@ public class LanguageDetectorBuilder {
 
         return new LanguageDetectorImpl(
                 wordLangProbMap, langlist,
-                verbose, alpha, skipUnknownNgrams, shortTextAlgorithm,
+                verbose, alpha, skipUnknownNgrams, shortTextAlgorithm, borderFactor,
                 langWeightingMap
         );
     }

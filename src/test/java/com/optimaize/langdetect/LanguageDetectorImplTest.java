@@ -58,6 +58,7 @@ public class LanguageDetectorImplTest {
         LanguageDetectorBuilder builder = new LanguageDetectorBuilder();
         builder.skipUnknownNgrams(false);
         builder.shortTextAlgorithm(50);
+        builder.borderFactor(2.0);
 
         LangProfileReader langProfileReader = new LangProfileReader();
         for (String language : ImmutableList.of("en", "fr", "nl", "de")) {
