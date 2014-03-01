@@ -33,12 +33,12 @@ import java.util.regex.Pattern;
 public class LangProfileWriter {
 
     /**
-     * Writes a {@link LangProfile} to an output stream (file).
+     * Writes a {@link LangProfile} to an OutputStream in UTF-8.
      *
      * @throws IOException
      */
-	public void writeProfile(LangProfile langProfile, OutputStream output) throws IOException {
-		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, Charset.forName("utf-8")))) {
+	public void write(LangProfile langProfile, OutputStream outputStream) throws IOException {
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, Charset.forName("utf-8")))) {
             writer.write("{\"freq\":{");
             boolean first = true;
             for (Map.Entry<String, Integer> entry : langProfile.getFreq().entrySet()) {
@@ -57,7 +57,7 @@ public class LangProfileWriter {
                 if (!first) {
                     writer.write(',');
                 }
-                writer.write(Integer.toString(nWord, 10));
+                writer.write(Integer.toString(nWord));
                 first = false;
             }
             writer.write("],\"name\":\"");

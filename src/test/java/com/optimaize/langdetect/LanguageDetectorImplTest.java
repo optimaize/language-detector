@@ -62,7 +62,7 @@ public class LanguageDetectorImplTest {
 
         LangProfileReader langProfileReader = new LangProfileReader();
         for (String language : ImmutableList.of("en", "fr", "nl", "de")) {
-            LangProfile langProfile = langProfileReader.readProfile(LanguageDetectorImplTest.class.getResourceAsStream("/languages/" + language));
+            LangProfile langProfile = langProfileReader.read(LanguageDetectorImplTest.class.getResourceAsStream("/languages/" + language));
             LanguageProfile languageProfile = OldLangProfileConverter.convert(langProfile);
             builder.withProfile(languageProfile);
         }

@@ -51,7 +51,7 @@ public class LangProfileReaderTest {
 
 	private static void checkProfileFile(String language, int nWordSize, int freqSize) throws IOException {
 		File profileFile = new File(PROFILE_DIR, language);
-		final LangProfile langProfile = new LangProfileReader().readProfile(profileFile);
+		final LangProfile langProfile = new LangProfileReader().read(profileFile);
 		assertThat(langProfile, is(notNullValue()));
 		assertThat(langProfile.getName(), is(equalTo(language)));
 		assertThat(langProfile.getNWords(), is(notNullValue()));

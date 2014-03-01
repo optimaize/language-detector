@@ -171,7 +171,7 @@ public class CommandLineInterface {
         try {
             LangProfile profile = GenProfile.load(lang, file);
             profile.omitLessFreq();
-            new LangProfileWriter().writeProfile(profile, new FileOutputStream(new File(lang)));
+            new LangProfileWriter().write(profile, new FileOutputStream(new File(lang)));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (LangDetectException e) {

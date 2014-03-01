@@ -2,6 +2,7 @@ package com.optimaize.langdetect.profiles;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,6 +20,14 @@ public interface LanguageProfile {
     String getLanguage();
 
     /**
+     * Tells what the n in n-grams are used here.
+     * Example: [1,2,3]
+     * @return Sorted from smaller to larger.
+     */
+    @NotNull
+    List<Integer> getGramLengths();
+
+    /**
      * @param gram for example "a" or "foo".
      * @return 0-n, also zero if this profile does not use n-grams of that length (for example if no 4-grams are made).
      */
@@ -31,6 +40,12 @@ public interface LanguageProfile {
      *              or if all the training text did not contain such long words.
      */
     int getNumGrams(int gramLength);
+
+    /**
+     * Tells how many n-grams there are for all n-gram sizes combined.
+     * @return 0-n (0 only on an empty profile...)
+     */
+    int getNumGrams();
 
     /**
      * This returns a much larger number than {@link #getNumGrams}.

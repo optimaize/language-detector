@@ -96,7 +96,7 @@ public class DetectorFactory {
                 continue;
             }
             try {
-                LangProfile profile = langProfileReader.readProfile(file);
+                LangProfile profile = langProfileReader.read(file);
                 addProfile(profile, index, langsize);
                 ++index;
             } catch (IOException e) {
@@ -123,7 +123,7 @@ public class DetectorFactory {
 					continue;
 				}
 				assert in.available() > 0;
-                LangProfile profile = langProfileReader.readProfile(in);
+                LangProfile profile = langProfileReader.read(in);
                 addProfile(profile, index, languages.length);
                 ++index;
             } catch (IOException e) {

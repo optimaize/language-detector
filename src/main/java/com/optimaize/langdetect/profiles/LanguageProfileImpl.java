@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>This class is immutable.</p>
@@ -53,6 +52,13 @@ public final class LanguageProfileImpl implements LanguageProfile {
         return language;
     }
 
+    @NotNull @Override
+    public List<Integer> getGramLengths() {
+        List<Integer> lengths = new ArrayList<>(ngrams.keySet());
+        Collections.sort(lengths);
+        return lengths;
+    }
+
     @Override
     public int getFrequency(String gram) {
         Map<String, Integer> map = ngrams.get(gram.length());
@@ -68,6 +74,15 @@ public final class LanguageProfileImpl implements LanguageProfile {
         Map<String, Integer> map = ngrams.get(gramLength);
         if (map==null) return 0;
         return map.size();
+    }
+
+    @Override
+    public int getNumGrams() {
+        int ret = 0;
+        for (Map<String, Integer> stringIntegerMap : ngrams.values()) {
+            ret += stringIntegerMap.size();
+        }
+        return ret;
     }
 
     @Override

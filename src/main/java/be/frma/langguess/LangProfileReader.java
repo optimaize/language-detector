@@ -36,25 +36,25 @@ public class LangProfileReader {
 	private static final Pattern NAME_PATTERN = Pattern.compile("\"name\" ?: ?\"(.+?)\"");
 
     /**
-     * Reads a {@link LangProfile} from a File.
+     * Reads a {@link LangProfile} from a File in UTF-8.
      */
-    public LangProfile readProfile(File profileFile) throws IOException {
+    public LangProfile read(File profileFile) throws IOException {
         if (!profileFile.exists()) {
-            throw new IllegalArgumentException("No such file: "+profileFile);
+            throw new IOException("No such file: "+profileFile);
         } else if (!profileFile.canRead()) {
-            throw new IllegalArgumentException("Cannot read file: "+profileFile);
+            throw new IOException("Cannot read file: "+profileFile);
         }
         try (FileInputStream input = new FileInputStream(profileFile)) {
-            return readProfile(input);
+            return read(input);
         }
     }
 
     /**
-     * Reads a {@link LangProfile} from an InputStream.
+     * Reads a {@link LangProfile} from an InputStream in UTF-8.
      */
-	public LangProfile readProfile(InputStream input) throws IOException {
+	public LangProfile read(InputStream inputStream) throws IOException {
 		StringBuilder buffer = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, Charset.forName("utf-8")))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("utf-8")))) {
             String line;
             while((line = reader.readLine()) != null) {
                 if (buffer.length() > 0) {
