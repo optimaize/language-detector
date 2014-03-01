@@ -19,13 +19,34 @@ import java.util.*;
  */
 public final class LanguageDetectorImpl implements LanguageDetector {
 
+    /**
+     * TODO document what this is for, and why that value is chosen.
+     */
     private static final double ALPHA_WIDTH = 0.05;
 
+    /**
+     * TODO document what this is for, and why that value is chosen.
+     */
     private static final int ITERATION_LIMIT = 1000;
+
+    /**
+     * TODO document what this is for, and why that value is chosen.
+     */
     private static final double PROB_THRESHOLD = 0.1;
+
+    /**
+     * TODO document what this is for, and why that value is chosen.
+     */
     private static final double CONV_THRESHOLD = 0.99999;
+
+    /**
+     * TODO document what this is for, and why that value is chosen.
+     */
     private static final int BASE_FREQ = 10000;
 
+    /**
+     * TODO document what this is for, and why that value is chosen.
+     */
     private static final int N_TRIAL = 7;
 
 
@@ -45,18 +66,17 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     @NotNull
     private final List<String> langlist;
 
-    private final boolean verbose;
-    private final double alpha;
-    private final boolean skipUnknownNgrams;
-    private final int shortTextAlgorithm;
-    private final double borderFactor;
-
     /**
      * User-defined language priorities, in the same order as {@code langlist}.
      */
     @Nullable
     private final double[] priorMap;
 
+    private final boolean verbose;
+    private final double alpha;
+    private final boolean skipUnknownNgrams;
+    private final int shortTextAlgorithm;
+    private final double borderFactor;
 
 
     /**
