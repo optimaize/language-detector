@@ -11,10 +11,7 @@ public class LanguageProfileBuilderTest {
 
     @Test
     public void german() throws Exception {
-        TextObjectFactory textObjectFactory = new TextObjectFactoryBuilder()
-                .withTextFilter(RemoveMinorityScriptsTextFilter.forThreshold(0.3))
-                .withTextFilter(UrlTextFilter.getInstance())
-                .build();
+        TextObjectFactory textObjectFactory = CommonTextObjectFactories.forIndexing();
 
         TextObject inputText = textObjectFactory.create()
                 .append("deutsche Text")

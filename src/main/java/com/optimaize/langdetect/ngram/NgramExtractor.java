@@ -42,6 +42,7 @@ public class NgramExtractor {
      * @author Nakatani Shuyo
      */
     @NotNull
+    @Deprecated
     public static List<String> extractNGrams(@NotNull CharSequence text, @Nullable Filter filter) {
         List<String> list = new ArrayList<>();
         NGram ngram = new NGram();

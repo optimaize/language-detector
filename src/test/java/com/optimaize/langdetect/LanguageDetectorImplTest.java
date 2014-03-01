@@ -40,11 +40,7 @@ public class LanguageDetectorImplTest {
 
     @Test
     public void germanShortWithUrl() throws IOException {
-        TextObjectFactory textObjectFactory = new TextObjectFactoryBuilder()
-                .maxTextLength(10000)
-                .withTextFilter(RemoveMinorityScriptsTextFilter.forThreshold(0.3))
-                .withTextFilter(UrlTextFilter.getInstance())
-                .build();
+        TextObjectFactory textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
         TextObject inputText = textObjectFactory.create().append("deutsche Text").append(" ").append("http://www.github.com/");
 
         LanguageDetector languageDetector = makeNewDetector();

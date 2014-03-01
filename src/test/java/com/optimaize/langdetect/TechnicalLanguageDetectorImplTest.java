@@ -17,8 +17,6 @@
 package com.optimaize.langdetect;
 
 import com.cybozu.labs.langdetect.LangDetectException;
-import com.optimaize.langdetect.LanguageDetector;
-import com.optimaize.langdetect.LanguageDetectorBuilder;
 import com.optimaize.langdetect.profiles.LanguageProfileBuilder;
 import org.junit.Test;
 
@@ -30,7 +28,7 @@ import static org.junit.Assert.assertEquals;
  * @author Nakatani Shuyo
  * @author Fabian Kessler
  */
-public class FirstLanguageDetectorImplTest {
+public class TechnicalLanguageDetectorImplTest {
 
     private static final String TRAINING_EN = "a a a b b c c d e";
     private static final String TRAINING_FR = "a b b c c c d d d";

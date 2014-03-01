@@ -45,7 +45,8 @@ This fork will probably die also. At least it offers an updated code base for th
   * Added interfaces
 * Made results for short text consistent, no random n-gram selection for short text (configurable).
 * Configurable when to remove ASCII. Old code did it when ascii was less than 1/3 of the content.
-
+* Removed the "seed" completely (for the Random() number generator, I don't see the use).
+* New n-gram generation (over 3x faster, produces much less garbage for the gc).
 
 #### TODO
 

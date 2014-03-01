@@ -67,6 +67,8 @@ public class LanguageDetectorBuilder {
      * Affixes (prefixes and suffixes) often distinguish the specific features of languages.
      * Giving a value greater than 1.0 weights these n-grams higher. A 2.0 weights them double.
      *
+     * TODO split into prefixFactor and suffixFactor.
+     *
      * Defaults to 1.0, which means don't use this feature. That's the old behavior.
      * @param borderFactor 0.0 to 10.0, a suggested value is 2.0
      */

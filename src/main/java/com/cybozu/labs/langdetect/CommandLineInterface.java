@@ -16,19 +16,21 @@
 
 package com.cybozu.labs.langdetect;
 
-import java.io.File;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
-import java.util.*;
-
 import be.frma.langguess.IOUtils;
-
 import be.frma.langguess.LangProfileWriter;
 import com.cybozu.labs.langdetect.util.LangProfile;
+import com.google.common.base.Optional;
+import com.optimaize.langdetect.DetectedLanguage;
+import com.optimaize.langdetect.LanguageDetector;
+import com.optimaize.langdetect.LanguageDetectorBuilder;
+import com.optimaize.langdetect.profiles.LanguageProfile;
+import com.optimaize.langdetect.profiles.LanguageProfileReader;
+import com.optimaize.langdetect.text.CommonTextObjectFactories;
+import com.optimaize.langdetect.text.TextObject;
+import com.optimaize.langdetect.text.TextObjectFactory;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * LangDetect Command Line Interface.
@@ -36,6 +38,8 @@ import com.cybozu.labs.langdetect.util.LangProfile;
  * <p>This is a command line interface of Language Detection Library "LangDetect".</p>
  *
  * <p>Renamed: this class was previously known as "Command".</p>
+ *
+ * <p>TODO after my recent changes switching to the new Detector this code is untested. -Fabian</p>
  *
  * @author Nakatani Shuyo
  * @author Francois ROLAND
@@ -56,11 +60,10 @@ public class CommandLineInterface {
      * Command Line Interface
      * @param args command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         CommandLineInterface cli = new CommandLineInterface();
         cli.addOpt("-d", "directory", "./");
         cli.addOpt("-a", "alpha", "" + DEFAULT_ALPHA);
-        cli.addOpt("-s", "seed", null);
         cli.parse(args);
 
         if (cli.hasOpt("--genprofile")) {
@@ -77,11 +80,11 @@ public class CommandLineInterface {
      * @param args command line arguments
      */
     private void parse(String[] args) {
-        for(int i=0;i<args.length;++i) {
+        for (int i=0; i<args.length; i++) {
             if (opt_with_value.containsKey(args[i])) {
                 String key = opt_with_value.get(args[i]);
                 values.put(key, args[i+1]);
-                ++i;
+                i++;
             } else if (args[i].startsWith("-")) {
                 opt_without_value.add(args[i]);
             } else {
@@ -134,23 +137,6 @@ public class CommandLineInterface {
 
 
     /**
-     * load profiles
-     * @return false if load success
-     */
-    private boolean loadProfile() {
-        String profileDirectory = get("directory") + "/";
-        try {
-            DetectorFactory.loadProfile(profileDirectory);
-            Long seed = getLong("seed");
-            if (seed != null) DetectorFactory.setSeed(seed);
-            return false;
-        } catch (LangDetectException e) {
-            System.err.println("ERROR: " + e.getMessage());
-            return true;
-        }
-    }
-    
-    /**
      * Generate Language Profile from a text file.
      * 
      * <pre>
@@ -185,37 +171,29 @@ public class CommandLineInterface {
      * Language detection test for each file (--detectlang option)
      * 
      * <pre>
-     * usage: --detectlang -d [profile directory] -a [alpha] -s [seed] [test file(s)]
+     * usage: --detectlang -d [profile directory] -a [alpha] [test file(s)]
      * </pre>
      * 
      */
-    public void detectLang() {
-        if (loadProfile()) return;
+    public void detectLang() throws IOException {
+        LanguageDetector languageDetector = makeDetector();
+        TextObjectFactory textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
+
         for (String filename: arglist) {
-            BufferedReader is = null;
-            try {
-                is = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"));
-
-                Detector detector = DetectorFactory.create(getDouble("alpha", DEFAULT_ALPHA));
-                if (hasOpt("--debug")) detector.setVerbose();
-                detector.append(is);
-                System.out.println(filename + ":" + detector.getProbabilities());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (LangDetectException e) {
-                e.printStackTrace();
-            } finally {
-                IOUtils.closeQuietly(is);
+            try (BufferedReader is = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"))) {
+                TextObject textObject = textObjectFactory.create().append(is);
+                List<DetectedLanguage> probabilities = languageDetector.getProbabilities(textObject);
+                System.out.println(filename + ":" + probabilities);
             }
-
         }
     }
+
 
     /**
      * Batch Test of Language Detection (--batchtest option)
      * 
      * <pre>
-     * usage: --batchtest -d [profile directory] -a [alpha] -s [seed] [test data(s)]
+     * usage: --batchtest -d [profile directory] -a [alpha] [test data(s)]
      * </pre>
      * 
      * The format of test data(s):
@@ -224,40 +202,26 @@ public class CommandLineInterface {
      * </pre>
      *  
      */
-    public void batchTest() {
-        if (loadProfile()) return;
-        Map<String, ArrayList<String>> result = new HashMap<>();
+    public void batchTest() throws IOException {
+        LanguageDetector languageDetector = makeDetector();
+        TextObjectFactory textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
+
+        Map<String, List<String>> result = new HashMap<>();
         for (String filename: arglist) {
-            BufferedReader is = null;
-            try {
-                is = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"));
+            try (BufferedReader is = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"))) {
                 while (is.ready()) {
                     String line = is.readLine();
                     int idx = line.indexOf('\t');
                     if (idx <= 0) continue;
                     String correctLang = line.substring(0, idx);
                     String text = line.substring(idx + 1);
-                    
-                    Detector detector = DetectorFactory.create(getDouble("alpha", DEFAULT_ALPHA));
-                    detector.append(text);
-/*
-                    for(int j=0;j<text.length();++j) {
-                        detector.append(text.charAt(j));
-                        if (detector.isConvergence()) break;
-                    }
-*/
-                    String lang = detector.detect();
+
+                    TextObject textObject = textObjectFactory.forText(text);
+                    Optional<String> lang = languageDetector.detect(textObject);
                     if (!result.containsKey(correctLang)) result.put(correctLang, new ArrayList<String>());
-                    result.get(correctLang).add(lang);
+                    result.get(correctLang).add(lang.or("unknown"));
                     if (hasOpt("--debug")) System.out.println(correctLang + "," + lang + "," + (text.length()>100?text.substring(0, 100):text));
                 }
-                
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (LangDetectException e) {
-                e.printStackTrace();
-            } finally {
-                IOUtils.closeQuietly(is);
             }
 
             List<String> langlist = new ArrayList<>(result.keySet());
@@ -284,6 +248,26 @@ public class CommandLineInterface {
             }
             System.out.println(String.format("total: %d/%d = %.3f", totalCorrect, totalCount, totalCorrect / (double)totalCount));
         }
+    }
+
+
+
+    /**
+     * Using all language profiles from the given directory.
+     */
+    private LanguageDetector makeDetector() throws IOException {
+        double alpha = getDouble("alpha", DEFAULT_ALPHA);
+        boolean verbose = (hasOpt("--debug"));
+
+        String profileDirectory = get("directory") + "/";
+        List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAll(new File(profileDirectory));
+
+        return new LanguageDetectorBuilder()
+                .alpha(alpha)
+                .verbose(verbose)
+                .shortTextAlgorithm(50)
+                .withProfiles(languageProfiles)
+                .build();
     }
 
 }
