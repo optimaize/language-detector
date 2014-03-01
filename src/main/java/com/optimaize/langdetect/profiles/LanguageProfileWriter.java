@@ -1,14 +1,13 @@
 package com.optimaize.langdetect.profiles;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
  * Writes a {@link LanguageProfile} to an output stream or file.
+ *
+ * <p>All file operations are done with UTF-8.</p>
  *
  * @author François ROLAND
  * @author Fabian Kessler
@@ -49,6 +48,28 @@ public class LanguageProfileWriter {
             writer.write(languageProfile.getLanguage());
             writer.write("\"}");
             writer.flush();
+        }
+    }
+
+    /**
+     * Writes a {@link LanguageProfile} to a folder using the language name as the file name.
+     *
+     * @param fullPath Must be an existing writable path. The profile file may not already exist there.
+     * @throws java.io.IOException
+     */
+    public void writeToDirectory(LanguageProfile languageProfile, File fullPath) throws IOException {
+        if (!fullPath.exists()) {
+            throw new IOException("Path does not exist: "+fullPath);
+        }
+        if (!fullPath.canWrite()) {
+            throw new IOException("Path not writable: "+fullPath);
+        }
+        File file = new File(fullPath.getAbsolutePath()+"/"+languageProfile.getLanguage());
+        if (file.exists()) {
+            throw new IOException("File exists already, refusing to overwrite: "+file);
+        }
+        try (FileOutputStream output = new FileOutputStream(file)) {
+            write(languageProfile, output);
         }
     }
 
