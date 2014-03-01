@@ -18,7 +18,7 @@ import java.util.*;
  * @author Fabian Kessler
  * @author Nakatani Shuyo
  */
-public class LanguageDetectorImpl implements LanguageDetector {
+public final class LanguageDetectorImpl implements LanguageDetector {
 
     private static final double ALPHA_WIDTH = 0.05;
 

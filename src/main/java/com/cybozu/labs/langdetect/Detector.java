@@ -16,6 +16,7 @@
 
 package com.cybozu.labs.langdetect;
 
+import com.cybozu.labs.langdetect.util.CharNormalizer;
 import com.cybozu.labs.langdetect.util.NGram;
 import com.cybozu.labs.langdetect.util.Util;
 import com.optimaize.langdetect.DetectedLanguage;
@@ -176,7 +177,7 @@ public class Detector {
         text = MAIL_REGEX.matcher(text).replaceAll(" ");
         char pre = 0;
         for (int i = 0; i < text.length() && i < maxTextLength; ++i) {
-            char c = NGram.normalize(text.charAt(i));
+            char c = CharNormalizer.normalize(text.charAt(i));
             if (c != ' ' || pre != ' ') this.text.append(c);
             pre = c;
         }

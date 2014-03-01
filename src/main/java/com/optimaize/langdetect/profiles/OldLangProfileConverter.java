@@ -1,4 +1,4 @@
-package com.optimaize.langdetect;
+package com.optimaize.langdetect.profiles;
 
 import com.cybozu.labs.langdetect.util.LangProfile;
 

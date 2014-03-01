@@ -43,6 +43,8 @@ This fork will probably die also. At least it offers an updated code base for th
   * Clear null reference concept: using IntelliJ's @Nullable and @NotNull annotations
   * Added JavaDoc, fixed typos
   * Added interfaces
+* Made results for short text consistent, no random n-gram selection for short text (configurable).
+* Configurable when to remove ASCII. Old code did it when ascii was less than 1/3 of the content.
 
 
 #### TODO
@@ -50,3 +52,4 @@ This fork will probably die also. At least it offers an updated code base for th
 * Using a logger instead of System.out.println
 * Remove old code
 * Simplify loading/storing of profiles, creation of profiles. Update to new profile class.
+* Cleaning of ASCII must be replaced with removing of minority script content.

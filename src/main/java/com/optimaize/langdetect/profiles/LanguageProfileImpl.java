@@ -1,10 +1,9 @@
-package com.optimaize.langdetect;
+package com.optimaize.langdetect.profiles;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +12,7 @@ import java.util.Map;
  *
  * @author Fabian Kessler
  */
-public class LanguageProfileImpl implements LanguageProfile {
+public final class LanguageProfileImpl implements LanguageProfile {
 
     @NotNull
     private final String language;
@@ -27,7 +26,10 @@ public class LanguageProfileImpl implements LanguageProfile {
     private final Map<Integer, Long> numOccurrences;
 
 
-    public LanguageProfileImpl(@NotNull String language, @NotNull Map<Integer, Map<String, Integer>> ngrams) {
+    /**
+     * Use the builder.
+     */
+    LanguageProfileImpl(@NotNull String language, @NotNull Map<Integer, Map<String, Integer>> ngrams) {
         this.language = language;
         this.ngrams = ImmutableMap.copyOf(ngrams);
         this.numOccurrences = computeNumOccurrences(ngrams);
