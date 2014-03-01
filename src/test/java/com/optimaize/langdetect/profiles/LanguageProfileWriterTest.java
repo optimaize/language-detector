@@ -41,6 +41,7 @@ public class LanguageProfileWriterTest {
             assertEquals(newProfile.getLanguage(), originalProfile.getLanguage());
             assertEquals(newProfile.getNumGrams(), originalProfile.getNumGrams());
             assertEquals(newProfile.getGramLengths(), originalProfile.getGramLengths());
+            assertEquals(newProfile, originalProfile);
         } finally {
             //noinspection ResultOfMethodCallIgnored
             newFile.delete();

@@ -46,8 +46,7 @@ public final class LanguageProfileImpl implements LanguageProfile {
         return map;
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public String getLanguage() {
         return language;
     }
@@ -92,8 +91,7 @@ public final class LanguageProfileImpl implements LanguageProfile {
         return aLong;
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public Iterable<Map.Entry<String,Integer>> iterateGrams() {
         Iterable[] arr = new Iterable[ngrams.size()];
         int i=0;
@@ -103,5 +101,28 @@ public final class LanguageProfileImpl implements LanguageProfile {
         }
         //noinspection unchecked
         return Iterables.concat(arr);
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LanguageProfileImpl that = (LanguageProfileImpl) o;
+
+        if (!language.equals(that.language)) return false;
+        if (!ngrams.equals(that.ngrams)) return false;
+        if (!numOccurrences.equals(that.numOccurrences)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = language.hashCode();
+        result = 31 * result + ngrams.hashCode();
+        result = 31 * result + numOccurrences.hashCode();
+        return result;
     }
 }
