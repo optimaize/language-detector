@@ -70,17 +70,21 @@ public class NgramExtractor {
      * @param  text
      * @param  gramLength 1-n
      * @return The grams, empty if the input was empty or if none for that gramLength fits.
+     *         Impl notes: this returns Array instead of List because
+     *         a) it's 10% faster to create
+     *         b) it produces a lot less garbage, which is good for gc and low latency
+     *         c) no one will need to touch this data anyway other than iterating
      */
     @NotNull
-    public static List<String> extractGrams(@NotNull CharSequence text, int gramLength) {
+    public static String[] extractGrams(@NotNull CharSequence text, int gramLength) {
         int len = text.length();
         int numGrams = len - (gramLength -1);
         if (numGrams <= 0) {
-            return Collections.emptyList();
+            return new String[]{};
         }
-        List<String> grams = new ArrayList<>(numGrams);
+        String[] grams = new String[numGrams];
         for (int pos=0; pos<numGrams; pos++) {
-            grams.add( text.subSequence(pos, pos+gramLength).toString() );
+            grams[pos] = text.subSequence(pos, pos+gramLength).toString();
         }
         return grams;
     }
