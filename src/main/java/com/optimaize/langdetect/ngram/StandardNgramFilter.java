@@ -32,6 +32,12 @@ public class StandardNgramFilter implements NgramFilter {
                     return false;
                 }
                 return true;
+            case 4:
+                if (ngram.charAt(1)==' ' || ngram.charAt(2)==' ') {
+                    //one of the middle chars is a space
+                    return false;
+                }
+                return true;
             default:
                 //would need the same check: no space in the middle, border is fine.
                 throw new UnsupportedOperationException("Unsupported n-gram length: "+ngram.length());
