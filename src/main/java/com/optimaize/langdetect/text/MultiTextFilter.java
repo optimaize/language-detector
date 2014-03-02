@@ -34,7 +34,7 @@ public class MultiTextFilter implements TextFilter {
         } else {
             String modified = text.toString();
             for (TextFilter filter : filters) {
-                modified = filter.filter(text);
+                modified = filter.filter(modified);
             }
             return modified;
         }
