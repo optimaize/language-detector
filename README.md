@@ -3,6 +3,45 @@
 Language Detection Library for Java
 
 
+## How to Use
+
+#### Language Detection for your Text
+
+    //load all languages:
+    List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAll();
+
+    //build language detector:
+    LanguageDetector languageDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
+            .withProfiles(languageProfiles)
+            .build();
+
+    //create a text object factory
+    TextObjectFactory textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
+
+    //query:
+    TextObject textObject = textObjectFactory.forText("my text");
+    Optional<String> lang = languageDetector.detect(textObject);
+
+
+#### Creating Language Profiles for your Training Text
+
+    //create text object factory:
+    TextObjectFactory textObjectFactory = CommonTextObjectFactories.forIndexingCleanText();
+
+    //load your training text:
+    TextObject inputText = textObjectFactory.create()
+            .append("this is my")
+            .append("training text")
+
+    //create the profile:
+    LanguageProfile languageProfile = new LanguageProfileBuilder("en")
+            .ngramExtractor(NgramExtractors.standard())
+            .addText(inputText)
+            .build();
+
+    //store it to disk if you like:
+    new LanguageProfileWriter().writeToDirectory(languageProfile, "c:/foo/bar");
+
 
 ## History and Changes
 
@@ -36,6 +75,7 @@ of the original project https://code.google.com/p/language-detection/
     * using Guava's Optional
   * Added JavaDoc, fixed typos
   * Added interfaces
+  * More tests. Thanks to the refactorings, code is now testable that was too much embedded before.
 * Removed the "seed" completely (for the Random() number generator, I don't see the use).
 * Updated all Maven dependency versions
 * Replaced last lib dependency with Maven (jsonic)
