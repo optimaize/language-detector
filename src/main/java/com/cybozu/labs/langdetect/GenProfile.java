@@ -31,6 +31,8 @@ import be.frma.langguess.IOUtils;
 
 import com.cybozu.labs.langdetect.util.LangProfile;
 import com.cybozu.labs.langdetect.util.TagExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Load Wikipedia's abstract XML as corpus and generate its language profile in JSON format.
@@ -38,6 +40,8 @@ import com.cybozu.labs.langdetect.util.TagExtractor;
  * @author Nakatani Shuyo
  */
 public class GenProfile {
+
+    private static final Logger logger = LoggerFactory.getLogger(GenProfile.class);
 
     /**
      * Load Wikipedia abstract database file and generate its language profile
@@ -81,7 +85,7 @@ public class GenProfile {
                     if (reader != null) reader.close();
                 } catch (XMLStreamException e) { /* ignore exception */ }
             }
-            System.out.println(lang + ":" + tagextractor.count());
+            logger.info(lang + ":" + tagextractor.count());
 
         } catch (IOException e) {
             throw new LangDetectException(ErrorCode.CantOpenTrainData, "Can't open training database file '" + file.getName() + "'");

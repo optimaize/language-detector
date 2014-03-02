@@ -5,6 +5,8 @@ import com.google.common.base.Optional;
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -18,6 +20,8 @@ import java.util.*;
  * @author Elmer Garduno
  */
 public final class LanguageDetectorImpl implements LanguageDetector {
+
+    private static final Logger logger = LoggerFactory.getLogger(LanguageDetectorImpl.class);
 
     /**
      * TODO document what this is for, and why that value is chosen.
@@ -159,12 +163,12 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     private double[] detectBlockShortText(Map<String, Integer> ngrams) {
         double[] prob = initProbability();
-        double alpha = this.alpha; //TODO i don't understand what this does.
+        double alpha = this.alpha; //TODO I don't understand what this does.
         for (Map.Entry<String, Integer> gramWithCount : ngrams.entrySet()) {
             updateLangProb(prob, gramWithCount.getKey(), gramWithCount.getValue(), alpha);
         }
         Util.normalizeProb(prob);
-        if (verbose) System.out.println("==> " + sortProbability(prob));
+        if (logger.isDebugEnabled()) logger.debug("==> " + sortProbability(prob));
         return prob;
     }
 
@@ -185,11 +189,11 @@ public final class LanguageDetectorImpl implements LanguageDetector {
                 updateLangProb(prob, ngrams.get(r), 1, alpha);
                 if (i % 5 == 0) {
                     if (Util.normalizeProb(prob) > CONV_THRESHOLD) break; //this looks like an optimization to return quickly when sure. TODO document what's the plan.
-                    if (verbose) System.out.println("> " + sortProbability(prob));
+                    if (logger.isTraceEnabled()) logger.trace("> " + sortProbability(prob));
                 }
             }
             for(int j=0;j<langprob.length;++j) langprob[j] += prob[j] / N_TRIAL;
-            if (verbose) System.out.println("==> " + sortProbability(prob));
+            if (logger.isDebugEnabled()) logger.debug("==> " + sortProbability(prob));
         }
         return langprob;
     }
@@ -227,7 +231,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
             langProbMap = dummyWordLangProbMap;
         }
 
-        if (verbose) System.out.println(ngram + "(" + Util.unicodeEncode(ngram) + "):" + Util.wordProbToString(langProbMap, langlist));
+        if (logger.isTraceEnabled()) logger.trace(ngram + "(" + Util.unicodeEncode(ngram) + "):" + Util.wordProbToString(langProbMap, langlist));
 
         double weight = alpha / BASE_FREQ;
         if (ngram.length() >1) {
