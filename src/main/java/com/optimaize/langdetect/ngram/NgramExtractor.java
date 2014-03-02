@@ -9,10 +9,6 @@ import java.util.*;
 /**
  * Class for extracting n-grams out of a text.
  *
- * TODO feature for:
- *      * <p>To have border grams, modify your input text. Example: instead of "foo" pass in " foo " or "$foo$".</p>
-
- *
  * @author Fabian Kessler
  */
 public class NgramExtractor {
@@ -21,22 +17,39 @@ public class NgramExtractor {
     private final List<Integer> gramLengths = new ArrayList<>(4);
     @Nullable
     private final NgramFilter filter;
+    @Nullable
+    private Character textPadding;
 
     public static NgramExtractor gramLength(int gramLength) {
-        return new NgramExtractor(ImmutableList.of(gramLength), null);
+        return new NgramExtractor(ImmutableList.of(gramLength), null, null);
     }
     public static NgramExtractor gramLengths(Integer... gramLength) {
-        return new NgramExtractor(Arrays.asList(gramLength), null);
+        return new NgramExtractor(Arrays.asList(gramLength), null, null);
     }
 
     public NgramExtractor filter(NgramFilter filter) {
-        return new NgramExtractor(this.gramLengths, filter);
+        return new NgramExtractor(this.gramLengths, filter, this.textPadding);
     }
 
-    private NgramExtractor(@NotNull List<Integer> gramLengths, @Nullable NgramFilter filter) {
+    /**
+     * To ensure having border grams, this character is added to the left and right of the text.
+     *
+     * <p>Example: when textPadding is a space ' ' then a text input "foo" becomes " foo ", ensuring that n-grams like " f"
+     * are created.</p>
+     *
+     * <p>If the text already has such a character in that position (eg starts with), it is not added there.</p>
+     *
+     * @param textPadding for example a space ' '.
+     */
+    public NgramExtractor textPadding(char textPadding) {
+        return new NgramExtractor(this.gramLengths, this.filter, textPadding);
+    }
+
+    private NgramExtractor(@NotNull List<Integer> gramLengths, @Nullable NgramFilter filter, @Nullable Character textPadding) {
         if (gramLengths.isEmpty()) throw new IllegalArgumentException();
         this.gramLengths.addAll(gramLengths);
         this.filter = filter;
+        this.textPadding = textPadding;
     }
 
     public List<Integer> getGramLengths() {
@@ -53,6 +66,7 @@ public class NgramExtractor {
      */
     @NotNull
     public List<String> extractGrams(@NotNull CharSequence text) {
+        text = applyPadding(text);
         int len = text.length();
 
         //the actual size will be totalNumGrams or less (filter)
@@ -87,6 +101,7 @@ public class NgramExtractor {
      */
     @NotNull
     public Map<String,Integer> extractCountedGrams(@NotNull CharSequence text) {
+        text = applyPadding(text);
         int len = text.length();
 
         int initialCapacity = 0;
@@ -100,6 +115,8 @@ public class NgramExtractor {
         }
         return grams;
     }
+
+
     private void _extractCounted(CharSequence text, int gramLength, int len, Map<String, Integer> grams) {
         int endPos = len - (gramLength -1);
         for (int pos=0; pos<endPos; pos++) {
@@ -141,6 +158,23 @@ public class NgramExtractor {
                 if (textLength < 1000) return (int)(textLength * 0.95);
                 return (int)(textLength * 0.9);
         }
+    }
+
+    private CharSequence applyPadding(CharSequence text) {
+        if (textPadding==null) return text;
+        if (text.length()==0) return text;
+        if (text.charAt(0)==textPadding && text.charAt(text.length()-1)==textPadding) {
+            return text;
+        }
+        StringBuilder sb = new StringBuilder();
+        if (text.charAt(0) != textPadding) {
+            sb.append(textPadding);
+        }
+        sb.append(text);
+        if (text.charAt(text.length()-1) != textPadding) {
+            sb.append(textPadding);
+        }
+        return sb;
     }
 
 }

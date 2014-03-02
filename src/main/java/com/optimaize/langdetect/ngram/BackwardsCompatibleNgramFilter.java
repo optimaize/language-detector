@@ -7,6 +7,16 @@ package com.optimaize.langdetect.ngram;
  */
 public class BackwardsCompatibleNgramFilter implements NgramFilter {
 
+    private static final BackwardsCompatibleNgramFilter INSTANCE = new BackwardsCompatibleNgramFilter();
+
+    public static NgramFilter getInstance() {
+        return INSTANCE;
+    }
+
+    private BackwardsCompatibleNgramFilter() {
+    }
+
+
     @Override
     public boolean use(String ngram) {
         switch (ngram.length()) {

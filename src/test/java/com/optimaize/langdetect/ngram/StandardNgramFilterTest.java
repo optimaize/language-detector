@@ -8,32 +8,34 @@ import static org.junit.Assert.*;
  */
 public class StandardNgramFilterTest {
 
+    private static final NgramFilter filter = StandardNgramFilter.getInstance();
+
     @Test
     public void oneGram() throws Exception {
-        assertTrue(new StandardNgramFilter().use("a"));
-        assertTrue(new StandardNgramFilter().use("A"));
+        assertTrue(filter.use("a"));
+        assertTrue(filter.use("A"));
 
-        assertFalse(new StandardNgramFilter().use(" "));
+        assertFalse(filter.use(" "));
     }
 
     @Test
     public void twoGram() throws Exception {
-        assertTrue(new StandardNgramFilter().use("ab"));
-        assertTrue(new StandardNgramFilter().use("Ab"));
-        assertTrue(new StandardNgramFilter().use("AB"));
-        assertTrue(new StandardNgramFilter().use("a "));
-        assertTrue(new StandardNgramFilter().use("a"));
+        assertTrue(filter.use("ab"));
+        assertTrue(filter.use("Ab"));
+        assertTrue(filter.use("AB"));
+        assertTrue(filter.use("a "));
+        assertTrue(filter.use("a"));
     }
 
     @Test
     public void threeGram() throws Exception {
-        assertTrue(new StandardNgramFilter().use("abc"));
-        assertTrue(new StandardNgramFilter().use("Abc"));
-        assertTrue(new StandardNgramFilter().use("ABC"));
-        assertTrue(new StandardNgramFilter().use("ab "));
-        assertTrue(new StandardNgramFilter().use(" ab"));
+        assertTrue(filter.use("abc"));
+        assertTrue(filter.use("Abc"));
+        assertTrue(filter.use("ABC"));
+        assertTrue(filter.use("ab "));
+        assertTrue(filter.use(" ab"));
 
-        assertFalse(new StandardNgramFilter().use("a c"));
+        assertFalse(filter.use("a c"));
     }
 
 }

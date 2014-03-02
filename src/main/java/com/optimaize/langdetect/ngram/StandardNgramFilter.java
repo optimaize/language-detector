@@ -7,6 +7,15 @@ package com.optimaize.langdetect.ngram;
  */
 public class StandardNgramFilter implements NgramFilter {
 
+    private static final StandardNgramFilter INSTANCE = new StandardNgramFilter();
+
+    public static NgramFilter getInstance() {
+        return INSTANCE;
+    }
+
+    private StandardNgramFilter() {
+    }
+
     @Override
     public boolean use(String ngram) {
         switch (ngram.length()) {

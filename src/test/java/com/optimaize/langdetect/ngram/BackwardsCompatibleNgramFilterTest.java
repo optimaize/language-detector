@@ -10,33 +10,35 @@ import static org.junit.Assert.assertTrue;
  */
 public class BackwardsCompatibleNgramFilterTest {
 
+    public static final NgramFilter filter = BackwardsCompatibleNgramFilter.getInstance();
+
     @Test
     public void oneGram() throws Exception {
-        assertTrue(new BackwardsCompatibleNgramFilter().use("a"));
-        assertTrue(new BackwardsCompatibleNgramFilter().use("A"));
+        assertTrue(filter.use("a"));
+        assertTrue(filter.use("A"));
 
-        assertFalse(new BackwardsCompatibleNgramFilter().use(" "));
+        assertFalse(filter.use(" "));
     }
 
     @Test
     public void twoGram() throws Exception {
-        assertTrue(new BackwardsCompatibleNgramFilter().use("ab"));
-        assertTrue(new BackwardsCompatibleNgramFilter().use("Ab"));
-        assertTrue(new BackwardsCompatibleNgramFilter().use("a "));
-        assertTrue(new BackwardsCompatibleNgramFilter().use("a"));
+        assertTrue(filter.use("ab"));
+        assertTrue(filter.use("Ab"));
+        assertTrue(filter.use("a "));
+        assertTrue(filter.use("a"));
 
-        assertFalse(new BackwardsCompatibleNgramFilter().use("AB"));
+        assertFalse(filter.use("AB"));
     }
 
     @Test
     public void threeGram() throws Exception {
-        assertTrue(new BackwardsCompatibleNgramFilter().use("abc"));
-        assertTrue(new BackwardsCompatibleNgramFilter().use("Abc"));
-        assertTrue(new BackwardsCompatibleNgramFilter().use("ab "));
-        assertTrue(new BackwardsCompatibleNgramFilter().use(" ab"));
+        assertTrue(filter.use("abc"));
+        assertTrue(filter.use("Abc"));
+        assertTrue(filter.use("ab "));
+        assertTrue(filter.use(" ab"));
 
-        assertFalse(new BackwardsCompatibleNgramFilter().use("a c"));
-        assertFalse(new BackwardsCompatibleNgramFilter().use("ABC"));
+        assertFalse(filter.use("a c"));
+        assertFalse(filter.use("ABC"));
     }
     
 }

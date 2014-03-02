@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class NgramExtractorTest {
 
     @Test
-    public void extractSortedGrams_1() {
+    public void extractGrams_1() {
         String text = "Foo bar";
         List<String> ngrams = NgramExtractor.gramLength(1).extractGrams(text);
         assertEquals(ngrams.size(), text.length());
@@ -22,36 +22,36 @@ public class NgramExtractorTest {
     }
 
     @Test
-    public void extractSortedGrams_2() {
+    public void extractGrams_2() {
         String text = "Foo bar";
         List<String> ngrams = NgramExtractor.gramLength(2).extractGrams(text);
-        assertEquals(ngrams.size(), text.length() - 1);
+        assertEquals(ngrams.size(), text.length() -1);
         assertEquals(ngrams, Arrays.asList("Fo","oo","o "," b","ba","ar"));
     }
 
     @Test
-    public void extractSortedGrams_3() {
+    public void extractGrams_3() {
         String text = "Foo bar";
         List<String> ngrams = NgramExtractor.gramLength(3).extractGrams(text);
         assertEquals(ngrams.size(), text.length()-2);
     }
 
     @Test
-    public void extractSortedGrams_6() {
+    public void extractGrams_6() {
         String text = "Foo bar";
         List<String> ngrams = NgramExtractor.gramLength(6).extractGrams(text);
         assertEquals(ngrams.size(), text.length()-5);
     }
 
     @Test
-    public void extractSortedGrams_7() {
+    public void extractGrams_7() {
         String text = "Foo bar";
         List<String> ngrams = NgramExtractor.gramLength(7).extractGrams(text);
         assertEquals(ngrams.size(), text.length()-6);
     }
 
     @Test
-    public void extractSortedGrams_8() {
+    public void extractGrams_8() {
         String text = "Foo bar";
         List<String> ngrams = NgramExtractor.gramLength(8).extractGrams(text);
         assertTrue(ngrams.isEmpty());
@@ -127,6 +127,34 @@ public class NgramExtractorTest {
 
         Map<String,Integer> combined2 = NgramExtractor.gramLengths(1, 2, 3).extractCountedGrams(text);
         assertEquals(combined, combined2);
+    }
+
+
+    @Test
+    public void extractGramsWithPadding_1() {
+        String text = "Foo bar";
+        List<String> ngrams = NgramExtractor.gramLength(1).textPadding(' ').extractGrams(text);
+        assertEquals(ngrams.size(), text.length()+2);
+        assertEquals(ngrams, Arrays.asList(" ","F","o","o"," ","b","a","r"," "));
+    }
+
+    @Test
+    public void extractGramsWithPaddingAndFilter_1() {
+        String text = "Foo bar";
+        List<String> ngrams = NgramExtractor
+                .gramLength(1)
+                .filter(StandardNgramFilter.getInstance())
+                .textPadding(' ')
+                .extractGrams(text);
+        assertEquals(ngrams, Arrays.asList("F","o","o","b","a","r"));
+    }
+
+    @Test
+    public void extractGramsWithPadding_2() {
+        String text = "Foo bar";
+        List<String> ngrams = NgramExtractor.gramLength(2).textPadding(' ').extractGrams(text);
+        assertEquals(ngrams.size(), text.length() +1);
+        assertEquals(ngrams, Arrays.asList(" F","Fo","oo","o "," b","ba","ar","r "));
     }
 
 }
