@@ -23,6 +23,7 @@ import com.google.common.base.Optional;
 import com.optimaize.langdetect.DetectedLanguage;
 import com.optimaize.langdetect.LanguageDetector;
 import com.optimaize.langdetect.LanguageDetectorBuilder;
+import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import com.optimaize.langdetect.profiles.LanguageProfileReader;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
@@ -262,7 +263,7 @@ public class CommandLineInterface {
         String profileDirectory = get("directory") + "/";
         List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAll(new File(profileDirectory));
 
-        return new LanguageDetectorBuilder()
+        return LanguageDetectorBuilder.create(NgramExtractor.gramLengths(1,2,3))
                 .alpha(alpha)
                 .verbose(verbose)
                 .shortTextAlgorithm(50)

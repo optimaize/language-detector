@@ -78,6 +78,8 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private final int shortTextAlgorithm;
     private final double borderFactor;
 
+    private final NgramExtractor ngramExtractor;
+
 
     /**
      * Use the {@link LanguageDetectorBuilder}.
@@ -85,7 +87,8 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     LanguageDetectorImpl(@NotNull Map<String, double[]> wordLangProbMap,
                          @NotNull List<String> langlist,
                          boolean verbose, double alpha, boolean skipUnknownNgrams, int shortTextAlgorithm, double borderFactor,
-                         @Nullable Map<String, Double> langWeightingMap) {
+                         @Nullable Map<String, Double> langWeightingMap,
+                         @NotNull NgramExtractor ngramExtractor) {
         if (alpha<0d || alpha >1d) throw new IllegalArgumentException(""+alpha);
         if (borderFactor<0d || borderFactor >10d) throw new IllegalArgumentException(""+borderFactor);
         if (langWeightingMap!=null && langWeightingMap.isEmpty()) langWeightingMap = null;
@@ -102,6 +105,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         this.shortTextAlgorithm = shortTextAlgorithm;
         this.borderFactor = borderFactor;
         this.priorMap = (langWeightingMap==null) ? null : Util.makeInternalPrioMap(langWeightingMap, langlist);
+        this.ngramExtractor = ngramExtractor;
     }
 
 
@@ -136,34 +140,28 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     @Nullable
     private double[] detectBlock(CharSequence text) {
-        List<String> ngrams = extractNGrams(text, skipUnknownNgrams);
-        if (ngrams.size()==0) {
-            return null;
-        } else if (text.length() <= shortTextAlgorithm) {
+        if (text.length() <= shortTextAlgorithm) {
+            Map<String, Integer> ngrams = ngramExtractor.extractCountedGrams(text);
+            if (ngrams.isEmpty()) return null;
             return detectBlockShortText(ngrams);
         } else {
-            return detectBlockLongText(ngrams);
+            List<String> strings = ngramExtractor.extractGrams(text);
+            if (strings.isEmpty()) return null;
+            return detectBlockLongText(strings);
         }
     }
 
     /**
      */
-    private double[] detectBlockShortText(List<String> ngrams) {
-        double[] langprob = new double[langlist.size()];
-
+    private double[] detectBlockShortText(Map<String, Integer> ngrams) {
         double[] prob = initProbability();
         double alpha = this.alpha; //TODO i don't understand what this does.
-
-        for (String ngram : ngrams) {
-            updateLangProb(prob, ngram, alpha);
+        for (Map.Entry<String, Integer> gramWithCount : ngrams.entrySet()) {
+            updateLangProb(prob, gramWithCount.getKey(), gramWithCount.getValue(), alpha);
         }
         Util.normalizeProb(prob);
-        for (int j=0; j<langprob.length; ++j) {
-            langprob[j] += prob[j];
-        }
         if (verbose) System.out.println("==> " + sortProbability(prob));
-
-        return langprob;
+        return prob;
     }
 
     /**
@@ -171,6 +169,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      * It is inappropriate for short text.
      */
     private double[] detectBlockLongText(List<String> ngrams) {
+        assert !ngrams.isEmpty();
         double[] langprob = new double[langlist.size()];
         Random rand = new Random();
         for (int t = 0; t < N_TRIAL; ++t) {
@@ -179,7 +178,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
 
             for (int i=0; i<ITERATION_LIMIT; i++) {
                 int r = rand.nextInt(ngrams.size());
-                updateLangProb(prob, ngrams.get(r), alpha);
+                updateLangProb(prob, ngrams.get(r), 1, alpha);
                 if (i % 5 == 0) {
                     if (Util.normalizeProb(prob) > CONV_THRESHOLD) break; //this looks like an optimization to return quickly when sure. TODO document what's the plan.
                     if (verbose) System.out.println("> " + sortProbability(prob));
@@ -208,29 +207,12 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         return prob;
     }
 
-    /**
-     * Extract n-grams from target text, except some!
-     * @return n-grams list
-     */
-    private List<String> extractNGrams(CharSequence text, final boolean skipUnknownNgrams) {
-        NgramExtractor.Filter filter = null;
-        if (skipUnknownNgrams) {
-            filter = new NgramExtractor.Filter() {
-                @Override
-                public boolean use(String gram) {
-                    //the n-gram is skipped if the LanguageProfiles don't know about it.
-                    //that may be problematic, because it does not downgrade the confidence.
-                    return wordLangProbMap.containsKey(gram);
-                }
-            };
-        }
-        return NgramExtractor.extractNGrams(text, filter);
-    }
 
     /**
      * update language probabilities with N-gram string(N=1,2,3)
+     * @param count 1-n: how often the gram occurred.
      */
-    private boolean updateLangProb(@NotNull double[] prob, @NotNull String ngram, double alpha) {
+    private boolean updateLangProb(@NotNull double[] prob, @NotNull String ngram, int count, double alpha) {
         double[] langProbMap = wordLangProbMap.get(ngram);
         if (langProbMap==null) {
             if (skipUnknownNgrams) {
@@ -248,7 +230,9 @@ public final class LanguageDetectorImpl implements LanguageDetector {
             weight *= borderFactor;
         }
         for (int i=0; i<prob.length; ++i) {
-            prob[i] *= (weight + langProbMap[i]);
+            for (int amount=0; amount<count; amount++) {
+                prob[i] *= (weight + langProbMap[i]);
+            }
         }
         return true;
     }

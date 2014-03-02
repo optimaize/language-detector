@@ -145,10 +145,10 @@ public class TagExtractorTest {
         TagExtractor extractor = new TagExtractor("abstract", 10);
         extractor.setTag("abstract");
         extractor.add("This is a sample text.");
-        assertEquals(extractor.buf_.toString(), "This is a sample text.");
+        assertEquals(extractor.buf_.toString().trim(), "This is a sample text.");
         assertEquals(extractor.tag_, "abstract");
         extractor.clear();
-        assertEquals(extractor.buf_.toString(), "");
+        assertEquals(extractor.buf_.toString().trim(), "");
         assertEquals(extractor.tag_, null);
     }
 

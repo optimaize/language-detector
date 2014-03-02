@@ -1,6 +1,7 @@
 package com.optimaize.langdetect.profiles;
 
 import com.optimaize.langdetect.ngram.NgramExtractor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,11 +18,17 @@ public class LanguageProfileBuilder {
 
     private final String language;
     private int minimalFrequency = 1;
+    private NgramExtractor ngramExtractor;
     private final Map<Integer, Map<String,Integer>> ngrams = new HashMap<>();
 
 
     public LanguageProfileBuilder(String language) {
         this.language = language;
+    }
+
+    public LanguageProfileBuilder ngramExtractor(@NotNull NgramExtractor ngramExtractor) {
+        this.ngramExtractor = ngramExtractor;
+        return this;
     }
 
     public LanguageProfileBuilder minimalFrequency(int minimalFrequency) {
@@ -30,10 +37,15 @@ public class LanguageProfileBuilder {
         return this;
     }
 
-
+    /**
+     * In order to use this you must set the {@link #ngramExtractor} first.
+     */
     public LanguageProfileBuilder addText(CharSequence text) {
-        for (String s : NgramExtractor.extractNGrams(text, null)) {
-            addGram(s, 1);
+        if (ngramExtractor==null) {
+            throw new IllegalStateException("NgramExtractor has not been set yet!");
+        }
+        for (Map.Entry<String, Integer> entry : ngramExtractor.extractCountedGrams(text).entrySet()) {
+            addGram(entry.getKey(), entry.getValue());
         }
         return this;
     }

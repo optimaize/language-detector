@@ -16,21 +16,17 @@
 
 package be.frma.langguess;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.zip.GZIPInputStream;
-
 import com.cybozu.labs.langdetect.ErrorCode;
 import com.cybozu.labs.langdetect.LangDetectException;
 import com.cybozu.labs.langdetect.util.LangProfile;
-import com.cybozu.labs.langdetect.util.NGram;
 import com.cybozu.labs.langdetect.util.Util;
+import com.optimaize.langdetect.text.CommonTextObjectFactories;
+import com.optimaize.langdetect.text.TextObject;
+import com.optimaize.langdetect.text.TextObjectFactory;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Generate a language profile from any given text file.
@@ -41,6 +37,9 @@ import com.cybozu.labs.langdetect.util.Util;
  */
 public class GenProfile {
 
+    private static final TextObjectFactory textObjectFactory = CommonTextObjectFactories.forIndexing();
+
+
     /**
      * Loads a text file and generate a language profile from its content. The input text file is supposed to be encoded in UTF-8.
      * @param lang target language name.
@@ -49,7 +48,6 @@ public class GenProfile {
      * @throws LangDetectException 
      */
     public static LangProfile generate(String lang, File textFile) throws LangDetectException {
-
         LangProfile profile = new LangProfile(lang);
 
         InputStream is = null;
@@ -60,7 +58,8 @@ public class GenProfile {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String line;
             while ((line = reader.readLine()) != null) {
-                Util.addCharSequence(profile, line);
+                TextObject textObject = textObjectFactory.forText(" "+line+" ");
+                Util.addCharSequence(profile, textObject);
 			}
         } catch (IOException e) {
             throw new LangDetectException(ErrorCode.CantOpenTrainData, "Can't open training database file '" + textFile.getName() + "'");

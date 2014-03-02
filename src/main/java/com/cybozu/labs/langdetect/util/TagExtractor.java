@@ -16,12 +16,18 @@
 
 package com.cybozu.labs.langdetect.util;
 
+import com.optimaize.langdetect.text.CommonTextObjectFactories;
+import com.optimaize.langdetect.text.TextObjectFactory;
+
 /**
  * {@link TagExtractor} is a class which extracts inner texts of specified tag.
  * Users don't use this class directly.
  * @author Nakatani Shuyo
  */
 public class TagExtractor {
+
+    private static final TextObjectFactory textObjectFactory = CommonTextObjectFactories.forIndexing();
+
     /* package scope */ String target_;
     /* package scope */ int threshold_;
     /* package scope */ StringBuilder buf_;
@@ -38,7 +44,7 @@ public class TagExtractor {
         return count_;
     }
     public void clear() {
-        buf_ = new StringBuilder();
+        buf_ = new StringBuilder(" ");
         tag_ = null;
     }
     public void setTag(String tag){
@@ -50,11 +56,15 @@ public class TagExtractor {
         }
     }
     public void closeTag(LangProfile profile) {
-        if ((profile != null) && tag_.equals(target_) && (buf_.length() > threshold_)) {
-            Util.addCharSequence(profile, buf_);
+        if ((profile != null) && tag_.equals(target_) && (buf_.length() > threshold_) && !isSpace()) {
+            Util.addCharSequence(profile, textObjectFactory.forText(buf_));
             ++count_;
         }
         clear();
+    }
+
+    private boolean isSpace() {
+        return (buf_.length()==1 && buf_.toString().equals(" "));
     }
 
 }

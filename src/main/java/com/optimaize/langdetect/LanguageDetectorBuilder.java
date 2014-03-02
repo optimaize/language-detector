@@ -1,5 +1,6 @@
 package com.optimaize.langdetect;
 
+import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,8 @@ public class LanguageDetectorBuilder {
 
     private static final double ALPHA_DEFAULT = 0.5;
 
+    @NotNull
+    private final NgramExtractor ngramExtractor;
 
     private boolean verbose = false;
     private double alpha = ALPHA_DEFAULT;
@@ -31,6 +34,14 @@ public class LanguageDetectorBuilder {
     private Set<LanguageProfile> languageProfiles = new HashSet<>();
     @NotNull
     private Set<String> langsAdded = new HashSet<>();
+
+    public static LanguageDetectorBuilder create(@NotNull NgramExtractor ngramExtractor) {
+        return new LanguageDetectorBuilder(ngramExtractor);
+    }
+
+    private LanguageDetectorBuilder(@NotNull NgramExtractor ngramExtractor) {
+        this.ngramExtractor = ngramExtractor;
+    }
 
 
     public LanguageDetectorBuilder verbose(boolean verbose) {
@@ -94,6 +105,11 @@ public class LanguageDetectorBuilder {
         if (langsAdded.contains(languageProfile.getLanguage())) {
             throw new IllegalStateException("A language profile for language "+languageProfile.getLanguage()+" was added already!");
         }
+        for (Integer gramLength : ngramExtractor.getGramLengths()) {
+            if (!languageProfile.getGramLengths().contains(gramLength)) {
+                throw new IllegalArgumentException("The NgramExtractor is set to handle "+gramLength+"-grams but the given language profile for "+languageProfile.getLanguage()+" does not support this!");
+            }
+        }
         langsAdded.add(languageProfile.getLanguage());
         languageProfiles.add(languageProfile);
         return this;
@@ -139,7 +155,8 @@ public class LanguageDetectorBuilder {
         return new LanguageDetectorImpl(
                 wordLangProbMap, langlist,
                 verbose, alpha, skipUnknownNgrams, shortTextAlgorithm, borderFactor,
-                langWeightingMap
+                langWeightingMap,
+                ngramExtractor
         );
     }
 

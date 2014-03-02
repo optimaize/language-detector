@@ -1,93 +1,146 @@
 package com.optimaize.langdetect.ngram;
 
-import com.cybozu.labs.langdetect.util.NGram;
-import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class for extracting n-grams out of a text.
  *
+ * TODO feature for:
+ *      * <p>To have border grams, modify your input text. Example: instead of "foo" pass in " foo " or "$foo$".</p>
+
+ *
  * @author Fabian Kessler
- * @author Nakatani Shuyo
  */
 public class NgramExtractor {
 
-    public interface Filter {
-        /**
-         * Allows to skip some n-grams.
-         *
-         * This is currently used to filter n-grams in to-analyze text when the n-gram is unknown to the loaded
-         * language profiles.
-         *
-         * @return true to use this n-gram, false to skip it.
-         */
-        boolean use(String gram);
-    }
-
-    /**
-     * This was the method found in the {@link com.cybozu.labs.langdetect.Detector} class, it was used to extract
-     * grams from the to-analyze text.
-     *
-     * NOTE: although it adds the first ngram with space, it does not add the last n-gram with space. example: "foo" gives " fo" but not "oo "!.
-     * It is not clear yet whether this is desired (and why) or a bug.
-     *
-     * TODO replace this algorithm with a simpler, faster one that uses less memory: only by position shifting. also, the returned list size
-     * can be computed before making it (based on text length and number of n-grams).
-     *
-     * @author Nakatani Shuyo
-     */
     @NotNull
-    @Deprecated
-    public static List<String> extractNGrams(@NotNull CharSequence text, @Nullable Filter filter) {
-        List<String> list = new ArrayList<>();
-        NGram ngram = new NGram();
-        for(int i=0;i<text.length();++i) {
-            ngram.addChar(text.charAt(i));
-            for(int n=1;n<=NGram.N_GRAM;++n){
-                String w = ngram.get(n);
-                if (w!=null) { //TODO this null check is ugly
-                    if (filter==null || filter.use(w)) {
-                        list.add(w);
-                    }
-                }
-            }
-        }
-        return list;
+    private final List<Integer> gramLengths = new ArrayList<>(4);
+    @Nullable
+    private final NgramFilter filter;
+
+    public static NgramExtractor gramLength(int gramLength) {
+        return new NgramExtractor(ImmutableList.of(gramLength), null);
+    }
+    public static NgramExtractor gramLengths(Integer... gramLength) {
+        return new NgramExtractor(Arrays.asList(gramLength), null);
     }
 
+    public NgramExtractor filter(NgramFilter filter) {
+        return new NgramExtractor(this.gramLengths, filter);
+    }
+
+    private NgramExtractor(@NotNull List<Integer> gramLengths, @Nullable NgramFilter filter) {
+        if (gramLengths.isEmpty()) throw new IllegalArgumentException();
+        this.gramLengths.addAll(gramLengths);
+        this.filter = filter;
+    }
+
+    public List<Integer> getGramLengths() {
+        return Collections.unmodifiableList(gramLengths);
+    }
 
     /**
      * Creates the n-grams for a given text in the order they occur.
      *
      * <p>Example: extractSortedGrams("Foo bar", 2) => [Fo,oo,o , b,ba,ar]</p>
      *
-     * <p>To have border grams, modify your input text. Example: instead of "foo" pass in " foo " or "$foo$".</p>
-     *
      * @param  text
-     * @param  gramLength 1-n
      * @return The grams, empty if the input was empty or if none for that gramLength fits.
-     *         Impl notes: this returns Array instead of List because
-     *         a) it's 10% faster to create
-     *         b) it produces a lot less garbage, which is good for gc and low latency
-     *         c) no one will need to touch this data anyway other than iterating
      */
     @NotNull
-    public static String[] extractGrams(@NotNull CharSequence text, int gramLength) {
+    public List<String> extractGrams(@NotNull CharSequence text) {
         int len = text.length();
-        int numGrams = len - (gramLength -1);
-        if (numGrams <= 0) {
-            return new String[]{};
+
+        //the actual size will be totalNumGrams or less (filter)
+        int totalNumGrams = 0;
+        for (Integer gramLength : gramLengths) {
+            int num = len - (gramLength - 1);
+            if (num >= 1) { //yes can be negative
+                totalNumGrams += num;
+            }
         }
-        String[] grams = new String[numGrams];
-        for (int pos=0; pos<numGrams; pos++) {
-            grams[pos] = text.subSequence(pos, pos+gramLength).toString();
+        if (totalNumGrams <= 0) {
+            return Collections.emptyList();
+        }
+        List<String> grams = new ArrayList<>(totalNumGrams);
+
+        for (Integer gramLength : gramLengths) {
+            int numGrams = len - (gramLength -1);
+            if (numGrams >= 1) { //yes can be negative
+                for (int pos=0; pos<numGrams; pos++) {
+                    String gram = text.subSequence(pos, pos + gramLength).toString();
+                    if (filter==null || filter.use(gram)) {
+                        grams.add(gram);
+                    }
+                }
+            }
         }
         return grams;
+    }
+
+    /**
+     * @return Key = ngram, value = count
+     */
+    @NotNull
+    public Map<String,Integer> extractCountedGrams(@NotNull CharSequence text) {
+        int len = text.length();
+
+        int initialCapacity = 0;
+        for (Integer gramLength : gramLengths) {
+            initialCapacity += guessNumDistinctiveGrams(len, gramLength);
+        }
+
+        Map<String,Integer> grams = new HashMap<>(initialCapacity);
+        for (Integer gramLength : gramLengths) {
+            _extractCounted(text, gramLength, len, grams);
+        }
+        return grams;
+    }
+    private void _extractCounted(CharSequence text, int gramLength, int len, Map<String, Integer> grams) {
+        int endPos = len - (gramLength -1);
+        for (int pos=0; pos<endPos; pos++) {
+            String gram = text.subSequence(pos, pos + gramLength).toString();
+            if (filter==null || filter.use(gram)) {
+                Integer counter = grams.get(gram);
+                if (counter==null) {
+                    grams.put(gram, 1);
+                } else {
+                    grams.put(gram, counter+1);
+                }
+            }
+        }
+    }
+
+    /**
+     * This is trying to be smart.
+     * It also depends on script (alphabet less than ideographic).
+     * So I'm not sure how good it really is. Just trying to prevent array copies... and for Latin it seems to work fine.
+     */
+    private static int guessNumDistinctiveGrams(int textLength, int gramLength) {
+        switch (gramLength) {
+            case 1:
+                return Math.min(80, textLength);
+            case 2:
+                if (textLength < 40) return textLength;
+                if (textLength < 100) return (int)(textLength*0.8);
+                if (textLength < 1000) return (int)(textLength * 0.6);
+                return (int)(textLength * 0.5);
+            case 3:
+                if (textLength < 40) return textLength;
+                if (textLength < 100) return (int)(textLength*0.9);
+                if (textLength < 1000) return (int)(textLength * 0.8);
+                return (int)(textLength * 0.6);
+            case 4:
+            case 5:
+            default:
+                if (textLength < 100) return textLength;
+                if (textLength < 1000) return (int)(textLength * 0.95);
+                return (int)(textLength * 0.9);
+        }
     }
 
 }

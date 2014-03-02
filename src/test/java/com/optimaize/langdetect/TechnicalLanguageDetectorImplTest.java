@@ -17,6 +17,7 @@
 package com.optimaize.langdetect;
 
 import com.cybozu.labs.langdetect.LangDetectException;
+import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.profiles.LanguageProfileBuilder;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ public class TechnicalLanguageDetectorImplTest {
 
     private LanguageDetector makeDetector() {
         //building exactly like the old detector behaved.
-        LanguageDetectorBuilder detectorBuilder = new LanguageDetectorBuilder()
+        LanguageDetectorBuilder detectorBuilder = LanguageDetectorBuilder.create(NgramExtractor.gramLengths(1))
                 .borderFactor(1.0)
                 .shortTextAlgorithm(0)
                 .skipUnknownNgrams(true);

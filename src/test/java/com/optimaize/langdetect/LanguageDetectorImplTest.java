@@ -3,6 +3,7 @@ package com.optimaize.langdetect;
 import be.frma.langguess.LangProfileReader;
 import com.cybozu.labs.langdetect.util.LangProfile;
 import com.google.common.collect.ImmutableList;
+import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import com.optimaize.langdetect.profiles.OldLangProfileConverter;
 import com.optimaize.langdetect.text.*;
@@ -51,7 +52,7 @@ public class LanguageDetectorImplTest {
     }
 
     private LanguageDetector makeNewDetector() throws IOException {
-        LanguageDetectorBuilder builder = new LanguageDetectorBuilder();
+        LanguageDetectorBuilder builder = LanguageDetectorBuilder.create(NgramExtractor.gramLengths(1, 2, 3));
         builder.skipUnknownNgrams(false);
         builder.shortTextAlgorithm(50);
         builder.borderFactor(2.0);

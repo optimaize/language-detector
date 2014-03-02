@@ -1,11 +1,10 @@
 package com.cybozu.labs.langdetect.util;
 
 import com.optimaize.langdetect.ngram.NgramExtractor;
+import com.optimaize.langdetect.ngram.OldNgramExtractor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Formatter;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A place for sharing code.
@@ -14,8 +13,29 @@ import java.util.Map;
  */
 public class Util {
 
+    private static final NgramExtractor ngramExtractor = NgramExtractor.gramLengths(1, 2, 3);
+
     public static void addCharSequence(LangProfile langProfile, CharSequence text) {
-        for (String s : NgramExtractor.extractNGrams(text, null)) {
+        //TODO replace with new code.
+
+//        List<String> old = OldNgramExtractor.extractNGrams(text, null);
+//        List<String> nuu = ngramExtractor.extractGrams(text);
+//
+//        Set<String> oldSet = new HashSet<>(old);
+//        Set<String> nuuSet = new HashSet<>(nuu);
+//
+//        ArrayList<String> justNuu = new ArrayList<>(nuu);
+//        justNuu.removeAll(old);
+//
+//        ArrayList<String> justOld = new ArrayList<>(old);
+//        justOld.removeAll(nuu);
+//
+//        System.out.println(text);
+
+//        for (String s : ngramExtractor.extractGrams(text)) {
+//            langProfile.add(s);
+//        }
+        for (String s : OldNgramExtractor.extractNGrams(text, null)) {
             langProfile.add(s);
         }
     }
