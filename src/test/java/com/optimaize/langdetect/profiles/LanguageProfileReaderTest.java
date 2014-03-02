@@ -71,7 +71,7 @@ public class LanguageProfileReaderTest {
     @Test
     public void readAll() throws IOException {
         List<LanguageProfile> read = new LanguageProfileReader().readAll();
-        assertEquals(read.size(), 47); //adjust this number when adding more languages
+        assertEquals(read.size(), 51); //adjust this number when adding more languages
     }
 
 
@@ -85,7 +85,7 @@ public class LanguageProfileReaderTest {
     @Test
     public void loadProfilesFromFile() throws IOException {
         List<LanguageProfile> result = new LanguageProfileReader().readAll(new File(new File(new File(new File("src"), "main"), "resources"), "languages"));
-        assertEquals(result.size(), 47);
+        assertEquals(result.size(), 51);
     }
 
 }
