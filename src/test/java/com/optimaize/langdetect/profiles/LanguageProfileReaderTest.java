@@ -72,7 +72,7 @@ public class LanguageProfileReaderTest {
     @Test
     public void readAll() throws IOException {
         List<LanguageProfile> profiles = new LanguageProfileReader().readAll();
-        assertEquals(profiles.size(), 53); //adjust this number when adding more languages
+        assertEquals(profiles.size(), 69); //adjust this number when adding more languages
         Set<String> allLangs = new HashSet<>();
         for (LanguageProfile profile : profiles) {
             assertFalse("Duplicate language: "+profile.getLanguage(), allLangs.contains(profile.getLanguage()));
@@ -94,7 +94,7 @@ public class LanguageProfileReaderTest {
     @Test
     public void loadProfilesFromFile() throws IOException {
         List<LanguageProfile> result = new LanguageProfileReader().readAll(new File(new File(new File(new File("src"), "main"), "resources"), "languages"));
-        assertEquals(result.size(), 53); //adjust this number when adding more languages
+        assertEquals(result.size(), 69); //adjust this number when adding more languages
     }
 
 }
