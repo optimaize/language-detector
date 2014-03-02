@@ -25,7 +25,8 @@ public class LanguageDetectorBuilder {
     private double alpha = ALPHA_DEFAULT;
     private boolean skipUnknownNgrams = true;
     private int shortTextAlgorithm = 50;
-    private double borderFactor = 1.0d;
+    private double prefixFactor = 1.0d;
+    private double suffixFactor = 1.0d;
 
     @Nullable
     private Map<String, Double> langWeightingMap;
@@ -72,19 +73,35 @@ public class LanguageDetectorBuilder {
     }
 
     /**
-     * To weight n-grams that are on the left or right border of a word differently from n-grams
+     * Sets prefixFactor() and suffixFactor() both to the given value.
+     * @see #prefixFactor(double)
+     */
+    public LanguageDetectorBuilder affixFactor(double affixFactor) {
+        prefixFactor(affixFactor);
+        suffixFactor(affixFactor);
+        return this;
+    }
+    /**
+     * To weight n-grams that are on the left border of a word differently from n-grams
      * in the middle of words, assign a value here.
      *
      * Affixes (prefixes and suffixes) often distinguish the specific features of languages.
      * Giving a value greater than 1.0 weights these n-grams higher. A 2.0 weights them double.
      *
-     * TODO split into prefixFactor and suffixFactor.
-     *
-     * Defaults to 1.0, which means don't use this feature. That's the old behavior.
-     * @param borderFactor 0.0 to 10.0, a suggested value is 2.0
+     * Defaults to 1.0, which means don't use this feature.
+     * @param prefixFactor 0.0 to 10.0, a suggested value is 1.5
      */
-    public LanguageDetectorBuilder borderFactor(double borderFactor) {
-        this.borderFactor = borderFactor;
+    public LanguageDetectorBuilder prefixFactor(double prefixFactor) {
+        this.prefixFactor = prefixFactor;
+        return this;
+    }
+    /**
+     * Defaults to 1.0, which means don't use this feature.
+     * @param suffixFactor 0.0 to 10.0, a suggested value is 2.0
+     * @see #prefixFactor(double)
+     */
+    public LanguageDetectorBuilder suffixFactor(double suffixFactor) {
+        this.suffixFactor = suffixFactor;
         return this;
     }
 
@@ -154,7 +171,8 @@ public class LanguageDetectorBuilder {
 
         return new LanguageDetectorImpl(
                 wordLangProbMap, langlist,
-                verbose, alpha, skipUnknownNgrams, shortTextAlgorithm, borderFactor,
+                verbose, alpha, skipUnknownNgrams, shortTextAlgorithm,
+                prefixFactor, suffixFactor,
                 langWeightingMap,
                 ngramExtractor
         );

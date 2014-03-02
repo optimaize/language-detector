@@ -39,7 +39,7 @@ public class TechnicalLanguageDetectorImplTest {
     private LanguageDetector makeDetector() {
         //building exactly like the old detector behaved.
         LanguageDetectorBuilder detectorBuilder = LanguageDetectorBuilder.create(NgramExtractor.gramLengths(1))
-                .borderFactor(1.0)
+                .affixFactor(1.0)
                 .shortTextAlgorithm(0)
                 .skipUnknownNgrams(true);
 

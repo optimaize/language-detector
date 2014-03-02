@@ -76,7 +76,8 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private final double alpha;
     private final boolean skipUnknownNgrams;
     private final int shortTextAlgorithm;
-    private final double borderFactor;
+    private final double prefixFactor;
+    private final double suffixFactor;
 
     private final NgramExtractor ngramExtractor;
 
@@ -86,11 +87,13 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     LanguageDetectorImpl(@NotNull Map<String, double[]> wordLangProbMap,
                          @NotNull List<String> langlist,
-                         boolean verbose, double alpha, boolean skipUnknownNgrams, int shortTextAlgorithm, double borderFactor,
+                         boolean verbose, double alpha, boolean skipUnknownNgrams, int shortTextAlgorithm,
+                         double prefixFactor, double suffixFactor,
                          @Nullable Map<String, Double> langWeightingMap,
                          @NotNull NgramExtractor ngramExtractor) {
         if (alpha<0d || alpha >1d) throw new IllegalArgumentException(""+alpha);
-        if (borderFactor<0d || borderFactor >10d) throw new IllegalArgumentException(""+borderFactor);
+        if (prefixFactor <0d || prefixFactor >10d) throw new IllegalArgumentException(""+ prefixFactor);
+        if (suffixFactor <0d || suffixFactor >10d) throw new IllegalArgumentException(""+ suffixFactor);
         if (langWeightingMap!=null && langWeightingMap.isEmpty()) langWeightingMap = null;
         if (langlist.isEmpty()) throw new IllegalArgumentException();
 
@@ -103,7 +106,8 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         this.alpha = alpha;
         this.skipUnknownNgrams = skipUnknownNgrams;
         this.shortTextAlgorithm = shortTextAlgorithm;
-        this.borderFactor = borderFactor;
+        this.prefixFactor = prefixFactor;
+        this.suffixFactor = suffixFactor;
         this.priorMap = (langWeightingMap==null) ? null : Util.makeInternalPrioMap(langWeightingMap, langlist);
         this.ngramExtractor = ngramExtractor;
     }
@@ -226,8 +230,12 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         if (verbose) System.out.println(ngram + "(" + Util.unicodeEncode(ngram) + "):" + Util.wordProbToString(langProbMap, langlist));
 
         double weight = alpha / BASE_FREQ;
-        if (borderFactor!=1.0 && ngram.length()>1 && (ngram.charAt(0)==' ' || ngram.charAt(ngram.length()-1)==' ')) {
-            weight *= borderFactor;
+        if (ngram.length() >1) {
+            if (prefixFactor !=1.0 && ngram.charAt(0)==' ') {
+                weight *= prefixFactor;
+            } else if (suffixFactor!=1.0 && ngram.charAt(ngram.length()-1)==' ') {
+                weight *= suffixFactor;
+            }
         }
         for (int i=0; i<prob.length; ++i) {
             for (int amount=0; amount<count; amount++) {

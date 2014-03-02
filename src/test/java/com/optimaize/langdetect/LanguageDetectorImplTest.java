@@ -3,7 +3,6 @@ package com.optimaize.langdetect;
 import be.frma.langguess.LangProfileReader;
 import com.cybozu.labs.langdetect.util.LangProfile;
 import com.google.common.collect.ImmutableList;
-import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import com.optimaize.langdetect.profiles.OldLangProfileConverter;
@@ -56,7 +55,8 @@ public class LanguageDetectorImplTest {
         LanguageDetectorBuilder builder = LanguageDetectorBuilder.create(NgramExtractors.standard());
         builder.skipUnknownNgrams(false);
         builder.shortTextAlgorithm(50);
-        builder.borderFactor(2.0);
+        builder.prefixFactor(1.5);
+        builder.suffixFactor(2.0);
 
         LangProfileReader langProfileReader = new LangProfileReader();
         for (String language : ImmutableList.of("en", "fr", "nl", "de")) {
