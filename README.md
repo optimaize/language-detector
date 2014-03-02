@@ -5,7 +5,7 @@ Language Detection Library for Java
 
 ## Language Support
 
-### 53 Built-in Language Profiles
+### 69 Built-in Language Profiles
 
 1. af Afrikaans
 1. ar Arabic
@@ -61,6 +61,24 @@ Language Detection Library for Java
 1. zh-cn Simplified Chinese
 1. zh-tw Traditional Chinese
 
+1. an Aragonese
+1. ast Asturian
+1. eu Basque
+1. be Belarusian
+1. br Breton
+1. cat Catalan
+1. gl Galician
+1. ht Haitian
+1. is Icelandic
+1. ga Irish
+1. ms Malay
+1. mt Maltese
+1. oc Occitan
+1. sr Serbian (Cyrillic alphabet)
+1. cy Welsh
+1. yi Yiddish
+
+
 ### Other Languages
 
 You can create a language profile for your own language easily. Or provide us "training text", see "How You Can Help".
@@ -88,6 +106,9 @@ This software cannot handle it well when the input text is in none of the expect
 For example if you only load the language profiles from English and German, but the text is written in French,
 the program may pick the more likely one, or say it doesn't know. (An improvement would be to clearly detect that
 it's unlikely one of the supported languages.)
+
+If you are looking for a language detector / language guesser library in Java, this seems to be the best open source
+library you can get at this time. If it doesn't need to be Java, you may want to take a look at https://code.google.com/p/cld2/
 
 
 ## How to Use
@@ -154,7 +175,7 @@ of the original project https://code.google.com/p/language-detection/
 
 * Made results for short text consistent, no random n-gram selection for short text (configurable).
 * Configurable when to remove ASCII (foreign script). Old code did it when ascii was less than 1/3 of the content, and only for ASCII.
-* New n-gram generation. Faster, and flexible (filter, space-padding). Previously it was hardcoded to 1, 2 and 3-grams, and it has hardcoded which n-grams were ignored.
+* New n-gram generation. Faster, and flexible (filter, space-padding). Previously it was hardcoded to 1, 2 and 3-grams, and it had hardcoded which n-grams were ignored.
 * LanguageDetector is now safe to use multi-threaded.
 * Clear code to safely load profiles and use them, no state in static fields.
 * Easier to generate your own language profiles based on training text, and to load and store them.
@@ -188,8 +209,7 @@ Still pretty much the same, business-friendly, but requires that derivative work
 
 ##### TODO
 
-* Using a logger instead of System.out.println
-* Remove old code (still a bit left)
+The software works well, there are things that can be improved. Check the Issues list.
 
 
 #### Why so much forking?
@@ -225,11 +245,6 @@ LGPLv3 (business friendly, must publish changes)
 * Started the project and built most of the functionality. Provided the language profiles.
 * Project is at https://code.google.com/p/language-detection/
 
-###### Francois ROLAND
-
-* Forked to https://code.google.com/p/lang-guess/
-* Maven integration
-
 ###### Fabian Kessler
 
 * Forked to https://github.com/optimaize/language-detector from Francois on 2014-02-27
@@ -237,4 +252,16 @@ LGPLv3 (business friendly, must publish changes)
 * Added JavaDoc
 * See changes above, or check the GitHub commit history
 
+###### Francois ROLAND
+
+* Forked to https://code.google.com/p/lang-guess/ from Shuyo's original project.
+* Maven integration
+
+###### Robert Theis
+
+* Forked to https://github.com/rmtheis/language-detection from Shuyo's original project.
+* Added 16 more language profiles
+* Features not (yet) integrated here:
+  * profiles stored as Java code
+  * Maven multi-module project to reduce size for Android apps
 

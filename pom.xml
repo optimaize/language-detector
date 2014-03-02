@@ -38,6 +38,9 @@
         <developer>
             <name>François ROLAND</name>
         </developer>
+        <developer>
+            <name>Robert Theis</name>
+        </developer>
     </developers>
     <scm>
         <connection>scm:git:https://github.com/optimaize/language-detector</connection>
