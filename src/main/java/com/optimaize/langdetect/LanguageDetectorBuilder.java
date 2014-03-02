@@ -24,7 +24,7 @@ public class LanguageDetectorBuilder {
     private boolean verbose = false;
     private double alpha = ALPHA_DEFAULT;
     private boolean skipUnknownNgrams = true;
-    private int shortTextAlgorithm = 0;
+    private int shortTextAlgorithm = 50;
     private double borderFactor = 1.0d;
 
     @Nullable
