@@ -9,13 +9,12 @@ To generate your own, use a LanguageProfileBuilder and then add text using a Tex
 then finally store the result with a LanguageProfileWriter.
 
 
-## Abut the "languages.sm" folder and files
+## Abut the "languages.shorttext" folder and files
 
 These files are from the original software from Nakatani Shuyo.
 
-Unfortunately, the data sources from which they were generated are not available.
-The data files are larger than those in the "languages" folder, and there are fewer files here.
-Maybe they provide better quality, maybe not, I don't know.
+Either they are for detecting language on short messages, or they are built from short message text, or
+both, I don't know.
 
 
 ## Abut the "messages.properties" file
