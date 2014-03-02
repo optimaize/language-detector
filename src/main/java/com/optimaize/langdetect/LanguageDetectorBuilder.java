@@ -21,7 +21,6 @@ public class LanguageDetectorBuilder {
     @NotNull
     private final NgramExtractor ngramExtractor;
 
-    private boolean verbose = false;
     private double alpha = ALPHA_DEFAULT;
     private boolean skipUnknownNgrams = true;
     private int shortTextAlgorithm = 50;
@@ -44,11 +43,6 @@ public class LanguageDetectorBuilder {
         this.ngramExtractor = ngramExtractor;
     }
 
-
-    public LanguageDetectorBuilder verbose(boolean verbose) {
-        this.verbose = verbose;
-        return this;
-    }
 
     public LanguageDetectorBuilder alpha(double alpha) {
         if (alpha<0 || alpha>1) throw new IllegalArgumentException(""+alpha);
@@ -171,7 +165,7 @@ public class LanguageDetectorBuilder {
 
         return new LanguageDetectorImpl(
                 wordLangProbMap, langlist,
-                verbose, alpha, skipUnknownNgrams, shortTextAlgorithm,
+                alpha, skipUnknownNgrams, shortTextAlgorithm,
                 prefixFactor, suffixFactor,
                 langWeightingMap,
                 ngramExtractor

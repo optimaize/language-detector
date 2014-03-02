@@ -23,7 +23,6 @@ import com.google.common.base.Optional;
 import com.optimaize.langdetect.DetectedLanguage;
 import com.optimaize.langdetect.LanguageDetector;
 import com.optimaize.langdetect.LanguageDetectorBuilder;
-import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import com.optimaize.langdetect.profiles.LanguageProfileReader;
@@ -222,7 +221,7 @@ public class CommandLineInterface {
                     Optional<String> lang = languageDetector.detect(textObject);
                     if (!result.containsKey(correctLang)) result.put(correctLang, new ArrayList<String>());
                     result.get(correctLang).add(lang.or("unknown"));
-                    if (hasOpt("--debug")) System.out.println(correctLang + "," + lang + "," + (text.length()>100?text.substring(0, 100):text));
+                    if (hasOpt("--debug")) System.out.println(correctLang + "," + lang + "," + (text.length() > 100 ? text.substring(0, 100) : text));
                 }
             }
 
@@ -248,7 +247,7 @@ public class CommandLineInterface {
                 totalCorrect += correct;
                 totalCount += count;
             }
-            System.out.println(String.format("total: %d/%d = %.3f", totalCorrect, totalCount, totalCorrect / (double)totalCount));
+            System.out.println(String.format("total: %d/%d = %.3f", totalCorrect, totalCount, totalCorrect / (double) totalCount));
         }
     }
 
@@ -259,14 +258,12 @@ public class CommandLineInterface {
      */
     private LanguageDetector makeDetector() throws IOException {
         double alpha = getDouble("alpha", DEFAULT_ALPHA);
-        boolean verbose = (hasOpt("--debug"));
 
         String profileDirectory = get("directory") + "/";
         List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAll(new File(profileDirectory));
 
         return LanguageDetectorBuilder.create(NgramExtractors.standard())
                 .alpha(alpha)
-                .verbose(verbose)
                 .shortTextAlgorithm(50)
                 .withProfiles(languageProfiles)
                 .build();

@@ -76,7 +76,6 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     @Nullable
     private final double[] priorMap;
 
-    private final boolean verbose;
     private final double alpha;
     private final boolean skipUnknownNgrams;
     private final int shortTextAlgorithm;
@@ -91,7 +90,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     LanguageDetectorImpl(@NotNull Map<String, double[]> wordLangProbMap,
                          @NotNull List<String> langlist,
-                         boolean verbose, double alpha, boolean skipUnknownNgrams, int shortTextAlgorithm,
+                         double alpha, boolean skipUnknownNgrams, int shortTextAlgorithm,
                          double prefixFactor, double suffixFactor,
                          @Nullable Map<String, Double> langWeightingMap,
                          @NotNull NgramExtractor ngramExtractor) {
@@ -106,7 +105,6 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         this.dummyWordLangProbMap = new double[langlist.size()];
         this.langlist = langlist;
 
-        this.verbose = verbose;
         this.alpha = alpha;
         this.skipUnknownNgrams = skipUnknownNgrams;
         this.shortTextAlgorithm = shortTextAlgorithm;
