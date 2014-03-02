@@ -1,6 +1,7 @@
 package com.optimaize.langdetect.profiles;
 
 import com.optimaize.langdetect.ngram.NgramExtractor;
+import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.text.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -20,7 +21,7 @@ public class LanguageProfileBuilderTest {
                 .append("http://www.github.com/");
 
         LanguageProfile languageProfile = new LanguageProfileBuilder("de")
-                .ngramExtractor(NgramExtractor.gramLengths(1, 2, 3))
+                .ngramExtractor(NgramExtractors.standard())
                 .addText(inputText)
                 .build();
 

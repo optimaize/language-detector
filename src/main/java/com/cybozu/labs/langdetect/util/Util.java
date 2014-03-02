@@ -1,6 +1,7 @@
 package com.cybozu.labs.langdetect.util;
 
 import com.optimaize.langdetect.ngram.NgramExtractor;
+import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.ngram.OldNgramExtractor;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,7 @@ import java.util.*;
  */
 public class Util {
 
-    private static final NgramExtractor ngramExtractor = NgramExtractor.gramLengths(1, 2, 3);
+    private static final NgramExtractor ngramExtractor = NgramExtractors.standard();
 
     public static void addCharSequence(LangProfile langProfile, CharSequence text) {
         //TODO replace with new code.

@@ -1,6 +1,7 @@
 package com.optimaize.langdetect;
 
 import com.optimaize.langdetect.ngram.NgramExtractor;
+import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.profiles.LanguageProfileReader;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
 import org.junit.Test;
@@ -16,7 +17,7 @@ public class DataLanguageDetectorImplTest {
 
     @Test
     public void shortTextAlgo() throws IOException {
-        LanguageDetector detector = LanguageDetectorBuilder.create(NgramExtractor.gramLengths(1, 2, 3))
+        LanguageDetector detector = LanguageDetectorBuilder.create(NgramExtractors.standard())
                 .shortTextAlgorithm(100)
                 .withProfiles(new LanguageProfileReader().readAll())
                 .build();
@@ -25,7 +26,7 @@ public class DataLanguageDetectorImplTest {
 
     @Test
     public void longTextAlgo() throws IOException {
-        LanguageDetector detector = LanguageDetectorBuilder.create(NgramExtractor.gramLengths(1,2,3))
+        LanguageDetector detector = LanguageDetectorBuilder.create(NgramExtractors.standard())
                 .shortTextAlgorithm(0)
                 .withProfiles(new LanguageProfileReader().readAll())
                 .build();
