@@ -9,7 +9,7 @@
     <name>language-detector</name>
     <version>0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <url>https://github.com/fabiankessler/language-detector</url>
+    <url>https://github.com/optimaize/language-detector</url>
 
     <licenses>
         <license>
@@ -30,16 +30,16 @@
             <name>Nakatani Shuyo</name>
         </developer>
         <developer>
-            <name>François ROLAND</name>
+            <name>Fabian Kessler</name>
         </developer>
         <developer>
-            <name>Fabian Kessler</name>
+            <name>François ROLAND</name>
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:https://github.com/fabiankessler/language-detector</connection>
-        <developerConnection>scm:git:https://github.com/fabiankessler/language-detector</developerConnection>
-        <url>https://github.com/fabiankessler/language-detector</url>
+        <connection>scm:git:https://github.com/optimaize/language-detector</connection>
+        <developerConnection>scm:git:https://github.com/optimaize/language-detector</developerConnection>
+        <url>https://github.com/optimaize/language-detector</url>
     </scm>
 
     <build>
