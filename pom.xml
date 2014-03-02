@@ -11,7 +11,9 @@
     <packaging>jar</packaging>
     <url>https://github.com/optimaize/language-detector</url>
 
-
+    <description>
+        Language Detection Library for Java.
+    </description>
 
     <licenses>
         <license>
