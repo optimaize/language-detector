@@ -40,6 +40,12 @@ of the original project https://code.google.com/p/language-detection/
 * Updated all Maven dependency versions
 * Replaced last lib dependency with Maven (jsonic)
 
+##### Legal
+
+Changed license from Apache2 to LGPLv3.
+Still pretty much the same, business-friendly, but requires that derivative works are published publicly also.
+
+
 ##### TODO
 
 * Using a logger instead of System.out.println
@@ -65,6 +71,10 @@ noticed that I have to touch pretty much all code. And with the status of the ot
 I figured that I better start my own. This ensures that my work is published to the public.
 
 
+
+## License
+
+LGPLv3 (business friendly, must publish changes)
 
 
 
