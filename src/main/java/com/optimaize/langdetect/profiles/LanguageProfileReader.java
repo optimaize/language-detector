@@ -144,7 +144,7 @@ public class LanguageProfileReader {
         if (fileName.startsWith(".")) {
             return false;
         }
-        if (!fileName.matches("^[a-z]{2,3}$") && !fileName.matches("^[a-z]\\-[a-z]{2}$")) {
+        if (!fileName.matches("^[a-z]{2,3}$") && !fileName.matches("^[a-z]{2}\\-[a-z]{2}$")) {
             return false;
         }
         return true;

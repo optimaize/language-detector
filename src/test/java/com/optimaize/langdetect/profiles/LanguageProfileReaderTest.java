@@ -5,15 +5,16 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
- * @author François ROLAND
  * @author Fabian Kessler
+ * @author François ROLAND
  */
 public class LanguageProfileReaderTest {
 
@@ -70,8 +71,16 @@ public class LanguageProfileReaderTest {
 
     @Test
     public void readAll() throws IOException {
-        List<LanguageProfile> read = new LanguageProfileReader().readAll();
-        assertEquals(read.size(), 51); //adjust this number when adding more languages
+        List<LanguageProfile> profiles = new LanguageProfileReader().readAll();
+        assertEquals(profiles.size(), 53); //adjust this number when adding more languages
+        Set<String> allLangs = new HashSet<>();
+        for (LanguageProfile profile : profiles) {
+            assertFalse("Duplicate language: "+profile.getLanguage(), allLangs.contains(profile.getLanguage()));
+            allLangs.add(profile.getLanguage());
+        }
+        assertTrue(allLangs.contains("de"));
+        assertTrue(allLangs.contains("zh-cn"));
+        assertTrue(allLangs.contains("zh-tw"));
     }
 
 
@@ -85,7 +94,7 @@ public class LanguageProfileReaderTest {
     @Test
     public void loadProfilesFromFile() throws IOException {
         List<LanguageProfile> result = new LanguageProfileReader().readAll(new File(new File(new File(new File("src"), "main"), "resources"), "languages"));
-        assertEquals(result.size(), 51);
+        assertEquals(result.size(), 53); //adjust this number when adding more languages
     }
 
 }
