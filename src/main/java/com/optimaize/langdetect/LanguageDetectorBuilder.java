@@ -28,6 +28,7 @@ public class LanguageDetectorBuilder {
     private double suffixFactor = 1.0d;
 
     private double probabilityThreshold = 0.1;
+    private double minimalConfidence = 0.9999d;
 
     @Nullable
     private Map<String, Double> langWeightingMap;
@@ -111,6 +112,15 @@ public class LanguageDetectorBuilder {
         return this;
     }
 
+    /**
+     * {@link LanguageDetector#detect} returns a language if the best detected language has at least this probability.
+     * The default currently is 0.9999d, but don't rely on it, if you need to be sure then set one.
+     */
+    public LanguageDetectorBuilder minimalConfidence(double minimalConfidence) {
+        this.minimalConfidence = minimalConfidence;
+        return this;
+    }
+
 
     /**
      * TODO document exactly. Also explain how it influences the results.
@@ -158,7 +168,7 @@ public class LanguageDetectorBuilder {
                 NgramFrequencyData.create(languageProfiles),
                 alpha, skipUnknownNgrams, shortTextAlgorithm,
                 prefixFactor, suffixFactor,
-                probabilityThreshold,
+                probabilityThreshold, minimalConfidence,
                 langWeightingMap,
                 ngramExtractor
         );

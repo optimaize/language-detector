@@ -65,6 +65,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private final double suffixFactor;
 
     private final double probabilityThreshold;
+    private final double minimalConfidence;
 
     private final NgramExtractor ngramExtractor;
 
@@ -76,12 +77,14 @@ public final class LanguageDetectorImpl implements LanguageDetector {
                          double alpha, boolean skipUnknownNgrams, int shortTextAlgorithm,
                          double prefixFactor, double suffixFactor,
                          double probabilityThreshold,
+                         double minimalConfidence,
                          @Nullable Map<String, Double> langWeightingMap,
                          @NotNull NgramExtractor ngramExtractor) {
         if (alpha<0d || alpha >1d) throw new IllegalArgumentException(""+alpha);
         if (prefixFactor <0d || prefixFactor >10d) throw new IllegalArgumentException(""+ prefixFactor);
         if (suffixFactor <0d || suffixFactor >10d) throw new IllegalArgumentException(""+ suffixFactor);
         if (probabilityThreshold<0d || probabilityThreshold>1d) throw new IllegalArgumentException(""+probabilityThreshold);
+        if (minimalConfidence<0d || minimalConfidence>1d) throw new IllegalArgumentException(""+minimalConfidence);
         if (langWeightingMap!=null && langWeightingMap.isEmpty()) langWeightingMap = null;
 
         this.ngramFrequencyData = ngramFrequencyData;
@@ -91,6 +94,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         this.prefixFactor = prefixFactor;
         this.suffixFactor = suffixFactor;
         this.probabilityThreshold = probabilityThreshold;
+        this.minimalConfidence = minimalConfidence;
         this.priorMap = (langWeightingMap==null) ? null : Util.makeInternalPrioMap(langWeightingMap, ngramFrequencyData.getLanglist());
         this.ngramExtractor = ngramExtractor;
     }
@@ -103,7 +107,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
             return Optional.absent();
         } else {
             DetectedLanguage best = probabilities.get(0);
-            if (best.getProbability() >= 0.9999d) {
+            if (best.getProbability() >= minimalConfidence) {
                 return Optional.of(best.getLanguage());
             } else {
                 return Optional.absent();
