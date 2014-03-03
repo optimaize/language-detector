@@ -53,22 +53,8 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     private static final int N_TRIAL = 7;
 
-
-    /**
-     * Key=ngram
-     * Value = array with probabilities per loaded language, in the same order as {@code langlist}.
-     */
     @NotNull
-    private final Map<String, double[]> wordLangProbMap;
-    /**
-     * Used for computation when {@code wordLangProbMap} does not have an entry.
-     */
-    private final double[] dummyWordLangProbMap;
-    /**
-     * All the loaded languages, order is important.
-     */
-    @NotNull
-    private final List<String> langlist;
+    private final NgramFrequencyData ngramFrequencyData;
 
     /**
      * User-defined language priorities, in the same order as {@code langlist}.
@@ -77,6 +63,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private final double[] priorMap;
 
     private final double alpha;
+    @Deprecated
     private final boolean skipUnknownNgrams;
     private final int shortTextAlgorithm;
     private final double prefixFactor;
@@ -88,8 +75,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     /**
      * Use the {@link LanguageDetectorBuilder}.
      */
-    LanguageDetectorImpl(@NotNull Map<String, double[]> wordLangProbMap,
-                         @NotNull List<String> langlist,
+    LanguageDetectorImpl(@NotNull NgramFrequencyData ngramFrequencyData,
                          double alpha, boolean skipUnknownNgrams, int shortTextAlgorithm,
                          double prefixFactor, double suffixFactor,
                          @Nullable Map<String, Double> langWeightingMap,
@@ -98,19 +84,14 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         if (prefixFactor <0d || prefixFactor >10d) throw new IllegalArgumentException(""+ prefixFactor);
         if (suffixFactor <0d || suffixFactor >10d) throw new IllegalArgumentException(""+ suffixFactor);
         if (langWeightingMap!=null && langWeightingMap.isEmpty()) langWeightingMap = null;
-        if (langlist.isEmpty()) throw new IllegalArgumentException();
 
-        //not making a copy because these 2 come fresh from the builder.
-        this.wordLangProbMap = wordLangProbMap;
-        this.dummyWordLangProbMap = new double[langlist.size()];
-        this.langlist = langlist;
-
+        this.ngramFrequencyData = ngramFrequencyData;
         this.alpha = alpha;
         this.skipUnknownNgrams = skipUnknownNgrams;
         this.shortTextAlgorithm = shortTextAlgorithm;
         this.prefixFactor = prefixFactor;
         this.suffixFactor = suffixFactor;
-        this.priorMap = (langWeightingMap==null) ? null : Util.makeInternalPrioMap(langWeightingMap, langlist);
+        this.priorMap = (langWeightingMap==null) ? null : Util.makeInternalPrioMap(langWeightingMap, ngramFrequencyData.getLanglist());
         this.ngramExtractor = ngramExtractor;
     }
 
@@ -176,7 +157,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     private double[] detectBlockLongText(List<String> ngrams) {
         assert !ngrams.isEmpty();
-        double[] langprob = new double[langlist.size()];
+        double[] langprob = new double[ngramFrequencyData.getLanglist().size()];
         Random rand = new Random();
         for (int t = 0; t < N_TRIAL; ++t) {
             double[] prob = initProbability();
@@ -202,13 +183,13 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      * @return initialized map of language probabilities
      */
     private double[] initProbability() {
-        double[] prob = new double[langlist.size()];
+        double[] prob = new double[ngramFrequencyData.getLanglist().size()];
         if (priorMap != null) {
             //TODO analyze and optimize this code, looks like double copy.
             System.arraycopy(priorMap, 0, prob, 0, prob.length);
             for(int i=0;i<prob.length;++i) prob[i] = priorMap[i];
         } else {
-            for(int i=0;i<prob.length;++i) prob[i] = 1.0 / langlist.size();
+            for(int i=0;i<prob.length;++i) prob[i] = 1.0 / ngramFrequencyData.getLanglist().size();
         }
         return prob;
     }
@@ -219,17 +200,12 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      * @param count 1-n: how often the gram occurred.
      */
     private boolean updateLangProb(@NotNull double[] prob, @NotNull String ngram, int count, double alpha) {
-        double[] langProbMap = wordLangProbMap.get(ngram);
+        double[] langProbMap = ngramFrequencyData.getProbabilities(ngram);
         if (langProbMap==null) {
-            if (skipUnknownNgrams) {
-                //this is not nice, an unknown n-gram must lower confidence and total points.
-                //it is how the original program worked.
-                return false;
-            }
-            langProbMap = dummyWordLangProbMap;
+            return false;
         }
 
-        if (logger.isTraceEnabled()) logger.trace(ngram + "(" + Util.unicodeEncode(ngram) + "):" + Util.wordProbToString(langProbMap, langlist));
+        if (logger.isTraceEnabled()) logger.trace(ngram + "(" + Util.unicodeEncode(ngram) + "):" + Util.wordProbToString(langProbMap, ngramFrequencyData.getLanglist()));
 
         double weight = alpha / BASE_FREQ;
         if (ngram.length() >1) {
@@ -259,7 +235,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
             if (p > PROB_THRESHOLD) {
                 for (int i = 0; i <= list.size(); ++i) {
                     if (i == list.size() || list.get(i).getProbability() < p) {
-                        list.add(i, new DetectedLanguage(langlist.get(j), p));
+                        list.add(i, new DetectedLanguage(ngramFrequencyData.getLanglist().get(j), p));
                         break;
                     }
                 }

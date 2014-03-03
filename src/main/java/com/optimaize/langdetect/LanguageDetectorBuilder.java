@@ -141,30 +141,8 @@ public class LanguageDetectorBuilder {
      */
     public LanguageDetector build() throws IllegalStateException {
         if (languageProfiles.isEmpty()) throw new IllegalStateException();
-
-        Map<String, double[]> wordLangProbMap = new HashMap<>();
-        List<String> langlist = new ArrayList<>();
-        int langsize = languageProfiles.size(); //that's how the orig code did it. dunno what that's for.
-
-        int index = -1;
-        for (LanguageProfile profile : languageProfiles) {
-            index++;
-
-            langlist.add( profile.getLanguage() );
-
-            for (Map.Entry<String, Integer> ngramEntry : profile.iterateGrams()) {
-                String ngram      = ngramEntry.getKey();
-                Integer frequency = ngramEntry.getValue();
-                if (!wordLangProbMap.containsKey(ngram)) {
-                    wordLangProbMap.put(ngram, new double[langsize]);
-                }
-                double prob = frequency.doubleValue() / profile.getNumGramOccurrences(ngram.length());
-                wordLangProbMap.get(ngram)[index] = prob;
-            }
-        }
-
         return new LanguageDetectorImpl(
-                wordLangProbMap, langlist,
+                NgramFrequencyData.create(languageProfiles),
                 alpha, skipUnknownNgrams, shortTextAlgorithm,
                 prefixFactor, suffixFactor,
                 langWeightingMap,
