@@ -27,6 +27,8 @@ public class LanguageDetectorBuilder {
     private double prefixFactor = 1.0d;
     private double suffixFactor = 1.0d;
 
+    private double probabilityThreshold = 0.1;
+
     @Nullable
     private Map<String, Double> langWeightingMap;
 
@@ -100,6 +102,17 @@ public class LanguageDetectorBuilder {
     }
 
     /**
+     * {@link LanguageDetector#getProbabilities} does not return languages with less probability than this.
+     * The default currently is 0.1 (the old hardcoded value), but don't rely on it, if you need to be sure
+     * then set one.
+     */
+    public LanguageDetectorBuilder probabilityThreshold(double probabilityThreshold) {
+        this.probabilityThreshold = probabilityThreshold;
+        return this;
+    }
+
+
+    /**
      * TODO document exactly. Also explain how it influences the results.
      * Maybe check for unsupported languages at some point, or not, but document whether it does throw or ignore.
      * String key = language code, Double value = priority (probably 0-1).
@@ -145,6 +158,7 @@ public class LanguageDetectorBuilder {
                 NgramFrequencyData.create(languageProfiles),
                 alpha, skipUnknownNgrams, shortTextAlgorithm,
                 prefixFactor, suffixFactor,
+                probabilityThreshold,
                 langWeightingMap,
                 ngramExtractor
         );

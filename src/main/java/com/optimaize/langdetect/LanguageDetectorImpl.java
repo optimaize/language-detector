@@ -36,11 +36,6 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     /**
      * TODO document what this is for, and why that value is chosen.
      */
-    private static final double PROB_THRESHOLD = 0.1;
-
-    /**
-     * TODO document what this is for, and why that value is chosen.
-     */
     private static final double CONV_THRESHOLD = 0.99999;
 
     /**
@@ -69,6 +64,8 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private final double prefixFactor;
     private final double suffixFactor;
 
+    private final double probabilityThreshold;
+
     private final NgramExtractor ngramExtractor;
 
 
@@ -78,11 +75,13 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     LanguageDetectorImpl(@NotNull NgramFrequencyData ngramFrequencyData,
                          double alpha, boolean skipUnknownNgrams, int shortTextAlgorithm,
                          double prefixFactor, double suffixFactor,
+                         double probabilityThreshold,
                          @Nullable Map<String, Double> langWeightingMap,
                          @NotNull NgramExtractor ngramExtractor) {
         if (alpha<0d || alpha >1d) throw new IllegalArgumentException(""+alpha);
         if (prefixFactor <0d || prefixFactor >10d) throw new IllegalArgumentException(""+ prefixFactor);
         if (suffixFactor <0d || suffixFactor >10d) throw new IllegalArgumentException(""+ suffixFactor);
+        if (probabilityThreshold<0d || probabilityThreshold>1d) throw new IllegalArgumentException(""+probabilityThreshold);
         if (langWeightingMap!=null && langWeightingMap.isEmpty()) langWeightingMap = null;
 
         this.ngramFrequencyData = ngramFrequencyData;
@@ -91,6 +90,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         this.shortTextAlgorithm = shortTextAlgorithm;
         this.prefixFactor = prefixFactor;
         this.suffixFactor = suffixFactor;
+        this.probabilityThreshold = probabilityThreshold;
         this.priorMap = (langWeightingMap==null) ? null : Util.makeInternalPrioMap(langWeightingMap, ngramFrequencyData.getLanglist());
         this.ngramExtractor = ngramExtractor;
     }
@@ -225,17 +225,18 @@ public final class LanguageDetectorImpl implements LanguageDetector {
 
 
     /**
-     * @return language candidates order by probabilities descending
+     * Returns the detected languages sorted by probabilities descending.
+     * Languages with less probability than PROB_THRESHOLD are ignored.
      */
     @NotNull
     private List<DetectedLanguage> sortProbability(double[] prob) {
         List<DetectedLanguage> list = new ArrayList<>();
         for (int j=0;j<prob.length;++j) {
             double p = prob[j];
-            if (p > PROB_THRESHOLD) {
-                for (int i = 0; i <= list.size(); ++i) {
+            if (p >= probabilityThreshold) {
+                for (int i=0; i<=list.size(); ++i) {
                     if (i == list.size() || list.get(i).getProbability() < p) {
-                        list.add(i, new DetectedLanguage(ngramFrequencyData.getLanglist().get(j), p));
+                        list.add(i, new DetectedLanguage(ngramFrequencyData.getLanguage(j), p));
                         break;
                     }
                 }

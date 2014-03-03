@@ -21,12 +21,18 @@ public interface LanguageDetector {
 
     /**
      * @param text You probably want a {@link com.optimaize.langdetect.text.TextObject}.
-     * @return The language if confident, absent if not.
+     * @return The language if confident, absent if unknown or not confident enough.
      */
     Optional<String> detect(CharSequence text);
 
     /**
-     * There may be some PROB_THRESHOLD applied to cut unlikely results.
+     * Returns all languages with at least some likeliness.
+     *
+     * <p>There is a configurable cutoff applied for languages with very low probability.</p>
+     *
+     * <p>The way the algorithm currently works, it can be that, for example, this method returns a 0.99 for
+     * Danish and less than 0.01 for Norwegian, and still they have almost the same chance. It would be nice if
+     * this could be improved in future versions.</p>
      *
      * @param text You probably want a {@link com.optimaize.langdetect.text.TextObject}.
      * @return Sorted from better to worse. May be empty.
