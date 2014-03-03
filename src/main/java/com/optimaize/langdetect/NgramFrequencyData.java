@@ -9,11 +9,11 @@ import java.util.*;
 /**
  * Contains frequency information for ngram strings and the languages.
  *
- * <p>Immutable in theory.</p>
+ * <p>Immutable by definition (can't make Arrays unmodifiable).</p>
  *
  * @author Fabian Kessler
  */
-public class NgramFrequencyData {
+public final class NgramFrequencyData {
 
     /**
      * Key=ngram
@@ -64,15 +64,19 @@ public class NgramFrequencyData {
 
 
     @NotNull
-    public List<String> getLanglist() {
+    public List<String> getLanguagelist() {
         return langlist;
+    }
+    @NotNull
+    public String getLanguage(int pos) {
+        return langlist.get(pos);
     }
 
     /**
      * Don't modify this data structure! (Can't make array immutable...)
      * @return null if no language profile knows that ngram.
      *         entries are 0 for languages that don't know that ngram at all.
-     *         The array is in the order of the {@link #getLanglist()} language list, and has exactly that size.
+     *         The array is in the order of the {@link #getLanguagelist()} language list, and has exactly that size.
      *         impl note: this way the caller can handle it more efficient than returning an empty array.
      */
     @Nullable
