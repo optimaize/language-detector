@@ -40,8 +40,7 @@ public class TechnicalLanguageDetectorImplTest {
         //building exactly like the old detector behaved.
         LanguageDetectorBuilder detectorBuilder = LanguageDetectorBuilder.create(NgramExtractor.gramLengths(1))
                 .affixFactor(1.0)
-                .shortTextAlgorithm(0)
-                .skipUnknownNgrams(true);
+                .shortTextAlgorithm(0);
 
         LanguageProfileBuilder profileBuilder = new LanguageProfileBuilder("en");
         add(detectorBuilder, profileBuilder, TRAINING_EN);

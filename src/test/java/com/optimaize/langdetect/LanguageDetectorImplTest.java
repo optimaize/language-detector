@@ -53,7 +53,6 @@ public class LanguageDetectorImplTest {
 
     private LanguageDetector makeNewDetector() throws IOException {
         LanguageDetectorBuilder builder = LanguageDetectorBuilder.create(NgramExtractors.standard());
-        builder.skipUnknownNgrams(false);
         builder.shortTextAlgorithm(50);
         builder.prefixFactor(1.5);
         builder.suffixFactor(2.0);

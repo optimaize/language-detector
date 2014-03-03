@@ -22,7 +22,6 @@ public class LanguageDetectorBuilder {
     private final NgramExtractor ngramExtractor;
 
     private double alpha = ALPHA_DEFAULT;
-    private boolean skipUnknownNgrams = true;
     private int shortTextAlgorithm = 50;
     private double prefixFactor = 1.0d;
     private double suffixFactor = 1.0d;
@@ -53,13 +52,6 @@ public class LanguageDetectorBuilder {
         return this;
     }
 
-    /**
-     * If not specified, the default is {@code true}. This is the old behavior.
-     */
-    public LanguageDetectorBuilder skipUnknownNgrams(boolean skipUnknownNgrams) {
-        this.skipUnknownNgrams = skipUnknownNgrams;
-        return this;
-    }
 
     /**
      * Defaults to 0, which means don't use this feature. That's the old behavior.
@@ -166,7 +158,7 @@ public class LanguageDetectorBuilder {
         if (languageProfiles.isEmpty()) throw new IllegalStateException();
         return new LanguageDetectorImpl(
                 NgramFrequencyData.create(languageProfiles),
-                alpha, skipUnknownNgrams, shortTextAlgorithm,
+                alpha, shortTextAlgorithm,
                 prefixFactor, suffixFactor,
                 probabilityThreshold, minimalConfidence,
                 langWeightingMap,

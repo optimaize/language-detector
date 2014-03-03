@@ -58,8 +58,6 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private final double[] priorMap;
 
     private final double alpha;
-    @Deprecated
-    private final boolean skipUnknownNgrams;
     private final int shortTextAlgorithm;
     private final double prefixFactor;
     private final double suffixFactor;
@@ -74,7 +72,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      * Use the {@link LanguageDetectorBuilder}.
      */
     LanguageDetectorImpl(@NotNull NgramFrequencyData ngramFrequencyData,
-                         double alpha, boolean skipUnknownNgrams, int shortTextAlgorithm,
+                         double alpha, int shortTextAlgorithm,
                          double prefixFactor, double suffixFactor,
                          double probabilityThreshold,
                          double minimalConfidence,
@@ -89,7 +87,6 @@ public final class LanguageDetectorImpl implements LanguageDetector {
 
         this.ngramFrequencyData = ngramFrequencyData;
         this.alpha = alpha;
-        this.skipUnknownNgrams = skipUnknownNgrams;
         this.shortTextAlgorithm = shortTextAlgorithm;
         this.prefixFactor = prefixFactor;
         this.suffixFactor = suffixFactor;
