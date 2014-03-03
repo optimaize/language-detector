@@ -1,6 +1,8 @@
 package com.optimaize.langdetect;
 
 import com.optimaize.langdetect.profiles.LanguageProfile;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -17,15 +19,18 @@ public class NgramFrequencyData {
      * Key=ngram
      * Value = array with probabilities per loaded language, in the same order as {@code langlist}.
      */
+    @NotNull
     private final Map<String, double[]> wordLangProbMap;
 
     /**
      * All the loaded languages, order is important.
      */
+    @NotNull
     private final List<String> langlist;
 
 
-    public static NgramFrequencyData create(Collection<LanguageProfile> languageProfiles) {
+    @NotNull
+    public static NgramFrequencyData create(@NotNull Collection<LanguageProfile> languageProfiles) {
         Map<String, double[]> wordLangProbMap = new HashMap<>();
         List<String> langlist = new ArrayList<>();
         int langsize = languageProfiles.size(); //that's how the orig code did it. dunno what that's for.
@@ -50,14 +55,15 @@ public class NgramFrequencyData {
         return new NgramFrequencyData(wordLangProbMap, langlist);
     }
 
-    private NgramFrequencyData(Map<String, double[]> wordLangProbMap,
-                               List<String> langlist) {
+    private NgramFrequencyData(@NotNull Map<String, double[]> wordLangProbMap,
+                               @NotNull List<String> langlist) {
         //not making immutable copies because I create them here (optimization).
         this.wordLangProbMap = Collections.unmodifiableMap(wordLangProbMap);
         this.langlist = Collections.unmodifiableList(langlist);
     }
 
 
+    @NotNull
     public List<String> getLanglist() {
         return langlist;
     }
@@ -69,6 +75,7 @@ public class NgramFrequencyData {
      *         The array is in the order of the {@link #getLanglist()} language list, and has exactly that size.
      *         impl note: this way the caller can handle it more efficient than returning an empty array.
      */
+    @Nullable
     public double[] getProbabilities(String ngram) {
         return wordLangProbMap.get(ngram);
     }
