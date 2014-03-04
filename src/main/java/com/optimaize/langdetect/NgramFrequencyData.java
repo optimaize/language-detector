@@ -29,11 +29,19 @@ public final class NgramFrequencyData {
     private final List<String> langlist;
 
 
+    /**
+     * @param gramLengths for example [1,2,3]
+     * @throws java.lang.IllegalArgumentException if languageProfiles or gramLengths is empty, or if one of the
+     *         languageProfiles does not have the grams of the required sizes.
+     */
     @NotNull
-    public static NgramFrequencyData create(@NotNull Collection<LanguageProfile> languageProfiles) {
+    public static NgramFrequencyData create(@NotNull Collection<LanguageProfile> languageProfiles, @NotNull Collection<Integer> gramLengths) throws IllegalArgumentException {
+        if (languageProfiles.isEmpty()) throw new IllegalArgumentException("No languageProfiles provided!");
+        if (gramLengths.isEmpty()) throw new IllegalArgumentException("No gramLengths provided!");
+
         Map<String, double[]> wordLangProbMap = new HashMap<>();
         List<String> langlist = new ArrayList<>();
-        int langsize = languageProfiles.size(); //that's how the orig code did it. dunno what that's for.
+        int langsize = languageProfiles.size();
 
         int index = -1;
         for (LanguageProfile profile : languageProfiles) {
@@ -41,14 +49,19 @@ public final class NgramFrequencyData {
 
             langlist.add( profile.getLanguage() );
 
-            for (Map.Entry<String, Integer> ngramEntry : profile.iterateGrams()) {
-                String ngram      = ngramEntry.getKey();
-                Integer frequency = ngramEntry.getValue();
-                if (!wordLangProbMap.containsKey(ngram)) {
-                    wordLangProbMap.put(ngram, new double[langsize]);
+            for (Integer gramLength : gramLengths) {
+                if (!profile.getGramLengths().contains(gramLength)) {
+                    throw new IllegalArgumentException("The language profile for "+profile.getLanguage()+" does not contain "+gramLength+"-grams!");
                 }
-                double prob = frequency.doubleValue() / profile.getNumGramOccurrences(ngram.length());
-                wordLangProbMap.get(ngram)[index] = prob;
+                for (Map.Entry<String, Integer> ngramEntry : profile.iterateGrams(gramLength)) {
+                    String ngram      = ngramEntry.getKey();
+                    Integer frequency = ngramEntry.getValue();
+                    if (!wordLangProbMap.containsKey(ngram)) {
+                        wordLangProbMap.put(ngram, new double[langsize]);
+                    }
+                    double prob = frequency.doubleValue() / profile.getNumGramOccurrences(ngram.length());
+                    wordLangProbMap.get(ngram)[index] = prob;
+                }
             }
         }
 
