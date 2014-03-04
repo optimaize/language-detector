@@ -78,31 +78,14 @@ public class LanguageProfileReader {
      * Reads all built-in language profiles from the "languages" folder (shipped with the jar).
      */
     public List<LanguageProfile> readAll() throws IOException {
-        List<String> strings = readFilesFromClassPathFolder();
+        List<String> strings = BuiltInLanguages.getLanguages();
         return read(strings);
     }
 
     /**
-     * This should work in a jar (untested). If you know a nicer way that works in a jar too, replace it.
-     */
-    private List<String> readFilesFromClassPathFolder() throws IOException {
-        List<String> files = new ArrayList<>();
-        ClassLoader loader = LanguageProfileReader.class.getClassLoader();
-        try (InputStream in = loader.getResourceAsStream("languages/.")) {
-            BufferedReader rdr = new BufferedReader(new InputStreamReader(in));
-            String line;
-            while ((line = rdr.readLine()) != null) {
-                if (looksLikeLanguageProfileName(line)) {
-                    files.add(line);
-                }
-            }
-            rdr.close();
-        }
-        return files;
-    }
-
-    /**
      * Loads all profiles from the specified directory.
+     *
+     * Do not use this method for files distributed within a jar.
      *
      * @param path profile directory path
      * @return empty if there is no language file in it.
