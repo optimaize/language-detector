@@ -103,6 +103,11 @@ public final class LanguageProfileImpl implements LanguageProfile {
         return Iterables.concat(arr);
     }
 
+    @NotNull @Override
+    public Iterable<Map.Entry<String, Integer>> iterateGrams(int gramLength) {
+        return ngrams.get(gramLength).entrySet();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
