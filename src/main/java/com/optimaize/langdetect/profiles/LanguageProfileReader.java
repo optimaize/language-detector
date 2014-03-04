@@ -57,21 +57,18 @@ public class LanguageProfileReader {
     }
 
     /**
-     * Same as {@link #read(ClassLoader, String, java.util.Collection)} using the class loader
-     * of this class, and the default profiles directory of this library.
+     * Same as {@link #read(ClassLoader, String, java.util.Collection)} using the class loader of this class.
+     */
+    public List<LanguageProfile> read(String profileDirectory, Collection<String> languages) throws IOException {
+        return read(LanguageProfileReader.class.getClassLoader(), profileDirectory, languages);
+    }
+
+    /**
+     * Same as {@link #read(ClassLoader, String, java.util.Collection)} using the class loader of this class,
+     * and the default profiles directory of this library.
      */
     public List<LanguageProfile> read(Collection<String> languages) throws IOException {
-        List<LanguageProfile> loaded = new ArrayList<>(languages.size());
-        for (String language : languages) {
-            String fullpath = '/' + PROFILES_DIR + '/' + language; //WITH slash before the profileDirectory when not using the classloader!
-            try (InputStream in = LanguageProfileReader.class.getResourceAsStream(fullpath)) {
-                if (in == null) {
-                    throw new IOException("No language file available for language "+language+"!");
-                }
-                loaded.add( read(in) );
-            }
-        }
-        return loaded;
+        return read(LanguageProfileReader.class.getClassLoader(), PROFILES_DIR, languages);
     }
 
     /**

@@ -70,8 +70,28 @@ public class LanguageProfileReaderTest {
 
 
     @Test
+    public void read() throws IOException {
+        List<LanguageProfile> read = new LanguageProfileReader().read(ImmutableList.of("de", "fr"));
+        assertEquals(read.size(), 2);
+    }
+
+    @Test
+    public void read_folder() throws IOException {
+        List<LanguageProfile> read = new LanguageProfileReader().read("languages", ImmutableList.of("de", "fr"));
+        assertEquals(read.size(), 2);
+    }
+
+    @Test
+    public void read_classpathAndFolder() throws IOException {
+        List<LanguageProfile> read = new LanguageProfileReader().read(LanguageProfileReaderTest.class.getClassLoader(), "languages", ImmutableList.of("de", "fr"));
+        assertEquals(read.size(), 2);
+    }
+
+    @Test
     public void readAll() throws IOException {
-        List<LanguageProfile> profiles = new LanguageProfileReader().readAll();
+        verify_readAll( new LanguageProfileReader().readAll() );
+    }
+    private void verify_readAll(List<LanguageProfile> profiles) {
         assertEquals(profiles.size(), 69); //adjust this number when adding more languages
         Set<String> allLangs = new HashSet<>();
         for (LanguageProfile profile : profiles) {
@@ -82,7 +102,6 @@ public class LanguageProfileReaderTest {
         assertTrue(allLangs.contains("zh-cn"));
         assertTrue(allLangs.contains("zh-tw"));
     }
-
 
 
     @Test
