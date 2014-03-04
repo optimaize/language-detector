@@ -77,7 +77,7 @@ public final class NgramFrequencyData {
 
 
     @NotNull
-    public List<String> getLanguagelist() {
+    public List<String> getLanguageList() {
         return langlist;
     }
     @NotNull
@@ -89,7 +89,7 @@ public final class NgramFrequencyData {
      * Don't modify this data structure! (Can't make array immutable...)
      * @return null if no language profile knows that ngram.
      *         entries are 0 for languages that don't know that ngram at all.
-     *         The array is in the order of the {@link #getLanguagelist()} language list, and has exactly that size.
+     *         The array is in the order of the {@link #getLanguageList()} language list, and has exactly that size.
      *         impl note: this way the caller can handle it more efficient than returning an empty array.
      */
     @Nullable

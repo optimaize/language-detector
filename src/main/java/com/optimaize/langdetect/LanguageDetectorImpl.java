@@ -92,7 +92,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         this.suffixFactor = suffixFactor;
         this.probabilityThreshold = probabilityThreshold;
         this.minimalConfidence = minimalConfidence;
-        this.priorMap = (langWeightingMap==null) ? null : Util.makeInternalPrioMap(langWeightingMap, ngramFrequencyData.getLanguagelist());
+        this.priorMap = (langWeightingMap==null) ? null : Util.makeInternalPrioMap(langWeightingMap, ngramFrequencyData.getLanguageList());
         this.ngramExtractor = ngramExtractor;
     }
 
@@ -158,7 +158,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     private double[] detectBlockLongText(List<String> ngrams) {
         assert !ngrams.isEmpty();
-        double[] langprob = new double[ngramFrequencyData.getLanguagelist().size()];
+        double[] langprob = new double[ngramFrequencyData.getLanguageList().size()];
         Random rand = new Random();
         for (int t = 0; t < N_TRIAL; ++t) {
             double[] prob = initProbability();
@@ -184,13 +184,13 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      * @return initialized map of language probabilities
      */
     private double[] initProbability() {
-        double[] prob = new double[ngramFrequencyData.getLanguagelist().size()];
+        double[] prob = new double[ngramFrequencyData.getLanguageList().size()];
         if (priorMap != null) {
             //TODO analyze and optimize this code, looks like double copy.
             System.arraycopy(priorMap, 0, prob, 0, prob.length);
             for(int i=0;i<prob.length;++i) prob[i] = priorMap[i];
         } else {
-            for(int i=0;i<prob.length;++i) prob[i] = 1.0 / ngramFrequencyData.getLanguagelist().size();
+            for(int i=0;i<prob.length;++i) prob[i] = 1.0 / ngramFrequencyData.getLanguageList().size();
         }
         return prob;
     }
@@ -206,7 +206,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
             return false;
         }
 
-        if (logger.isTraceEnabled()) logger.trace(ngram + "(" + Util.unicodeEncode(ngram) + "):" + Util.wordProbToString(langProbMap, ngramFrequencyData.getLanguagelist()));
+        if (logger.isTraceEnabled()) logger.trace(ngram + "(" + Util.unicodeEncode(ngram) + "):" + Util.wordProbToString(langProbMap, ngramFrequencyData.getLanguageList()));
 
         double weight = alpha / BASE_FREQ;
         if (ngram.length() >1) {
