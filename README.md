@@ -232,6 +232,12 @@ I figured that I better start my own. This ensures that my work is published to 
 
 
 
+## Where it's used
+
+An adapted version of this is used by the http://www.NameAPI.org server.
+
+
+
 ## License
 
 LGPLv3 (business friendly, must publish changes)
