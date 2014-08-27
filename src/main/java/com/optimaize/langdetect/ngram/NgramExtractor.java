@@ -98,6 +98,8 @@ public class NgramExtractor {
 
     /**
      * @return Key = ngram, value = count
+     *         The order is as the n-grams appeared first in the string.
+     *
      */
     @NotNull
     public Map<String,Integer> extractCountedGrams(@NotNull CharSequence text) {
@@ -109,7 +111,7 @@ public class NgramExtractor {
             initialCapacity += guessNumDistinctiveGrams(len, gramLength);
         }
 
-        Map<String,Integer> grams = new HashMap<>(initialCapacity);
+        Map<String,Integer> grams = new LinkedHashMap<>(initialCapacity);
         for (Integer gramLength : gramLengths) {
             _extractCounted(text, gramLength, len, grams);
         }
