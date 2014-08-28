@@ -2,6 +2,12 @@
 
 Language Detection Library for Java
 
+    <dependency>
+        <groupId>com.optimaize.languagedetector</groupId>
+        <artifactId>language-detector</artifactId>
+        <version>0.4</version>
+    </dependency>
+
 
 ## Language Support
 
@@ -271,3 +277,13 @@ LGPLv3 (business friendly, must publish changes)
   * profiles stored as Java code
   * Maven multi-module project to reduce size for Android apps
 
+
+## For Maven Users
+
+The project is in Maven central http://search.maven.org/#artifactdetails%7Ccom.optimaize.languagedetector%7Clanguage-detector%7C0.4%7Cjar this is the latest version:
+
+    <dependency>
+        <groupId>com.optimaize.languagedetector</groupId>
+        <artifactId>language-detector</artifactId>
+        <version>0.4</version>
+    </dependency>
