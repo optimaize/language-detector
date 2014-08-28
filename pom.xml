@@ -53,6 +53,9 @@
     <build>
         <!-- Include the README and LICENSE files: -->
         <resources>
+            <resource><!-- this is default, but because we tamper with the resources, we need to explicitly mention it. -->
+                <directory>src/main/resources</directory>
+            </resource>
             <resource>
                 <directory>${project.basedir}</directory>
                 <includes>
