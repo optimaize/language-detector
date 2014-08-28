@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.optimaize.languagedetector</groupId>
     <artifactId>language-detector</artifactId>
     <name>language-detector</name>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>jar</packaging>
 
     <url>https://github.com/optimaize/language-detector</url>
@@ -48,7 +46,8 @@
         <connection>scm:git:https://github.com/optimaize/language-detector</connection>
         <developerConnection>scm:git:https://github.com/optimaize/language-detector</developerConnection>
         <url>https://github.com/optimaize/language-detector</url>
-    </scm>
+      <tag>language-detector-0.4</tag>
+  </scm>
 
     <build>
         <!-- Include the README and LICENSE files: -->
