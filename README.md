@@ -209,8 +209,8 @@ of the original project https://code.google.com/p/language-detection/
 
 ##### Legal
 
-Changed license from Apache2 to LGPLv3.
-Still pretty much the same, business-friendly, but requires that derivative works are published publicly also.
+Apache2 license, just like the work from which this is derived.
+(I had temporarily changed it to LGPLv3, but that change was invalid and therefore reverted.)
 
 
 ##### TODO
