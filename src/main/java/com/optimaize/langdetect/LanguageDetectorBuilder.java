@@ -47,7 +47,7 @@ public class LanguageDetectorBuilder {
 
 
     public LanguageDetectorBuilder alpha(double alpha) {
-        if (alpha<0 || alpha>1) throw new IllegalArgumentException(""+alpha);
+        if (alpha<0 || alpha>1) throw new IllegalArgumentException("alpha must be between 0 and 1, but was: "+alpha);
         this.alpha = alpha;
         return this;
     }

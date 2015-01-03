@@ -78,11 +78,11 @@ public final class LanguageDetectorImpl implements LanguageDetector {
                          double minimalConfidence,
                          @Nullable Map<String, Double> langWeightingMap,
                          @NotNull NgramExtractor ngramExtractor) {
-        if (alpha<0d || alpha >1d) throw new IllegalArgumentException(""+alpha);
-        if (prefixFactor <0d || prefixFactor >10d) throw new IllegalArgumentException(""+ prefixFactor);
-        if (suffixFactor <0d || suffixFactor >10d) throw new IllegalArgumentException(""+ suffixFactor);
-        if (probabilityThreshold<0d || probabilityThreshold>1d) throw new IllegalArgumentException(""+probabilityThreshold);
-        if (minimalConfidence<0d || minimalConfidence>1d) throw new IllegalArgumentException(""+minimalConfidence);
+        if (alpha<0d || alpha >1d) throw new IllegalArgumentException("alpha must be between 0 and 1, but was: "+alpha);
+        if (prefixFactor <0d || prefixFactor >10d) throw new IllegalArgumentException("prefixFactor must be between 0 and 10, but was: "+prefixFactor);
+        if (suffixFactor <0d || suffixFactor >10d) throw new IllegalArgumentException("suffixFactor must be between 0 and 10, but was: "+suffixFactor);
+        if (probabilityThreshold<0d || probabilityThreshold>1d) throw new IllegalArgumentException("probabilityThreshold must be between 0 and 1, but was: "+probabilityThreshold);
+        if (minimalConfidence<0d || minimalConfidence>1d) throw new IllegalArgumentException("minimalConfidence must be between 0 and 1, but was: "+minimalConfidence);
         if (langWeightingMap!=null && langWeightingMap.isEmpty()) langWeightingMap = null;
 
         this.ngramFrequencyData = ngramFrequencyData;

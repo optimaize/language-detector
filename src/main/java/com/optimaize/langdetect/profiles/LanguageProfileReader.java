@@ -48,7 +48,7 @@ public class LanguageProfileReader {
             String fullpath = profileDirectory + '/' + language; //WITHOUT slash before the profileDirectory when using the classloader!
             try (InputStream in = classLoader.getResourceAsStream(fullpath)) {
                 if (in == null) {
-                    throw new IOException("No language file available for language "+language+"!");
+                    throw new IOException("No language file available for language "+language+" at " + fullpath + "!");
                 }
                 loaded.add( read(in) );
             }
