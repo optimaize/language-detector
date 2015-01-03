@@ -33,9 +33,9 @@ public class LanguageDetectorBuilder {
     private Map<String, Double> langWeightingMap;
 
     @NotNull
-    private Set<LanguageProfile> languageProfiles = new HashSet<>();
+    private final Set<LanguageProfile> languageProfiles = new HashSet<>();
     @NotNull
-    private Set<String> langsAdded = new HashSet<>();
+    private final Set<String> langsAdded = new HashSet<>();
 
     public static LanguageDetectorBuilder create(@NotNull NgramExtractor ngramExtractor) {
         return new LanguageDetectorBuilder(ngramExtractor);

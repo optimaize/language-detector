@@ -44,7 +44,7 @@ public class CharNormalizer {
     }
 
     private static final String LATIN1_EXCLUDED = Messages.getString("NGram.LATIN1_EXCLUDE");
-    private static Map<Character, Character> cjk_map;
+    private static final Map<Character, Character> cjk_map;
 
 
     /**
