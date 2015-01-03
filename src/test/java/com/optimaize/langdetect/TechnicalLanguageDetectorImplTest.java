@@ -16,7 +16,6 @@
 
 package com.optimaize.langdetect;
 
-import com.cybozu.labs.langdetect.LangDetectException;
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.profiles.LanguageProfileBuilder;
 import org.junit.Test;
@@ -80,7 +79,7 @@ public class TechnicalLanguageDetectorImplTest {
     }
 
     @Test
-    public final void testDetector4() throws LangDetectException {
+    public final void testDetector4() {
         LanguageDetector languageDetector = makeDetector();
         assertEquals(languageDetector.detect("\u3042\u3042\u3042\u3042a").get(), "ja");
     }

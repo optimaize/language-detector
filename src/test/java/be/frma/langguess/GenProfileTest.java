@@ -1,7 +1,6 @@
 
 package be.frma.langguess;
 
-import com.cybozu.labs.langdetect.LangDetectException;
 import com.cybozu.labs.langdetect.util.LangProfile;
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertThat;
 public class GenProfileTest extends GenProfile {
 
 	@Test
-	public void generateProfile() throws IOException, LangDetectException {
+	public void generateProfile() throws IOException {
 		File inputFile = File.createTempFile("profileInput", ".txt");
 		try {
 			try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(inputFile), Charset.forName("utf-8")))) {

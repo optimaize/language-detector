@@ -36,26 +36,20 @@ public class NGram {
     /**
      * ngrams are created from 1gram to this amount, currently 2grams and 3grams.
      */
-    public final static int N_GRAM = 3;
+    public static final int N_GRAM = 3;
 
     private StringBuilder grams_;
     private boolean capitalword_;
 
-    /**
-     * 
-     */
     public NGram() {
         grams_ = new StringBuilder(" ");
         capitalword_ = false;
     }
 
-    /**
-     * @param ch
-     */
     public void addChar(char ch) {
         ch = CharNormalizer.normalize(ch);
-        char lastchar = grams_.charAt(grams_.length() - 1);
-        if (lastchar == ' ') {
+        char lastChar = grams_.charAt(grams_.length() - 1);
+        if (lastChar == ' ') {
             grams_ = new StringBuilder(" ");
             capitalword_ = false;
             if (ch==' ') return;
@@ -65,7 +59,7 @@ public class NGram {
         grams_.append(ch);
 
         if (Character.isUpperCase(ch)){
-            if (Character.isUpperCase(lastchar)) capitalword_ = true;
+            if (Character.isUpperCase(lastChar)) capitalword_ = true;
         } else {
             capitalword_ = false;
         }

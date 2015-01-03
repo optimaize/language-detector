@@ -35,8 +35,8 @@ import org.jetbrains.annotations.NotNull;
 public class DetectedLanguage implements Comparable<DetectedLanguage> {
 
     @NotNull
-    private String language;
-    private double probability;
+    private final String language;
+    private final double probability;
 
     /**
      * @param language TODO document and validate syntax

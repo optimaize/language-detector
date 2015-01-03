@@ -175,7 +175,7 @@ public class LangProfile implements Serializable {
 		return freq;
 	}
 
-	public void setFreq(HashMap<String, Integer> freq) {
+	public void setFreq(Map<String, Integer> freq) {
 		this.freq = freq;
 	}
 

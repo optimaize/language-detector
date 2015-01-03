@@ -48,9 +48,8 @@ public class GenProfile {
      * @param lang target language name
      * @param file target database file path
      * @return Language profile instance
-     * @throws LangDetectException 
      */
-    public static LangProfile load(String lang, File file) throws LangDetectException {
+    public static LangProfile load(String lang, File file) {
 
         LangProfile profile = new LangProfile(lang);
 
@@ -79,7 +78,7 @@ public class GenProfile {
                     }
                 }
             } catch (XMLStreamException e) {
-                throw new LangDetectException(ErrorCode.TrainDataFormatError, "Training database file '" + file.getName() + "' is an invalid XML.");
+                throw new RuntimeException("Training database file '" + file.getName() + "' is an invalid XML.", e);
             } finally {
                 try {
                     if (reader != null) reader.close();
@@ -88,7 +87,7 @@ public class GenProfile {
             logger.info(lang + ":" + tagextractor.count());
 
         } catch (IOException e) {
-            throw new LangDetectException(ErrorCode.CantOpenTrainData, "Can't open training database file '" + file.getName() + "'");
+            throw new RuntimeException("Can't open training database file '" + file.getName() + "'", e);
         } finally {
             IOUtils.closeQuietly(is);
         }
