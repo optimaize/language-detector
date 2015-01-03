@@ -1,6 +1,5 @@
 package com.optimaize.langdetect.profiles;
 
-import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.text.*;
 import org.junit.Test;
