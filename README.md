@@ -84,6 +84,8 @@ Language Detection Library for Java
 1. cy Welsh
 1. yi Yiddish
 
+User danielnaber has made available profiles for Khmer and Esperanto on his website, see open tasks to integrate these.
+
 
 ### Other Languages
 
@@ -189,7 +191,7 @@ of the original project https://code.google.com/p/language-detection/
 
 ##### Technical Changes
 
-* Updated to use Java 7 for compilation, and for syntax. It's 2014, and 7 is the only officially supported version by Oracle.
+* Updated to use Java 7 for compilation, and for syntax. It's 2015, and 7/8 are the only officially supported version by Oracle.
 * Code quality improvements:
   * Returning interfaces instead of implementations (List instead of ArrayList etc)
   * String .equals instead of ==
@@ -203,7 +205,7 @@ of the original project https://code.google.com/p/language-detection/
   * Added JavaDoc, fixed typos
   * Added interfaces
   * More tests. Thanks to the refactorings, code is now testable that was too much embedded before.
-* Removed the "seed" completely (for the Random() number generator, I don't see the use).
+* Removed the "seed" completely (for the Random() number generator, I don't see the use). UPDATE: now I do, there's an open task to re-add this.
 * Updated all Maven dependency versions
 * Replaced last lib dependency with Maven (jsonic)
 
