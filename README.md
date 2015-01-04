@@ -248,7 +248,7 @@ An adapted version of this is used by the http://www.NameAPI.org server.
 
 ## License
 
-LGPLv3 (business friendly, must publish changes)
+Apache 2 (business friendly)
 
 
 

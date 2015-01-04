@@ -15,8 +15,8 @@
 
     <licenses>
         <license>
-            <name>LGPL v3</name>
-            <url>http://www.gnu.org/copyleft/lesser.html</url>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
 
