@@ -89,7 +89,8 @@ User danielnaber has made available profiles for Khmer and Esperanto on his webs
 
 ### Other Languages
 
-You can create a language profile for your own language easily. Or provide us "training text", see "How You Can Help".
+You can create a language profile for your own language easily.
+See https://github.com/optimaize/language-detector/blob/master/src/main/resources/README.md
 
 
 ## How it Works
@@ -152,12 +153,27 @@ library you can get at this time. If it doesn't need to be Java, you may want to
     //create the profile:
     LanguageProfile languageProfile = new LanguageProfileBuilder("en")
             .ngramExtractor(NgramExtractors.standard())
+            .minimalFrequency(5) //adjust please
             .addText(inputText)
             .build();
 
     //store it to disk if you like:
     new LanguageProfileWriter().writeToDirectory(languageProfile, "c:/foo/bar");
 
+
+For the profile name, use he ISO 639-1 language code if there is one, otherwise the ISO 639-3 code.
+
+The training text should be rather clean; it is a good idea to remove parts written in other languages
+(like English phrases, or Latin script content in a Cyrillic text for example). Some also like to remove
+proper nouns like (international) place names in case there are too many. It's up to you how far you go.
+As a general rule, the cleaner the text is, the better is its profile.
+
+Please contribute your new language profile to this project. The file can be added to the languages folder, and
+then referenced in the BuiltInLanguages class. Or else open a ticket, and provide a download link.
+
+Also, it's a good idea to put the original text along with the modifying (cleaning) code into a new
+project on GitHub. This gives others the possibility to improve on your work. Or maybe even use the
+training text in other, non-Java software.
 
 
 ## How You Can Help

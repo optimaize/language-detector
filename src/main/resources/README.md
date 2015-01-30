@@ -1,15 +1,13 @@
-## Abut the "languages" folder and files
+## About the "languages" folder and files
 
-These files are from the original software from Nakatani Shuyo.
-
+Most of these files are from the original software from Nakatani Shuyo.
 Unfortunately, the data sources from which they were generated are not available.
-It looks like it comes from Wikipedia pages.
+It looks like the text comes from Wikipedia pages.
 
-To generate your own, use a LanguageProfileBuilder and then add text using a TextObject,
-then finally store the result with a LanguageProfileWriter.
+To generate your own language profile, see the main readme at https://github.com/optimaize/language-detector
 
 
-## Abut the "languages.shorttext" folder and files
+## About the "languages.shorttext" folder and files
 
 These files are from the original software from Nakatani Shuyo.
 
@@ -17,7 +15,7 @@ Either they are for detecting language on short messages, or they are built from
 both, I don't know.
 
 
-## Abut the "messages.properties" file
+## About the "messages.properties" file
 
 They are used in the CharNormalizer.
 

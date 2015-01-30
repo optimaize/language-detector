@@ -31,8 +31,14 @@ public class LanguageProfileBuilder {
         return this;
     }
 
+    /**
+     * @param minimalFrequency 1-n, the default is 1. n-grams that occurred less often in the text are removed.
+     *                         This really should be set to something higher.
+     *                         Try to play with the number until you get a profile file of satisfying size,
+     *                         that produces good language detection results.
+     */
     public LanguageProfileBuilder minimalFrequency(int minimalFrequency) {
-        if (minimalFrequency<1) throw new IllegalArgumentException("minimalFrequency must be >= 1, but was: "+minimalFrequency);
+        if (minimalFrequency < 1) throw new IllegalArgumentException("minimalFrequency must be >= 1, but was: "+minimalFrequency);
         this.minimalFrequency = minimalFrequency;
         return this;
     }

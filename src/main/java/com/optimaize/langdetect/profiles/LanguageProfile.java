@@ -34,6 +34,7 @@ public interface LanguageProfile {
     int getFrequency(String gram);
 
     /**
+     * Tells how many different n-grams there are for a certain n-gram size.
      * For example the English language has about 57 different 1-grams, whereas Chinese in Hani has thousands.
      * @param gramLength 1-n
      * @return 0-n, returns zero if no such n-grams were made (for example if no 4-grams were made),
@@ -48,6 +49,7 @@ public interface LanguageProfile {
     int getNumGrams();
 
     /**
+     * Tells how often all n-grams of a certain length occurred, combined.
      * This returns a much larger number than {@link #getNumGrams}.
      * @param gramLength 1-n
      * @return 0-n, returns zero if no such n-grams were made (for example if no 4-grams were made),
