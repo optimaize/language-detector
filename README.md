@@ -244,6 +244,8 @@ I figured that I better start my own. This ensures that my work is published to 
 
 An adapted version of this is used by the http://www.NameAPI.org server.
 
+https://www.languagetool.org/ is a proof-reading software for LibreOffice/OpenOffice, for the Desktop and for Firefox.
+
 
 
 ## License
