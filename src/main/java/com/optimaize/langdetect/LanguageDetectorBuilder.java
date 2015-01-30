@@ -33,9 +33,9 @@ public class LanguageDetectorBuilder {
     private Map<String, Double> langWeightingMap;
 
     @NotNull
-    private Set<LanguageProfile> languageProfiles = new HashSet<>();
+    private final Set<LanguageProfile> languageProfiles = new HashSet<>();
     @NotNull
-    private Set<String> langsAdded = new HashSet<>();
+    private final Set<String> langsAdded = new HashSet<>();
 
     public static LanguageDetectorBuilder create(@NotNull NgramExtractor ngramExtractor) {
         return new LanguageDetectorBuilder(ngramExtractor);
@@ -47,7 +47,7 @@ public class LanguageDetectorBuilder {
 
 
     public LanguageDetectorBuilder alpha(double alpha) {
-        if (alpha<0 || alpha>1) throw new IllegalArgumentException(""+alpha);
+        if (alpha<0 || alpha>1) throw new IllegalArgumentException("alpha must be between 0 and 1, but was: "+alpha);
         this.alpha = alpha;
         return this;
     }

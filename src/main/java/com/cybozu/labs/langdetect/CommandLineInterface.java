@@ -16,7 +16,6 @@
 
 package com.cybozu.labs.langdetect;
 
-import be.frma.langguess.IOUtils;
 import be.frma.langguess.LangProfileWriter;
 import com.cybozu.labs.langdetect.util.LangProfile;
 import com.google.common.base.Optional;
@@ -52,10 +51,10 @@ public class CommandLineInterface {
     private static final double DEFAULT_ALPHA = 0.5;
 
     /** for Command line easy parser */
-    private Map<String, String> opt_with_value = new HashMap<>();
-    private Map<String, String> values = new HashMap<>();
-    private Set<String> opt_without_value = new HashSet<>();
-    private List<String> arglist = new ArrayList<>();
+    private final Map<String, String> opt_with_value = new HashMap<>();
+    private final Map<String, String> values = new HashMap<>();
+    private final Set<String> opt_without_value = new HashSet<>();
+    private final List<String> arglist = new ArrayList<>();
 
     /**
      * Command Line Interface
@@ -98,18 +97,11 @@ public class CommandLineInterface {
         opt_with_value.put(opt, key);
         values.put(key, value);
     }
+
     private String get(String key) {
         return values.get(key);
     }
-    private Long getLong(String key) {
-        String value = values.get(key);
-        if (value == null) return null;
-        try {
-            return Long.valueOf(value);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
+
     private double getDouble(String key, double defaultValue) {
         try {
             return Double.valueOf(values.get(key));
@@ -154,17 +146,12 @@ public class CommandLineInterface {
             return;
         }
 
-        ObjectOutputStream os = null; //TODO this is wrong, not used. someone needs to close the FileOutputStream instead.
-        try {
+        try(FileOutputStream outputStream = new FileOutputStream(new File(lang))) {
             LangProfile profile = GenProfile.load(lang, file);
             profile.omitLessFreq();
-            new LangProfileWriter().write(profile, new FileOutputStream(new File(lang)));
+            new LangProfileWriter().write(profile, outputStream);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (LangDetectException e) {
-            e.printStackTrace();
-        } finally {
-        	IOUtils.closeQuietly(os);
         }
     }
 
@@ -208,7 +195,7 @@ public class CommandLineInterface {
         TextObjectFactory textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
 
         Map<String, List<String>> result = new HashMap<>();
-        for (String filename: arglist) {
+        for (String filename : arglist) {
             try (BufferedReader is = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"))) {
                 while (is.ready()) {
                     String line = is.readLine();
@@ -225,11 +212,11 @@ public class CommandLineInterface {
                 }
             }
 
-            List<String> langlist = new ArrayList<>(result.keySet());
-            Collections.sort(langlist);
+            List<String> langList = new ArrayList<>(result.keySet());
+            Collections.sort(langList);
 
             int totalCount = 0, totalCorrect = 0;
-            for ( String lang :langlist) {
+            for (String lang : langList) {
                 Map<String, Integer> resultCount = new HashMap<>();
                 int count = 0;
                 List<String> list = result.get(lang);

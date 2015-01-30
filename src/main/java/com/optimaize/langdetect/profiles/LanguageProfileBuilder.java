@@ -32,7 +32,7 @@ public class LanguageProfileBuilder {
     }
 
     public LanguageProfileBuilder minimalFrequency(int minimalFrequency) {
-        if (minimalFrequency<1) throw new IllegalArgumentException(""+minimalFrequency);
+        if (minimalFrequency<1) throw new IllegalArgumentException("minimalFrequency must be >= 1, but was: "+minimalFrequency);
         this.minimalFrequency = minimalFrequency;
         return this;
     }

@@ -16,8 +16,6 @@
 
 package be.frma.langguess;
 
-import com.cybozu.labs.langdetect.ErrorCode;
-import com.cybozu.labs.langdetect.LangDetectException;
 import com.cybozu.labs.langdetect.util.LangProfile;
 import com.cybozu.labs.langdetect.util.Util;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
@@ -45,9 +43,8 @@ public class GenProfile {
      * @param lang target language name.
      * @param textFile input text file.
      * @return Language profile instance
-     * @throws LangDetectException 
      */
-    public static LangProfile generate(String lang, File textFile) throws LangDetectException {
+    public static LangProfile generate(String lang, File textFile) {
         LangProfile profile = new LangProfile(lang);
 
         InputStream is = null;
@@ -60,9 +57,9 @@ public class GenProfile {
             while ((line = reader.readLine()) != null) {
                 TextObject textObject = textObjectFactory.forText(" "+line+" ");
                 Util.addCharSequence(profile, textObject);
-			}
+            }
         } catch (IOException e) {
-            throw new LangDetectException(ErrorCode.CantOpenTrainData, "Can't open training database file '" + textFile.getName() + "'");
+            throw new RuntimeException("Can't open training database file '" + textFile.getName() + "'", e);
         } finally {
             IOUtils.closeQuietly(is);
         }

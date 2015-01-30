@@ -36,7 +36,7 @@ public class TextObject implements CharSequence, Appendable {
     private final TextFilter textFilter;
 
     @NotNull
-    private StringBuilder stringBuilder;
+    private final StringBuilder stringBuilder;
 
     private final int maxTextLength;
 

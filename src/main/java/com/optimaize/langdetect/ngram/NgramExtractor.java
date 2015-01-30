@@ -18,7 +18,7 @@ public class NgramExtractor {
     @Nullable
     private final NgramFilter filter;
     @Nullable
-    private Character textPadding;
+    private final Character textPadding;
 
     public static NgramExtractor gramLength(int gramLength) {
         return new NgramExtractor(ImmutableList.of(gramLength), null, null);
