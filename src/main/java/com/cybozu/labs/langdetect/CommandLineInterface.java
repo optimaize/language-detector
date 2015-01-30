@@ -28,6 +28,8 @@ import com.optimaize.langdetect.profiles.LanguageProfileReader;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
 import com.optimaize.langdetect.text.TextObject;
 import com.optimaize.langdetect.text.TextObjectFactory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -64,13 +66,14 @@ public class CommandLineInterface {
         CommandLineInterface cli = new CommandLineInterface();
         cli.addOpt("-d", "directory", "./");
         cli.addOpt("-a", "alpha", "" + DEFAULT_ALPHA);
+        cli.addOpt("-s", "seed", null);
         cli.parse(args);
 
-        if (cli.hasOpt("--genprofile")) {
+        if (cli.hasParam("--genprofile")) {
             cli.generateProfile();
-        } else if (cli.hasOpt("--detectlang")) {
+        } else if (cli.hasParam("--detectlang")) {
             cli.detectLang();
-        } else if (cli.hasOpt("--batchtest")) {
+        } else if (cli.hasParam("--batchtest")) {
             cli.batchTest();
         }
     }
@@ -98,19 +101,46 @@ public class CommandLineInterface {
         values.put(key, value);
     }
 
-    private String get(String key) {
-        return values.get(key);
+    @NotNull
+    private String requireParamString(@NotNull String key) {
+        String s = values.get(key);
+        if (s==null || s.isEmpty()) {
+            throw new RuntimeException("Missing command line param: "+key);
+        }
+        return s;
     }
 
-    private double getDouble(String key, double defaultValue) {
-        try {
-            return Double.valueOf(values.get(key));
-        } catch (NumberFormatException e) {
+    /**
+     * Returns the double, or the default is absent. Throws if the double is specified but invalid.
+     */
+    private double getParamDouble(String key, double defaultValue) {
+        String value = values.get(key);
+        if (value==null || value.isEmpty()) {
             return defaultValue;
+        }
+        try {
+            return Double.valueOf(value);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Invalid double value: >>>"+value+"<<<", e);
         }
     }
 
-    private boolean hasOpt(String opt) {
+    /**
+     */
+    @Nullable
+    private Long getParamLongOrNull(String key) {
+        String value = values.get(key);
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        try {
+            return Long.valueOf(value);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Invalid long value: >>>"+value+"<<<", e);
+        }
+    }
+
+    private boolean hasParam(String opt) {
         return opt_without_value.contains(opt);
     }
 
@@ -122,7 +152,12 @@ public class CommandLineInterface {
      * @return matched file
      */
     private File searchFile(File directory, String pattern) {
-        for(File file : directory.listFiles()) {
+        if (!directory.isDirectory()) {
+            throw new IllegalArgumentException("Not a directly: "+directory);
+        }
+        File[] files = directory.listFiles();
+        assert files != null; //checked for directly above.
+        for (File file : files) {
             if (file.getName().matches(pattern)) return file;
         }
         return null;
@@ -159,7 +194,7 @@ public class CommandLineInterface {
      * Language detection test for each file (--detectlang option)
      * 
      * <pre>
-     * usage: --detectlang -d [profile directory] -a [alpha] [test file(s)]
+     * usage: --detectlang -d [profile directory] -a [alpha] -s [seed] [test file(s)]
      * </pre>
      * 
      */
@@ -181,7 +216,7 @@ public class CommandLineInterface {
      * Batch Test of Language Detection (--batchtest option)
      * 
      * <pre>
-     * usage: --batchtest -d [profile directory] -a [alpha] [test data(s)]
+     * usage: --batchtest -d [profile directory] -a [alpha] -s [seed] [test data(s)]
      * </pre>
      * 
      * The format of test data(s):
@@ -208,7 +243,7 @@ public class CommandLineInterface {
                     Optional<String> lang = languageDetector.detect(textObject);
                     if (!result.containsKey(correctLang)) result.put(correctLang, new ArrayList<String>());
                     result.get(correctLang).add(lang.or("unknown"));
-                    if (hasOpt("--debug")) System.out.println(correctLang + "," + lang + "," + (text.length() > 100 ? text.substring(0, 100) : text));
+                    if (hasParam("--debug")) System.out.println(correctLang + "," + lang + "," + (text.length() > 100 ? text.substring(0, 100) : text));
                 }
             }
 
@@ -244,13 +279,15 @@ public class CommandLineInterface {
      * Using all language profiles from the given directory.
      */
     private LanguageDetector makeDetector() throws IOException {
-        double alpha = getDouble("alpha", DEFAULT_ALPHA);
+        double alpha = getParamDouble("alpha", DEFAULT_ALPHA);
+        String profileDirectory = requireParamString("directory") + "/";
+        Optional<Long> seed = Optional.fromNullable(getParamLongOrNull("seed"));
 
-        String profileDirectory = get("directory") + "/";
         List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAll(new File(profileDirectory));
 
         return LanguageDetectorBuilder.create(NgramExtractors.standard())
                 .alpha(alpha)
+                .seed(seed)
                 .shortTextAlgorithm(50)
                 .withProfiles(languageProfiles)
                 .build();

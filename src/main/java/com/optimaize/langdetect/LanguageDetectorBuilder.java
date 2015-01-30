@@ -1,11 +1,15 @@
 package com.optimaize.langdetect;
 
+import com.google.common.base.Optional;
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * Builder for {@link LanguageDetector}.
@@ -22,6 +26,7 @@ public class LanguageDetectorBuilder {
     private final NgramExtractor ngramExtractor;
 
     private double alpha = ALPHA_DEFAULT;
+    private Optional<Long> seed = Optional.absent();
     private int shortTextAlgorithm = 50;
     private double prefixFactor = 1.0d;
     private double suffixFactor = 1.0d;
@@ -49,6 +54,14 @@ public class LanguageDetectorBuilder {
     public LanguageDetectorBuilder alpha(double alpha) {
         if (alpha<0 || alpha>1) throw new IllegalArgumentException("alpha must be between 0 and 1, but was: "+alpha);
         this.alpha = alpha;
+        return this;
+    }
+
+    public LanguageDetectorBuilder seed(long seed) {
+        return seed(Optional.of(seed));
+    }
+    public LanguageDetectorBuilder seed(@NotNull Optional<Long> seed) {
+        this.seed = seed;
         return this;
     }
 
@@ -158,7 +171,7 @@ public class LanguageDetectorBuilder {
         if (languageProfiles.isEmpty()) throw new IllegalStateException();
         return new LanguageDetectorImpl(
                 NgramFrequencyData.create(languageProfiles, ngramExtractor.getGramLengths()),
-                alpha, shortTextAlgorithm,
+                alpha, seed, shortTextAlgorithm,
                 prefixFactor, suffixFactor,
                 probabilityThreshold, minimalConfidence,
                 langWeightingMap,

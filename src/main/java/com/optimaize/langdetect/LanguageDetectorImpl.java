@@ -48,6 +48,16 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     private static final int N_TRIAL = 7;
 
+    /**
+     * This is used when no custom seed was passed in.
+     * By using the same seed for different calls, the results are consistent also.
+     *
+     * Changing this number means that users of the library might suddenly see other results after updating.
+     * So don't change it hastily. I chose a prime number *clueless*.
+     * See https://github.com/optimaize/language-detector/issues/14
+     */
+    private static final long DEFAULT_SEED = 41L;
+
     @NotNull
     private final NgramFrequencyData ngramFrequencyData;
 
@@ -58,6 +68,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private final double[] priorMap;
 
     private final double alpha;
+    private final Optional<Long> seed;
     private final int shortTextAlgorithm;
     private final double prefixFactor;
     private final double suffixFactor;
@@ -72,7 +83,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      * Use the {@link LanguageDetectorBuilder}.
      */
     LanguageDetectorImpl(@NotNull NgramFrequencyData ngramFrequencyData,
-                         double alpha, int shortTextAlgorithm,
+                         double alpha, Optional<Long> seed, int shortTextAlgorithm,
                          double prefixFactor, double suffixFactor,
                          double probabilityThreshold,
                          double minimalConfidence,
@@ -87,6 +98,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
 
         this.ngramFrequencyData = ngramFrequencyData;
         this.alpha = alpha;
+        this.seed = seed;
         this.shortTextAlgorithm = shortTextAlgorithm;
         this.prefixFactor = prefixFactor;
         this.suffixFactor = suffixFactor;
@@ -159,7 +171,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private double[] detectBlockLongText(List<String> ngrams) {
         assert !ngrams.isEmpty();
         double[] langprob = new double[ngramFrequencyData.getLanguageList().size()];
-        Random rand = new Random();
+        Random rand = new Random(seed.or(DEFAULT_SEED));
         for (int t = 0; t < N_TRIAL; ++t) {
             double[] prob = initProbability();
             double alpha = this.alpha + (rand.nextGaussian() * ALPHA_WIDTH);
