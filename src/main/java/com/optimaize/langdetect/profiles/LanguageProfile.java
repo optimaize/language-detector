@@ -58,6 +58,28 @@ public interface LanguageProfile {
     long getNumGramOccurrences(int gramLength);
 
     /**
+     * Tells how often the n-gram with the lowest amount of occurrences used in this profile occurred.
+     *
+     * Most likely there were n-grams with less (unless the returned number is 1), but they were eliminated
+     * in order to keep the profile reasonably small.
+     *
+     * This is the opposite of getMaxGramCount().
+     *
+     * @param gramLength 1-n
+     * @return 0-n, returns zero if no such n-grams were made or existed.
+     */
+    long getMinGramCount(int gramLength);
+    /**
+     * Tells how often the n-gram with the highest amount of occurrences used in this profile occurred.
+     *
+     * This is the opposite of getMinGramCount().
+     *
+     * @param gramLength 1-n
+     * @return 0-n, returns zero if no such n-grams were made or existed.
+     */
+    long getMaxGramCount(int gramLength);
+
+    /**
      * Iterates all ngram strings with frequency.
      */
     @NotNull

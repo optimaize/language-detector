@@ -91,6 +91,35 @@ public final class LanguageProfileImpl implements LanguageProfile {
         return aLong;
     }
 
+    @Override
+    public long getMinGramCount(int gramLength) {
+        Map<String, Integer> stringIntegerMap = ngrams.get(gramLength);
+        if (stringIntegerMap==null) return 0;
+        Integer min = null;
+        for (Integer integer : stringIntegerMap.values()) {
+            if (min==null || min > integer) {
+                min = integer;
+            }
+        }
+        assert min != null;
+        return min;
+    }
+
+    @Override
+    public long getMaxGramCount(int gramLength) {
+        Map<String, Integer> stringIntegerMap = ngrams.get(gramLength);
+        if (stringIntegerMap==null) return 0;
+        Integer max = null;
+        for (Integer integer : stringIntegerMap.values()) {
+            if (max==null || max < integer) {
+                max = integer;
+            }
+        }
+        assert max != null;
+        return max;
+    }
+
+
     @NotNull @Override
     public Iterable<Map.Entry<String,Integer>> iterateGrams() {
         Iterable[] arr = new Iterable[ngrams.size()];
@@ -123,7 +152,6 @@ public final class LanguageProfileImpl implements LanguageProfile {
         return sb.toString();
     }
 
-    //generated code
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -133,16 +161,13 @@ public final class LanguageProfileImpl implements LanguageProfile {
 
         if (!language.equals(that.language)) return false;
         if (!ngrams.equals(that.ngrams)) return false;
-        if (!numOccurrences.equals(that.numOccurrences)) return false;
 
         return true;
     }
-    //generated code
     @Override
     public int hashCode() {
         int result = language.hashCode();
         result = 31 * result + ngrams.hashCode();
-        result = 31 * result + numOccurrences.hashCode();
         return result;
     }
 }

@@ -21,27 +21,31 @@ public class LanguageProfileReaderTest {
     private static final File PROFILE_DIR = new File(new File(new File(new File("src"), "main"), "resources"), "languages");
 
 
+    /*
+    * In case someone creates new language profiles then these numbers need to be adjusted.
+    */
+
     @Test
     public void readEnFile() throws IOException {
-        checkProfileFile("en", 3, 2301);
+        checkProfileFile("en", 3, 2301, 26164, 3774627);
     }
 
     @Test
     public void readBnFile() throws IOException {
-        checkProfileFile("bn", 3, 2846);
+        checkProfileFile("bn", 3, 2846, 198, 22964);
     }
 
     @Test
     public void readFrFile() throws IOException {
-        checkProfileFile("fr", 3, 2232);
+        checkProfileFile("fr", 3, 2232, 6653, 1120211);
     }
 
     @Test
     public void readNlFile() throws IOException {
-        checkProfileFile("nl", 3, 2163);
+        checkProfileFile("nl", 3, 2163, 5640, 1373884);
     }
 
-    private static void checkProfileFile(String language, int nWordSize, int freqSize) throws IOException {
+    private static void checkProfileFile(String language, int nWordSize, int freqSize, long minFreq, long maxFreq) throws IOException {
         File profileFile = new File(PROFILE_DIR, language);
         final LanguageProfile languageProfile = new LanguageProfileReader().read(profileFile);
         assertThat(languageProfile, is(notNullValue()));
@@ -49,6 +53,10 @@ public class LanguageProfileReaderTest {
         assertEquals(languageProfile.getGramLengths().size(), nWordSize);
         assertEquals(languageProfile.getGramLengths(), ImmutableList.of(1, 2, 3));
         assertEquals(languageProfile.getNumGrams(), freqSize);
+
+        assertTrue(languageProfile.getMinGramCount(nWordSize) < languageProfile.getMaxGramCount(nWordSize));
+        assertEquals(languageProfile.getMinGramCount(nWordSize), minFreq);
+        assertEquals(languageProfile.getMaxGramCount(nWordSize), maxFreq);
     }
 
 
