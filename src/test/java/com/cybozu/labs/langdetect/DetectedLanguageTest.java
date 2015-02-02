@@ -17,6 +17,7 @@
 package com.cybozu.labs.langdetect;
 
 import com.optimaize.langdetect.DetectedLanguage;
+import com.optimaize.langdetect.i18n.LdLocale;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -33,27 +34,27 @@ public class DetectedLanguageTest {
 
     @Test
     public final void basic() {
-        DetectedLanguage lang = new DetectedLanguage("en", 1.0);
-        assertEquals(lang.getLanguage(), "en");
+        DetectedLanguage lang = new DetectedLanguage(LdLocale.fromString("en"), 1.0);
+        assertEquals(lang.getLocale().getLanguage(), "en");
         assertEquals(lang.getProbability(), 1.0, 0.0001);
         assertEquals(lang.toString(), "DetectedLanguage[en:1.0]");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public final void invalidProbability() {
-        new DetectedLanguage("en", 1.1);
+        new DetectedLanguage(LdLocale.fromString("en"), 1.1);
     }
 
     @Test
     public final void comparable() {
         List<DetectedLanguage> list = new ArrayList<>();
-        list.add(new DetectedLanguage("en", 1.0));
-        list.add(new DetectedLanguage("de", 1.0));
-        list.add(new DetectedLanguage("fr", 0.9));
+        list.add(new DetectedLanguage(LdLocale.fromString("en"), 1.0));
+        list.add(new DetectedLanguage(LdLocale.fromString("de"), 1.0));
+        list.add(new DetectedLanguage(LdLocale.fromString("fr"), 0.9));
         Collections.sort(list);
-        assertEquals(list.get(0).getLanguage(), "de"); //alphabetical de before en
-        assertEquals(list.get(1).getLanguage(), "en");
-        assertEquals(list.get(2).getLanguage(), "fr"); //points 0.9 the last
+        assertEquals(list.get(0).getLocale().getLanguage(), "de"); //alphabetical de before en
+        assertEquals(list.get(1).getLocale().getLanguage(), "en");
+        assertEquals(list.get(2).getLocale().getLanguage(), "fr"); //points 0.9 the last
     }
 
 }

@@ -1,5 +1,6 @@
 package com.optimaize.langdetect.profiles;
 
+import com.optimaize.langdetect.i18n.LdLocale;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -12,12 +13,8 @@ import java.util.Map;
  */
 public interface LanguageProfile {
 
-    /**
-     * The language code, which can be a 2-letter ISO 639-1 or a 3-letter ISO 639-3 code.
-     * If there is a 2-letter available ("fr" for French) it is used, if not then the 3-letter (gsw for Swiss german).
-     */
     @NotNull
-    String getLanguage();
+    LdLocale getLocale();
 
     /**
      * Tells what the n in n-grams are used here.

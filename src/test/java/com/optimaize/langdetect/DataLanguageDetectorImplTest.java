@@ -1,6 +1,5 @@
 package com.optimaize.langdetect;
 
-import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.profiles.LanguageProfileReader;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
@@ -19,7 +18,7 @@ public class DataLanguageDetectorImplTest {
     public void shortTextAlgo() throws IOException {
         LanguageDetector detector = LanguageDetectorBuilder.create(NgramExtractors.standard())
                 .shortTextAlgorithm(100)
-                .withProfiles(new LanguageProfileReader().readAll())
+                .withProfiles(new LanguageProfileReader().readAllBuiltIn())
                 .build();
         runTests(detector);
     }
@@ -28,7 +27,7 @@ public class DataLanguageDetectorImplTest {
     public void longTextAlgo() throws IOException {
         LanguageDetector detector = LanguageDetectorBuilder.create(NgramExtractors.standard())
                 .shortTextAlgorithm(0)
-                .withProfiles(new LanguageProfileReader().readAll())
+                .withProfiles(new LanguageProfileReader().readAllBuiltIn())
                 .build();
         runTests(detector);
     }
@@ -40,10 +39,10 @@ public class DataLanguageDetectorImplTest {
      * The long text algorithm returns either a 0.9999something (often), or a much lower 0.7something (sometimes).
      */
     private void runTests(LanguageDetector detector) {
-        assertEquals(detector.getProbabilities(text("This is some English text.")).get(0).getLanguage(), "en");
-        assertEquals(detector.getProbabilities(text("Ceci est un texte français.")).get(0).getLanguage(), "fr");
-        assertEquals(detector.getProbabilities(text("Dit is een Nederlandse tekst.")).get(0).getLanguage(), "nl");
-        assertEquals(detector.getProbabilities(text("Dies ist eine deutsche Text")).get(0).getLanguage(), "de");
+        assertEquals(detector.getProbabilities(text("This is some English text.")).get(0).getLocale().getLanguage(), "en");
+        assertEquals(detector.getProbabilities(text("Ceci est un texte français.")).get(0).getLocale().getLanguage(), "fr");
+        assertEquals(detector.getProbabilities(text("Dit is een Nederlandse tekst.")).get(0).getLocale().getLanguage(), "nl");
+        assertEquals(detector.getProbabilities(text("Dies ist eine deutsche Text")).get(0).getLocale().getLanguage(), "de");
     }
 
     private CharSequence text(CharSequence text) {

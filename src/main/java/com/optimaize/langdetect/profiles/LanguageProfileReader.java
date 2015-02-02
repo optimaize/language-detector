@@ -1,6 +1,8 @@
 package com.optimaize.langdetect.profiles;
 
 import be.frma.langguess.LangProfileReader;
+import com.optimaize.langdetect.i18n.LdLocale;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -40,15 +42,15 @@ public class LanguageProfileReader {
      *
      * @param classLoader the ClassLoader to load the profiles from. Use {@code MyClass.class.getClassLoader()}
      * @param profileDirectory profile directory path inside the classpath. The default profiles are in "languages".
-     * @param languages for example ["en", "fr", "de"].
+     * @param profileFileNames for example ["en", "fr", "de"].
      */
-    public List<LanguageProfile> read(ClassLoader classLoader, String profileDirectory, Collection<String> languages) throws IOException {
-        List<LanguageProfile> loaded = new ArrayList<>(languages.size());
-        for (String language : languages) {
-            String fullpath = profileDirectory + '/' + language; //WITHOUT slash before the profileDirectory when using the classloader!
-            try (InputStream in = classLoader.getResourceAsStream(fullpath)) {
+    public List<LanguageProfile> read(ClassLoader classLoader, String profileDirectory, Collection<String> profileFileNames) throws IOException {
+        List<LanguageProfile> loaded = new ArrayList<>(profileFileNames.size());
+        for (String profileFileName : profileFileNames) {
+            String path = makePathForClassLoader(profileDirectory, profileFileName);
+            try (InputStream in = classLoader.getResourceAsStream(path)) {
                 if (in == null) {
-                    throw new IOException("No language file available for language "+language+" at " + fullpath + "!");
+                    throw new IOException("No language file available named "+profileFileName+" at " + path + "!");
                 }
                 loaded.add( read(in) );
             }
@@ -56,27 +58,67 @@ public class LanguageProfileReader {
         return loaded;
     }
 
+    private String makePathForClassLoader(String profileDirectory, String fileName) {
+        //WITHOUT slash before the profileDirectory when using the classloader!
+        return profileDirectory + '/' + fileName;
+    }
+
     /**
      * Same as {@link #read(ClassLoader, String, java.util.Collection)} using the class loader of this class.
      */
-    public List<LanguageProfile> read(String profileDirectory, Collection<String> languages) throws IOException {
-        return read(LanguageProfileReader.class.getClassLoader(), profileDirectory, languages);
+    public List<LanguageProfile> read(String profileDirectory, Collection<String> profileFileNames) throws IOException {
+        return read(LanguageProfileReader.class.getClassLoader(), profileDirectory, profileFileNames);
     }
 
     /**
      * Same as {@link #read(ClassLoader, String, java.util.Collection)} using the class loader of this class,
      * and the default profiles directory of this library.
      */
-    public List<LanguageProfile> read(Collection<String> languages) throws IOException {
-        return read(LanguageProfileReader.class.getClassLoader(), PROFILES_DIR, languages);
+    public List<LanguageProfile> read(Collection<String> profileFileNames) throws IOException {
+        return read(LanguageProfileReader.class.getClassLoader(), PROFILES_DIR, profileFileNames);
+    }
+
+    @NotNull
+    public LanguageProfile readBuiltIn(@NotNull LdLocale locale) throws IOException {
+        String filename = makeProfileFileName(locale);
+        String path = makePathForClassLoader(PROFILES_DIR, filename);
+        try (InputStream in = LanguageProfileReader.class.getClassLoader().getResourceAsStream(path)) {
+            if (in == null) {
+                throw new IOException("No language file available named "+filename+" at " + path + "!");
+            }
+            return read(in);
+        }
+    }
+
+    @NotNull
+    private String makeProfileFileName(@NotNull LdLocale locale) {
+        return locale.toString();
+    }
+
+    @NotNull
+    public List<LanguageProfile> readBuiltIn(@NotNull Collection<LdLocale> languages) throws IOException {
+        List<String> profileNames = new ArrayList<>();
+        for (LdLocale locale : languages) {
+            profileNames.add(makeProfileFileName(locale));
+        }
+        return read(LanguageProfileReader.class.getClassLoader(), PROFILES_DIR, profileNames);
     }
 
     /**
-     * Reads all built-in language profiles from the "languages" folder (shipped with the jar).
+     * @deprecated renamed to readAllBuiltIn()
      */
     public List<LanguageProfile> readAll() throws IOException {
-        List<String> strings = BuiltInLanguages.getLanguages();
-        return read(strings);
+        return readAllBuiltIn();
+    }
+    /**
+     * Reads all built-in language profiles from the "languages" folder (shipped with the jar).
+     */
+    public List<LanguageProfile> readAllBuiltIn() throws IOException {
+        List<LanguageProfile> loaded = new ArrayList<>();
+        for (LdLocale locale : BuiltInLanguages.getLanguages()) {
+            loaded.add(readBuiltIn(locale));
+        }
+        return loaded;
     }
 
     /**
@@ -121,13 +163,15 @@ public class LanguageProfileReader {
         return looksLikeLanguageProfileName(file.getName());
     }
     private boolean looksLikeLanguageProfileName(String fileName) {
-        if (fileName.startsWith(".")) {
+        if (fileName.contains(".")) {
             return false;
         }
-        if (!fileName.matches("^[a-z]{2,3}$") && !fileName.matches("^[a-z]{2}\\-[a-z]{2}$")) {
+        try {
+            LdLocale.fromString(fileName);
+            return true;
+        } catch (Exception e) {
             return false;
         }
-        return true;
     }
 
 }

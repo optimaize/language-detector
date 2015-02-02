@@ -1,5 +1,6 @@
 package com.optimaize.langdetect;
 
+import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +27,7 @@ public final class NgramFrequencyData {
      * All the loaded languages, order is important.
      */
     @NotNull
-    private final List<String> langlist;
+    private final List<LdLocale> langlist;
 
 
     /**
@@ -40,18 +41,18 @@ public final class NgramFrequencyData {
         if (gramLengths.isEmpty()) throw new IllegalArgumentException("No gramLengths provided!");
 
         Map<String, double[]> wordLangProbMap = new HashMap<>();
-        List<String> langlist = new ArrayList<>();
+        List<LdLocale> langlist = new ArrayList<>();
         int langsize = languageProfiles.size();
 
         int index = -1;
         for (LanguageProfile profile : languageProfiles) {
             index++;
 
-            langlist.add( profile.getLanguage() );
+            langlist.add( profile.getLocale() );
 
             for (Integer gramLength : gramLengths) {
                 if (!profile.getGramLengths().contains(gramLength)) {
-                    throw new IllegalArgumentException("The language profile for "+profile.getLanguage()+" does not contain "+gramLength+"-grams!");
+                    throw new IllegalArgumentException("The language profile for "+profile.getLocale()+" does not contain "+gramLength+"-grams!");
                 }
                 for (Map.Entry<String, Integer> ngramEntry : profile.iterateGrams(gramLength)) {
                     String ngram      = ngramEntry.getKey();
@@ -69,7 +70,7 @@ public final class NgramFrequencyData {
     }
 
     private NgramFrequencyData(@NotNull Map<String, double[]> wordLangProbMap,
-                               @NotNull List<String> langlist) {
+                               @NotNull List<LdLocale> langlist) {
         //not making immutable copies because I create them here (optimization).
         this.wordLangProbMap = Collections.unmodifiableMap(wordLangProbMap);
         this.langlist = Collections.unmodifiableList(langlist);
@@ -77,11 +78,11 @@ public final class NgramFrequencyData {
 
 
     @NotNull
-    public List<String> getLanguageList() {
+    public List<LdLocale> getLanguageList() {
         return langlist;
     }
     @NotNull
-    public String getLanguage(int pos) {
+    public LdLocale getLanguage(int pos) {
         return langlist.get(pos);
     }
 

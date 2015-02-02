@@ -2,6 +2,7 @@ package com.optimaize.langdetect;
 
 import com.cybozu.labs.langdetect.util.Util;
 import com.google.common.base.Optional;
+import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -87,7 +88,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
                          double prefixFactor, double suffixFactor,
                          double probabilityThreshold,
                          double minimalConfidence,
-                         @Nullable Map<String, Double> langWeightingMap,
+                         @Nullable Map<LdLocale, Double> langWeightingMap,
                          @NotNull NgramExtractor ngramExtractor) {
         if (alpha<0d || alpha >1d) throw new IllegalArgumentException("alpha must be between 0 and 1, but was: "+alpha);
         if (prefixFactor <0d || prefixFactor >10d) throw new IllegalArgumentException("prefixFactor must be between 0 and 10, but was: "+prefixFactor);
@@ -110,14 +111,14 @@ public final class LanguageDetectorImpl implements LanguageDetector {
 
 
     @Override
-    public Optional<String> detect(CharSequence text) {
+    public Optional<LdLocale> detect(CharSequence text) {
         List<DetectedLanguage> probabilities = getProbabilities(text);
         if (probabilities.isEmpty()) {
             return Optional.absent();
         } else {
             DetectedLanguage best = probabilities.get(0);
             if (best.getProbability() >= minimalConfidence) {
-                return Optional.of(best.getLanguage());
+                return Optional.of(best.getLocale());
             } else {
                 return Optional.absent();
             }

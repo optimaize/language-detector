@@ -1,6 +1,7 @@
 package com.optimaize.langdetect.profiles;
 
 import com.google.common.collect.ImmutableList;
+import com.optimaize.langdetect.i18n.LdLocale;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,80 +11,83 @@ import java.util.List;
  */
 public class BuiltInLanguages {
 
-    private static final List<String> languages;
+    private static final List<LdLocale> languages;
     private static final List<String> shortTextLanguages;
 
     static {
-        List<String> names = new ArrayList<>();
-        names.add("af");
-        names.add("an");
-        names.add("ar");
-        names.add("ast");
-        names.add("be");
-        names.add("bg");
-        names.add("bn");
-        names.add("br");
-        names.add("ca");
-        names.add("cs");
-        names.add("cy");
-        names.add("da");
-        names.add("de");
-        names.add("el");
-        names.add("en");
-        names.add("es");
-        names.add("et");
-        names.add("eu");
-        names.add("fa");
-        names.add("fi");
-        names.add("fr");
-        names.add("ga");
-        names.add("gl");
-        names.add("gu");
-        names.add("he");
-        names.add("hi");
-        names.add("hr");
-        names.add("ht");
-        names.add("hu");
-        names.add("id");
-        names.add("is");
-        names.add("it");
-        names.add("ja");
-        names.add("kn");
-        names.add("ko");
-        names.add("lt");
-        names.add("lv");
-        names.add("mk");
-        names.add("ml");
-        names.add("mr");
-        names.add("ms");
-        names.add("mt");
-        names.add("ne");
-        names.add("nl");
-        names.add("no");
-        names.add("oc");
-        names.add("pa");
-        names.add("pl");
-        names.add("pt");
-        names.add("ro");
-        names.add("ru");
-        names.add("sk");
-        names.add("sl");
-        names.add("so");
-        names.add("sq");
-        names.add("sr");
-        names.add("sv");
-        names.add("sw");
-        names.add("ta");
-        names.add("te");
-        names.add("th");
-        names.add("tl");
-        names.add("tr");
-        names.add("uk");
-        names.add("ur");
-        names.add("vi");
-        names.add("yi");
-        names.add("zh-cn");
-        names.add("zh-tw");
+        List<LdLocale> names = new ArrayList<>();
+
+        //sorted alphabetically
+        names.add(LdLocale.fromString("af"));
+        names.add(LdLocale.fromString("an"));
+        names.add(LdLocale.fromString("ar"));
+        names.add(LdLocale.fromString("ast"));
+        names.add(LdLocale.fromString("be"));
+        names.add(LdLocale.fromString("bg"));
+        names.add(LdLocale.fromString("bn"));
+        names.add(LdLocale.fromString("br"));
+        names.add(LdLocale.fromString("ca"));
+        names.add(LdLocale.fromString("cs"));
+        names.add(LdLocale.fromString("cy"));
+        names.add(LdLocale.fromString("da"));
+        names.add(LdLocale.fromString("de"));
+        names.add(LdLocale.fromString("el"));
+        names.add(LdLocale.fromString("en"));
+        names.add(LdLocale.fromString("es"));
+        names.add(LdLocale.fromString("et"));
+        names.add(LdLocale.fromString("eu"));
+        names.add(LdLocale.fromString("fa"));
+        names.add(LdLocale.fromString("fi"));
+        names.add(LdLocale.fromString("fr"));
+        names.add(LdLocale.fromString("ga"));
+        names.add(LdLocale.fromString("gl"));
+        names.add(LdLocale.fromString("gu"));
+        names.add(LdLocale.fromString("he"));
+        names.add(LdLocale.fromString("hi"));
+        names.add(LdLocale.fromString("hr"));
+        names.add(LdLocale.fromString("ht"));
+        names.add(LdLocale.fromString("hu"));
+        names.add(LdLocale.fromString("id"));
+        names.add(LdLocale.fromString("is"));
+        names.add(LdLocale.fromString("it"));
+        names.add(LdLocale.fromString("ja"));
+        names.add(LdLocale.fromString("kn"));
+        names.add(LdLocale.fromString("ko"));
+        names.add(LdLocale.fromString("lt"));
+        names.add(LdLocale.fromString("lv"));
+        names.add(LdLocale.fromString("mk"));
+        names.add(LdLocale.fromString("ml"));
+        names.add(LdLocale.fromString("mr"));
+        names.add(LdLocale.fromString("ms"));
+        names.add(LdLocale.fromString("mt"));
+        names.add(LdLocale.fromString("ne"));
+        names.add(LdLocale.fromString("nl"));
+        names.add(LdLocale.fromString("no"));
+        names.add(LdLocale.fromString("oc"));
+        names.add(LdLocale.fromString("pa"));
+        names.add(LdLocale.fromString("pl"));
+        names.add(LdLocale.fromString("pt"));
+        names.add(LdLocale.fromString("ro"));
+        names.add(LdLocale.fromString("ru"));
+        names.add(LdLocale.fromString("sk"));
+        names.add(LdLocale.fromString("sl"));
+        names.add(LdLocale.fromString("so"));
+        names.add(LdLocale.fromString("sq"));
+        names.add(LdLocale.fromString("sr"));
+        names.add(LdLocale.fromString("sv"));
+        names.add(LdLocale.fromString("sw"));
+        names.add(LdLocale.fromString("ta"));
+        names.add(LdLocale.fromString("te"));
+        names.add(LdLocale.fromString("th"));
+        names.add(LdLocale.fromString("tl"));
+        names.add(LdLocale.fromString("tr"));
+        names.add(LdLocale.fromString("uk"));
+        names.add(LdLocale.fromString("ur"));
+        names.add(LdLocale.fromString("vi"));
+        names.add(LdLocale.fromString("yi"));
+        names.add(LdLocale.fromString("zh-CN"));
+        names.add(LdLocale.fromString("zh-TW"));
+
         languages = ImmutableList.copyOf(names);
     }
 
@@ -112,7 +116,7 @@ public class BuiltInLanguages {
     /**
      * @return immutable
      */
-    public static List<String> getLanguages() {
+    public static List<LdLocale> getLanguages() {
         return languages;
     }
     /**

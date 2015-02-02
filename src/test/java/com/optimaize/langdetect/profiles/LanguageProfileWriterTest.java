@@ -38,7 +38,7 @@ public class LanguageProfileWriterTest {
         try (FileOutputStream output = new FileOutputStream(newFile)) {
             new LanguageProfileWriter().write(originalProfile, output);
             LanguageProfile newProfile = new LanguageProfileReader().read(newFile);
-            assertEquals(newProfile.getLanguage(), originalProfile.getLanguage());
+            assertEquals(newProfile.getLocale(), originalProfile.getLocale());
             assertEquals(newProfile.getNumGrams(), originalProfile.getNumGrams());
             assertEquals(newProfile.getGramLengths(), originalProfile.getGramLengths());
             assertEquals(newProfile, originalProfile);

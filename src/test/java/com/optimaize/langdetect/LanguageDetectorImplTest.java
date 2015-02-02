@@ -26,7 +26,7 @@ public class LanguageDetectorImplTest {
         LanguageDetector languageDetector = makeNewDetector();
         List<DetectedLanguage> result = languageDetector.getProbabilities("Dies ist eine deutsche Text");
         DetectedLanguage best = result.get(0);
-        assertEquals(best.getLanguage(), "de");
+        assertEquals(best.getLocale().getLanguage(), "de");
         assertTrue(best.getProbability() >= 0.9999d);
     }
 
@@ -35,7 +35,7 @@ public class LanguageDetectorImplTest {
         LanguageDetector languageDetector = makeNewDetector();
         List<DetectedLanguage> result = languageDetector.getProbabilities("deutsche Text");
         DetectedLanguage best = result.get(0);
-        assertEquals(best.getLanguage(), "de");
+        assertEquals(best.getLocale().getLanguage(), "de");
         assertTrue(best.getProbability() >= 0.9999d);
     }
 
@@ -47,7 +47,7 @@ public class LanguageDetectorImplTest {
         LanguageDetector languageDetector = makeNewDetector();
         List<DetectedLanguage> result = languageDetector.getProbabilities(inputText);
         DetectedLanguage best = result.get(0);
-        assertEquals(best.getLanguage(), "de");
+        assertEquals(best.getLocale().getLanguage(), "de");
         assertTrue(best.getProbability() >= 0.9999d);
     }
 

@@ -1,5 +1,6 @@
 package com.optimaize.langdetect.profiles;
 
+import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,14 +17,19 @@ import java.util.Map;
  */
 public class LanguageProfileBuilder {
 
-    private final String language;
+    @NotNull
+    private final LdLocale locale;
     private int minimalFrequency = 1;
     private NgramExtractor ngramExtractor;
     private final Map<Integer, Map<String,Integer>> ngrams = new HashMap<>();
 
 
-    public LanguageProfileBuilder(String language) {
-        this.language = language;
+    public LanguageProfileBuilder(@NotNull LdLocale locale) {
+        this.locale = locale;
+    }
+    @Deprecated
+    public LanguageProfileBuilder(@NotNull String locale) {
+        this.locale = LdLocale.fromString(locale);
     }
 
     public LanguageProfileBuilder ngramExtractor(@NotNull NgramExtractor ngramExtractor) {
@@ -83,7 +89,7 @@ public class LanguageProfileBuilder {
         if (minimalFrequency >1) {
             removeNgramsWithLessFrequency();
         }
-        return new LanguageProfileImpl(language, ngrams);
+        return new LanguageProfileImpl(locale, ngrams);
     }
 
 

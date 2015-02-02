@@ -47,7 +47,7 @@ public class LanguageProfileWriter {
                 first = false;
             }
             writer.write("],\"name\":\"");
-            writer.write(languageProfile.getLanguage());
+            writer.write(languageProfile.getLocale().toString());
             writer.write("\"}");
             writer.flush();
         }
@@ -66,7 +66,7 @@ public class LanguageProfileWriter {
         if (!fullPath.canWrite()) {
             throw new IOException("Path not writable: "+fullPath);
         }
-        File file = new File(fullPath.getAbsolutePath()+"/"+languageProfile.getLanguage());
+        File file = new File(fullPath.getAbsolutePath()+"/"+languageProfile.getLocale());
         if (file.exists()) {
             throw new IOException("File exists already, refusing to overwrite: "+file);
         }

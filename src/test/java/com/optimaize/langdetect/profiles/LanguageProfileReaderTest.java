@@ -1,6 +1,7 @@
 package com.optimaize.langdetect.profiles;
 
 import com.google.common.collect.ImmutableList;
+import com.optimaize.langdetect.i18n.LdLocale;
 import org.junit.Test;
 
 import java.io.File;
@@ -49,7 +50,7 @@ public class LanguageProfileReaderTest {
         File profileFile = new File(PROFILE_DIR, language);
         final LanguageProfile languageProfile = new LanguageProfileReader().read(profileFile);
         assertThat(languageProfile, is(notNullValue()));
-        assertThat(languageProfile.getLanguage(), is(equalTo(language)));
+        assertThat(languageProfile.getLocale().getLanguage(), is(equalTo(language)));
         assertEquals(languageProfile.getGramLengths().size(), nWordSize);
         assertEquals(languageProfile.getGramLengths(), ImmutableList.of(1, 2, 3));
         assertEquals(languageProfile.getNumGrams(), freqSize);
@@ -96,19 +97,19 @@ public class LanguageProfileReaderTest {
     }
 
     @Test
-    public void readAll() throws IOException {
-        verify_readAll( new LanguageProfileReader().readAll() );
+    public void readAllBuiltIn() throws IOException {
+        verify_readAllBuiltIn(new LanguageProfileReader().readAllBuiltIn());
     }
-    private void verify_readAll(List<LanguageProfile> profiles) {
+    private void verify_readAllBuiltIn(List<LanguageProfile> profiles) {
         assertEquals(profiles.size(), 69); //adjust this number when adding more languages
-        Set<String> allLangs = new HashSet<>();
+        Set<LdLocale> allLangs = new HashSet<>();
         for (LanguageProfile profile : profiles) {
-            assertFalse("Duplicate language: "+profile.getLanguage(), allLangs.contains(profile.getLanguage()));
-            allLangs.add(profile.getLanguage());
+            assertFalse("Duplicate language: "+profile.getLocale(), allLangs.contains(profile.getLocale()));
+            allLangs.add(profile.getLocale());
         }
-        assertTrue(allLangs.contains("de"));
-        assertTrue(allLangs.contains("zh-cn"));
-        assertTrue(allLangs.contains("zh-tw"));
+        assertTrue(allLangs.contains(LdLocale.fromString("de")));
+        assertTrue(allLangs.contains(LdLocale.fromString("zh-CN")));
+        assertTrue(allLangs.contains(LdLocale.fromString("zh-TW")));
     }
 
 

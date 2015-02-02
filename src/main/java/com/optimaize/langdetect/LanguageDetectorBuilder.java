@@ -1,6 +1,7 @@
 package com.optimaize.langdetect;
 
 import com.google.common.base.Optional;
+import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import org.jetbrains.annotations.NotNull;
@@ -35,12 +36,12 @@ public class LanguageDetectorBuilder {
     private double minimalConfidence = 0.9999d;
 
     @Nullable
-    private Map<String, Double> langWeightingMap;
+    private Map<LdLocale, Double> langWeightingMap;
 
     @NotNull
     private final Set<LanguageProfile> languageProfiles = new HashSet<>();
     @NotNull
-    private final Set<String> langsAdded = new HashSet<>();
+    private final Set<LdLocale> langsAdded = new HashSet<>();
 
     public static LanguageDetectorBuilder create(@NotNull NgramExtractor ngramExtractor) {
         return new LanguageDetectorBuilder(ngramExtractor);
@@ -130,9 +131,9 @@ public class LanguageDetectorBuilder {
     /**
      * TODO document exactly. Also explain how it influences the results.
      * Maybe check for unsupported languages at some point, or not, but document whether it does throw or ignore.
-     * String key = language code, Double value = priority (probably 0-1).
+     * String key = language, Double value = priority (probably 0-1).
      */
-    public LanguageDetectorBuilder languagePriorities(@Nullable Map<String, Double> langWeightingMap) {
+    public LanguageDetectorBuilder languagePriorities(@Nullable Map<LdLocale, Double> langWeightingMap) {
         this.langWeightingMap = langWeightingMap;
         return this;
     }
@@ -141,15 +142,15 @@ public class LanguageDetectorBuilder {
      * @throws IllegalStateException if a profile for the same language was added already (must be a userland bug).
      */
     public LanguageDetectorBuilder withProfile(LanguageProfile languageProfile) throws IllegalStateException {
-        if (langsAdded.contains(languageProfile.getLanguage())) {
-            throw new IllegalStateException("A language profile for language "+languageProfile.getLanguage()+" was added already!");
+        if (langsAdded.contains(languageProfile.getLocale())) {
+            throw new IllegalStateException("A language profile for language "+languageProfile.getLocale()+" was added already!");
         }
         for (Integer gramLength : ngramExtractor.getGramLengths()) {
             if (!languageProfile.getGramLengths().contains(gramLength)) {
-                throw new IllegalArgumentException("The NgramExtractor is set to handle "+gramLength+"-grams but the given language profile for "+languageProfile.getLanguage()+" does not support this!");
+                throw new IllegalArgumentException("The NgramExtractor is set to handle "+gramLength+"-grams but the given language profile for "+languageProfile.getLocale()+" does not support this!");
             }
         }
-        langsAdded.add(languageProfile.getLanguage());
+        langsAdded.add(languageProfile.getLocale());
         languageProfiles.add(languageProfile);
         return this;
     }

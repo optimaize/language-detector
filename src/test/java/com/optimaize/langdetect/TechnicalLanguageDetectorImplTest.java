@@ -16,6 +16,7 @@
 
 package com.optimaize.langdetect;
 
+import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.profiles.LanguageProfileBuilder;
 import org.junit.Test;
@@ -41,13 +42,13 @@ public class TechnicalLanguageDetectorImplTest {
                 .affixFactor(1.0)
                 .shortTextAlgorithm(0);
 
-        LanguageProfileBuilder profileBuilder = new LanguageProfileBuilder("en");
+        LanguageProfileBuilder profileBuilder = new LanguageProfileBuilder(LdLocale.fromString("en"));
         add(detectorBuilder, profileBuilder, TRAINING_EN);
 
-        profileBuilder = new LanguageProfileBuilder("fr");
+        profileBuilder = new LanguageProfileBuilder(LdLocale.fromString("fr"));
         add(detectorBuilder, profileBuilder, TRAINING_FR);
 
-        profileBuilder = new LanguageProfileBuilder("ja");
+        profileBuilder = new LanguageProfileBuilder(LdLocale.fromString("ja"));
         add(detectorBuilder, profileBuilder, TRAINING_JA);
 
         return detectorBuilder.build();
@@ -63,24 +64,24 @@ public class TechnicalLanguageDetectorImplTest {
     @Test
     public final void testDetector1() {
         LanguageDetector languageDetector = makeDetector();
-        assertEquals(languageDetector.detect("a").get(), "en");
+        assertEquals(languageDetector.detect("a").get().getLanguage(), "en");
     }
 
     @Test
     public final void testDetector2() {
         LanguageDetector languageDetector = makeDetector();
-        assertEquals(languageDetector.detect("b d").get(), "fr");
+        assertEquals(languageDetector.detect("b d").get().getLanguage(), "fr");
     }
 
     @Test
     public final void testDetector3() {
         LanguageDetector languageDetector = makeDetector();
-        assertEquals(languageDetector.detect("d e").get(), "en");
+        assertEquals(languageDetector.detect("d e").get().getLanguage(), "en");
     }
 
     @Test
     public final void testDetector4() {
         LanguageDetector languageDetector = makeDetector();
-        assertEquals(languageDetector.detect("\u3042\u3042\u3042\u3042a").get(), "ja");
+        assertEquals(languageDetector.detect("\u3042\u3042\u3042\u3042a").get().getLanguage(), "ja");
     }
 }

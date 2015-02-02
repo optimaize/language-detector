@@ -22,6 +22,7 @@ import com.google.common.base.Optional;
 import com.optimaize.langdetect.DetectedLanguage;
 import com.optimaize.langdetect.LanguageDetector;
 import com.optimaize.langdetect.LanguageDetectorBuilder;
+import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import com.optimaize.langdetect.profiles.LanguageProfileReader;
@@ -240,9 +241,13 @@ public class CommandLineInterface {
                     String text = line.substring(idx + 1);
 
                     TextObject textObject = textObjectFactory.forText(text);
-                    Optional<String> lang = languageDetector.detect(textObject);
+                    Optional<LdLocale> lang = languageDetector.detect(textObject);
                     if (!result.containsKey(correctLang)) result.put(correctLang, new ArrayList<String>());
-                    result.get(correctLang).add(lang.or("unknown"));
+                    if (lang.isPresent()) {
+                        result.get(correctLang).add(lang.toString());
+                    } else {
+                        result.get(correctLang).add("unknown");
+                    }
                     if (hasParam("--debug")) System.out.println(correctLang + "," + lang + "," + (text.length() > 100 ? text.substring(0, 100) : text));
                 }
             }

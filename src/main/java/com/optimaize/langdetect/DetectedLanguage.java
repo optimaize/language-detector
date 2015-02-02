@@ -16,10 +16,11 @@
 
 package com.optimaize.langdetect;
 
+import com.optimaize.langdetect.i18n.LdLocale;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Holds information about a detected language: the language and the probability.
+ * Holds information about a detected language: the locale (language) and the probability.
  *
  * <p>Comparable: the "better" one comes before the worse.
  * First order by probability descending (1 to 0).
@@ -27,31 +28,29 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>This class is immutable.</p>
  *
- * <p>Renamed: this class was previously known as "Language".</p>
- *
  * @author Nakatani Shuyo
  * @author Fabian Kessler
  */
 public class DetectedLanguage implements Comparable<DetectedLanguage> {
 
     @NotNull
-    private final String language;
+    private final LdLocale locale;
     private final double probability;
 
     /**
-     * @param language TODO document and validate syntax
+     * @param locale
      * @param probability 0-1
      */
-    public DetectedLanguage(@NotNull String language, double probability) {
+    public DetectedLanguage(@NotNull LdLocale locale, double probability) {
         if (probability<0d) throw new IllegalArgumentException("Probability must be >= 0 but was "+probability);
         if (probability>1d) throw new IllegalArgumentException("Probability must be <= 1 but was "+probability);
-        this.language = language;
+        this.locale = locale;
         this.probability = probability;
     }
 
     @NotNull
-    public String getLanguage() {
-        return language;
+    public LdLocale getLocale() {
+        return locale;
     }
 
     /**
@@ -62,7 +61,7 @@ public class DetectedLanguage implements Comparable<DetectedLanguage> {
     }
 
     public String toString() {
-        return "DetectedLanguage["+language + ":" + probability+"]";
+        return "DetectedLanguage["+ locale + ":" + probability+"]";
     }
 
     /**
@@ -72,6 +71,6 @@ public class DetectedLanguage implements Comparable<DetectedLanguage> {
     public int compareTo(DetectedLanguage o) {
         int compare = Double.compare(o.probability, this.probability);
         if (compare!=0) return compare;
-        return this.language.compareTo(o.language);
+        return this.locale.toString().compareTo(o.locale.toString());
     }
 }

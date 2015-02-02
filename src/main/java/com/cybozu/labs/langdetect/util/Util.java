@@ -1,11 +1,14 @@
 package com.cybozu.labs.langdetect.util;
 
+import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.ngram.OldNgramExtractor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Formatter;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A place for sharing code.
@@ -78,7 +81,7 @@ public class Util {
     }
 
 
-    public static String wordProbToString(double[] prob, List<String> langlist) {
+    public static String wordProbToString(double[] prob, List<LdLocale> langlist) {
         Formatter formatter = new Formatter();
         for(int j=0;j<prob.length;++j) {
             double p = prob[j];
@@ -92,13 +95,13 @@ public class Util {
 
     /**
      */
-    public static double[] makeInternalPrioMap(@NotNull Map<String, Double> langWeightingMap,
-                                                @NotNull List<String> langlist) {
+    public static double[] makeInternalPrioMap(@NotNull Map<LdLocale, Double> langWeightingMap,
+                                                @NotNull List<LdLocale> langlist) {
         assert !langWeightingMap.isEmpty();
         double[] priorMap = new double[langlist.size()];
         double sump = 0;
         for (int i=0;i<priorMap.length;++i) {
-            String lang = langlist.get(i);
+            LdLocale lang = langlist.get(i);
             if (langWeightingMap.containsKey(lang)) {
                 double p = langWeightingMap.get(lang);
                 assert p>=0 : "Prior probability must be non-negative!";

@@ -2,6 +2,7 @@ package com.optimaize.langdetect.profiles;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import com.optimaize.langdetect.i18n.LdLocale;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -14,7 +15,7 @@ import java.util.*;
 public final class LanguageProfileImpl implements LanguageProfile {
 
     @NotNull
-    private final String language;
+    private final LdLocale locale;
     @NotNull
     private final Map<Integer, Map<String,Integer>> ngrams;
     /**
@@ -28,8 +29,9 @@ public final class LanguageProfileImpl implements LanguageProfile {
     /**
      * Use the builder.
      */
-    LanguageProfileImpl(@NotNull String language, @NotNull Map<Integer, Map<String, Integer>> ngrams) {
-        this.language = language;
+    LanguageProfileImpl(@NotNull LdLocale locale,
+                        @NotNull Map<Integer, Map<String, Integer>> ngrams) {
+        this.locale = locale;
         this.ngrams = ImmutableMap.copyOf(ngrams);
         this.numOccurrences = computeNumOccurrences(ngrams);
     }
@@ -46,9 +48,11 @@ public final class LanguageProfileImpl implements LanguageProfile {
         return map;
     }
 
-    @NotNull @Override
-    public String getLanguage() {
-        return language;
+
+    @NotNull
+    @Override
+    public LdLocale getLocale() {
+        return locale;
     }
 
     @NotNull @Override
@@ -140,8 +144,8 @@ public final class LanguageProfileImpl implements LanguageProfile {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("LanguageProfile{lang=");
-        sb.append(language);
+        sb.append("LanguageProfile{locale=");
+        sb.append(locale);
         for (Integer integer : getGramLengths()) {
             sb.append(",");
             sb.append(integer);
@@ -159,14 +163,14 @@ public final class LanguageProfileImpl implements LanguageProfile {
 
         LanguageProfileImpl that = (LanguageProfileImpl) o;
 
-        if (!language.equals(that.language)) return false;
+        if (!locale.equals(that.locale)) return false;
         if (!ngrams.equals(that.ngrams)) return false;
 
         return true;
     }
     @Override
     public int hashCode() {
-        int result = language.hashCode();
+        int result = locale.hashCode();
         result = 31 * result + ngrams.hashCode();
         return result;
     }
