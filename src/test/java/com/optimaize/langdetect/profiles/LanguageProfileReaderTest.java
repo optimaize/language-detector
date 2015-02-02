@@ -101,7 +101,7 @@ public class LanguageProfileReaderTest {
         verify_readAllBuiltIn(new LanguageProfileReader().readAllBuiltIn());
     }
     private void verify_readAllBuiltIn(List<LanguageProfile> profiles) {
-        assertEquals(profiles.size(), 69); //adjust this number when adding more languages
+        assertEquals(profiles.size(), 70); //adjust this number when adding more languages
         Set<LdLocale> allLangs = new HashSet<>();
         for (LanguageProfile profile : profiles) {
             assertFalse("Duplicate language: "+profile.getLocale(), allLangs.contains(profile.getLocale()));
@@ -122,7 +122,7 @@ public class LanguageProfileReaderTest {
     @Test
     public void loadProfilesFromFile() throws IOException {
         List<LanguageProfile> result = new LanguageProfileReader().readAll(new File(new File(new File(new File("src"), "main"), "resources"), "languages"));
-        assertEquals(result.size(), 69); //adjust this number when adding more languages
+        assertEquals(result.size(), 70); //adjust this number when adding more languages
     }
 
 }

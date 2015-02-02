@@ -11,7 +11,7 @@ Language Detection Library for Java
 
 ## Language Support
 
-### 69 Built-in Language Profiles
+### 70 Built-in Language Profiles
 
 1. af Afrikaans
 1. an Aragonese
@@ -46,6 +46,7 @@ Language Detection Library for Java
 1. is Icelandic
 1. it Italian
 1. ja Japanese
+1. km Khmer
 1. kn Kannada
 1. ko Korean
 1. lt Lithuanian
@@ -84,7 +85,7 @@ Language Detection Library for Java
 1. zh-tw Traditional Chinese
 
 
-User danielnaber has made available profiles for Khmer and Esperanto on his website, see open tasks to integrate these.
+User danielnaber has made available a profile for Esperanto on his website, see open tasks.
 
 
 ### Other Languages

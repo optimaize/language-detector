@@ -51,6 +51,7 @@ public class BuiltInLanguages {
         names.add(LdLocale.fromString("is"));
         names.add(LdLocale.fromString("it"));
         names.add(LdLocale.fromString("ja"));
+        names.add(LdLocale.fromString("km"));
         names.add(LdLocale.fromString("kn"));
         names.add(LdLocale.fromString("ko"));
         names.add(LdLocale.fromString("lt"));
