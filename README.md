@@ -14,25 +14,36 @@ Language Detection Library for Java
 ### 69 Built-in Language Profiles
 
 1. af Afrikaans
+1. an Aragonese
 1. ar Arabic
+1. ast Asturian
+1. be Belarusian
+1. br Breton
+1. ca Catalan
 1. bg Bulgarian
 1. bn Bengali
 1. cs Czech
+1. cy Welsh
 1. da Danish
 1. de German
 1. el Greek
 1. en English
 1. es Spanish
 1. et Estonian
+1. eu Basque
 1. fa Persian
 1. fi Finnish
 1. fr French
+1. ga Irish
+1. gl Galician
 1. gu Gujarati
 1. he Hebrew
 1. hi Hindi
 1. hr Croatian
+1. ht Haitian
 1. hu Hungarian
 1. id Indonesian
+1. is Icelandic
 1. it Italian
 1. ja Japanese
 1. kn Kannada
@@ -42,9 +53,12 @@ Language Detection Library for Java
 1. mk Macedonian
 1. ml Malayalam
 1. mr Marathi
+1. ms Malay
+1. mt Maltese
 1. ne Nepali
 1. nl Dutch
 1. no Norwegian
+1. oc Occitan
 1. pa Punjabi
 1. pl Polish
 1. pt Portuguese
@@ -54,6 +68,7 @@ Language Detection Library for Java
 1. sl Slovene
 1. so Somali
 1. sq Albanian
+1. sr Serbian
 1. sv Swedish
 1. sw Swahili
 1. ta Tamil
@@ -64,25 +79,10 @@ Language Detection Library for Java
 1. uk Ukrainian
 1. ur Urdu
 1. vi Vietnamese
+1. yi Yiddish
 1. zh-cn Simplified Chinese
 1. zh-tw Traditional Chinese
 
-1. an Aragonese
-1. ast Asturian
-1. eu Basque
-1. be Belarusian
-1. br Breton
-1. cat Catalan
-1. gl Galician
-1. ht Haitian
-1. is Icelandic
-1. ga Irish
-1. ms Malay
-1. mt Maltese
-1. oc Occitan
-1. sr Serbian (Cyrillic alphabet)
-1. cy Welsh
-1. yi Yiddish
 
 User danielnaber has made available profiles for Khmer and Esperanto on his website, see open tasks to integrate these.
 
@@ -167,6 +167,11 @@ The training text should be rather clean; it is a good idea to remove parts writ
 (like English phrases, or Latin script content in a Cyrillic text for example). Some also like to remove
 proper nouns like (international) place names in case there are too many. It's up to you how far you go.
 As a general rule, the cleaner the text is, the better is its profile.
+If you scrape text from Wikipedia then please only use the main content, without the left side navigation etc.
+
+The profile size should be similar to the existing profiles for practical reasons. To compute the likeliness
+for an identified language, the index size is put in relation, therefore a language with a larger profile
+won't have a higher probability to be chosen.
 
 Please contribute your new language profile to this project. The file can be added to the languages folder, and
 then referenced in the BuiltInLanguages class. Or else open a ticket, and provide a download link.
