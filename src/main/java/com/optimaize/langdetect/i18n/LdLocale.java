@@ -68,7 +68,7 @@ public final class LdLocale {
      */
     @NotNull
     public static LdLocale fromString(@NotNull String string) {
-        if (string.isEmpty()) throw new IllegalArgumentException("At least a language is required!");
+        if (string==null || string.isEmpty()) throw new IllegalArgumentException("At least a language is required!");
 
         String language = null;
         Optional<String> script = null;
