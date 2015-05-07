@@ -126,7 +126,7 @@ library you can get at this time. If it doesn't need to be Java, you may want to
 #### Language Detection for your Text
 
     //load all languages:
-    List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAll();
+    List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAllBuiltIn();
 
     //build language detector:
     LanguageDetector languageDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
