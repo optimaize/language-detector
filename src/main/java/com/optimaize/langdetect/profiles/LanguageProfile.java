@@ -9,6 +9,13 @@ import java.util.Map;
 /**
  * A language profile is built from a training text that should be fairly large and clean.
  *
+ * <p>It contains the n-grams from the training text in the desired gram sizes (eg 2 and 3-grams),
+ * with possible text filters applied for cleaning. Also, rarely occurring n-grams may have been cut to
+ * reduce the noise and index size. Use a {@link LanguageProfileBuilder}.</p>
+ *
+ * <p>The profile may be created at runtime on-the-fly, or it may be loaded from a previously generated
+ * text file (see OldLangProfileConverter).</p>
+ *
  * @author Fabian Kessler
  */
 public interface LanguageProfile {
