@@ -18,12 +18,40 @@ public final class LanguageProfileImpl implements LanguageProfile {
     private final LdLocale locale;
     @NotNull
     private final Map<Integer, Map<String,Integer>> ngrams;
-    /**
-     * Key = gram length (1-3 or so).
-     * Value = number of all occurrences of these grams combined.
-     */
     @NotNull
-    private final Map<Integer, Long> numOccurrences;
+    private final Stats stats;
+
+    private static class Stats {
+        /**
+         * Key = gram length (1-3 or so).
+         * Value = number of all occurrences of these grams combined.
+         */
+        @NotNull
+        private final Map<Integer, Long> numOccurrences;
+
+        /**
+         * Key = gram length (1-3 or so).
+         * Value = number of occurrences of the n-gram that occurs the least often.
+         * this can be 1, or larger if a cutoff was applied to remove infrequent grams.
+         */
+        @NotNull
+        private final Map<Integer, Long> minGramCounts;
+
+        /**
+         * Key = gram length (1-3 or so).
+         * Value = number of occurrences of the n-gram that occurs the most often.
+         */
+        @NotNull
+        private final Map<Integer, Long> maxGramCounts;
+
+        public Stats(@NotNull Map<Integer, Long> numOccurrences,
+                     @NotNull Map<Integer, Long> minGramCounts,
+                     @NotNull Map<Integer, Long> maxGramCounts) {
+            this.numOccurrences = ImmutableMap.copyOf(numOccurrences);
+            this.minGramCounts  = ImmutableMap.copyOf(minGramCounts);
+            this.maxGramCounts  = ImmutableMap.copyOf(maxGramCounts);
+        }
+    }
 
 
     /**
@@ -33,19 +61,31 @@ public final class LanguageProfileImpl implements LanguageProfile {
                         @NotNull Map<Integer, Map<String, Integer>> ngrams) {
         this.locale = locale;
         this.ngrams = ImmutableMap.copyOf(ngrams);
-        this.numOccurrences = computeNumOccurrences(ngrams);
+        this.stats  = makeStats(ngrams);
     }
 
-    private static Map<Integer, Long> computeNumOccurrences(Map<Integer, Map<String, Integer>> ngrams) {
-        Map<Integer, Long> map = new HashMap<>(6);
+    private static Stats makeStats(Map<Integer, Map<String, Integer>> ngrams) {
+        Map<Integer, Long> numOccurrences = new HashMap<>(6);
+        Map<Integer, Long> minGramCounts = new HashMap<>(6);
+        Map<Integer, Long> maxGramCounts = new HashMap<>(6);
         for (Map.Entry<Integer, Map<String, Integer>> entry : ngrams.entrySet()) {
             long count = 0;
+            Long min = null;
+            Long max = null;
             for (Integer integer : entry.getValue().values()) {
                 count += integer;
+                if (min==null || min > integer) {
+                    min = (long)integer;
+                }
+                if (max==null || max < integer) {
+                    max = (long)integer;
+                }
             }
-            map.put(entry.getKey(), count);
+            numOccurrences.put(entry.getKey(), count);
+            minGramCounts.put(entry.getKey(), min);
+            maxGramCounts.put(entry.getKey(), max);
         }
-        return map;
+        return new Stats(numOccurrences, minGramCounts, maxGramCounts);
     }
 
 
@@ -90,37 +130,23 @@ public final class LanguageProfileImpl implements LanguageProfile {
 
     @Override
     public long getNumGramOccurrences(int gramLength) {
-        Long aLong = numOccurrences.get(gramLength);
+        Long aLong = stats.numOccurrences.get(gramLength);
         if (aLong==null) return 0;
         return aLong;
     }
 
     @Override
     public long getMinGramCount(int gramLength) {
-        Map<String, Integer> stringIntegerMap = ngrams.get(gramLength);
-        if (stringIntegerMap==null) return 0;
-        Integer min = null;
-        for (Integer integer : stringIntegerMap.values()) {
-            if (min==null || min > integer) {
-                min = integer;
-            }
-        }
-        assert min != null;
-        return min;
+        Long aLong = stats.minGramCounts.get(gramLength);
+        if (aLong==null) return 0;
+        return aLong;
     }
 
     @Override
     public long getMaxGramCount(int gramLength) {
-        Map<String, Integer> stringIntegerMap = ngrams.get(gramLength);
-        if (stringIntegerMap==null) return 0;
-        Integer max = null;
-        for (Integer integer : stringIntegerMap.values()) {
-            if (max==null || max < integer) {
-                max = integer;
-            }
-        }
-        assert max != null;
-        return max;
+        Long aLong = stats.maxGramCounts.get(gramLength);
+        if (aLong==null) return 0;
+        return aLong;
     }
 
 
