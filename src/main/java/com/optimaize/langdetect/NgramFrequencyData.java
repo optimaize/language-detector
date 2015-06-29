@@ -8,7 +8,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
- * Contains frequency information for ngram strings and the languages.
+ * Contains frequency information for n-grams coming from multiple {@link LanguageProfile}s.
+ *
+ * <p>For each n-gram string it knows the locales (languages) in which it occurs, and how frequent it
+ * occurs in those languages in relation to other n-grams of the same length in those same languages.</p>
  *
  * <p>Immutable by definition (can't make Arrays unmodifiable).</p>
  *
@@ -17,14 +20,16 @@ import java.util.*;
 public final class NgramFrequencyData {
 
     /**
-     * Key=ngram
+     * Key   = ngram
      * Value = array with probabilities per loaded language, in the same order as {@code langlist}.
      */
     @NotNull
     private final Map<String, double[]> wordLangProbMap;
 
     /**
-     * All the loaded languages, order is important.
+     * All the loaded languages, in exactly the same order as the data is in the double[] in wordLangProbMap.
+     * Example: if wordLangProbMap has an entry for the n-gram "foo" then for each locale in this langlist here
+     * it has a value there. Languages that don't know the n-gram have the value 0d.
      */
     @NotNull
     private final List<LdLocale> langlist;

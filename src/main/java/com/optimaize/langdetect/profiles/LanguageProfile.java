@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A language profile is built from a training text that should be fairly large and clean.
+ * A language profile knows the locale (language), and contains the n-grams and some statistics.
+ *
+ * <p>It is built from a training text that should be fairly large and clean.</p>
  *
  * <p>It contains the n-grams from the training text in the desired gram sizes (eg 2 and 3-grams),
  * with possible text filters applied for cleaning. Also, rarely occurring n-grams may have been cut to
