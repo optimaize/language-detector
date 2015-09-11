@@ -1,6 +1,6 @@
 package com.optimaize.langdetect.text;
 
-import com.cybozu.labs.langdetect.util.CharNormalizer;
+import com.optimaize.langdetect.cybozu.util.CharNormalizer;
 import com.google.common.annotations.Beta;
 import org.jetbrains.annotations.NotNull;
 

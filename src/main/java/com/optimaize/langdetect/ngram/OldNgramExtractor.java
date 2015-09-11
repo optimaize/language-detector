@@ -1,6 +1,6 @@
 package com.optimaize.langdetect.ngram;
 
-import com.cybozu.labs.langdetect.util.NGram;
+import com.optimaize.langdetect.cybozu.util.NGram;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @author Nakatani Shuyo
  */
 @Deprecated
 public class OldNgramExtractor {
@@ -26,7 +27,7 @@ public class OldNgramExtractor {
     }
 
     /**
-     * This was the method found in the {@link com.cybozu.labs.langdetect.Detector} class, it was used to extract
+     * This was the method found in the <i>com.cybozu.labs.langdetect.Detector</i> class, it was used to extract
      * grams from the to-analyze text.
      *
      * NOTE: although it adds the first ngram with space, it does not add the last n-gram with space. example: "foo" gives " fo" but not "oo "!.
@@ -35,7 +36,6 @@ public class OldNgramExtractor {
      * TODO replace this algorithm with a simpler, faster one that uses less memory: only by position shifting. also, the returned list size
      * can be computed before making it (based on text length and number of n-grams).
      *
-     * @author Nakatani Shuyo
      */
     @NotNull
     @Deprecated

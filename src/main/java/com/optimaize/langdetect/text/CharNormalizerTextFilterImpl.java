@@ -1,9 +1,9 @@
 package com.optimaize.langdetect.text;
 
-import com.cybozu.labs.langdetect.util.CharNormalizer;
+import com.optimaize.langdetect.cybozu.util.CharNormalizer;
 
 /**
- * Runs through the {@link com.cybozu.labs.langdetect.util.CharNormalizer}.
+ * Runs through the {@link CharNormalizer}.
  *
  * @author Fabian Kessler
  * @deprecated can't be used because it would be a big loss to not inline this code.
