@@ -1,6 +1,6 @@
 package com.optimaize.langdetect;
 
-import com.cybozu.labs.langdetect.util.Util;
+import com.optimaize.langdetect.cybozu.util.Util;
 import com.google.common.base.Optional;
 import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractor;

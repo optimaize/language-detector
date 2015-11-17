@@ -1,6 +1,6 @@
 package com.optimaize.langdetect.profiles;
 
-import be.frma.langguess.LangProfileReader;
+import com.optimaize.langdetect.frma.LangProfileReader;
 import com.optimaize.langdetect.i18n.LdLocale;
 import org.jetbrains.annotations.NotNull;
 

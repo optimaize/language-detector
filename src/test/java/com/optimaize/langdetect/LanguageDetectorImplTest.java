@@ -1,7 +1,7 @@
 package com.optimaize.langdetect;
 
-import be.frma.langguess.LangProfileReader;
-import com.cybozu.labs.langdetect.util.LangProfile;
+import com.optimaize.langdetect.frma.LangProfileReader;
+import com.optimaize.langdetect.cybozu.util.LangProfile;
 import com.google.common.collect.ImmutableList;
 import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.profiles.LanguageProfile;

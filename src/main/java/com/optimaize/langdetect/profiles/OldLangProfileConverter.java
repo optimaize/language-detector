@@ -1,6 +1,6 @@
 package com.optimaize.langdetect.profiles;
 
-import com.cybozu.labs.langdetect.util.LangProfile;
+import com.optimaize.langdetect.cybozu.util.LangProfile;
 import com.optimaize.langdetect.i18n.LdLocale;
 
 import java.util.Map;
