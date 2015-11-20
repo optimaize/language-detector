@@ -250,6 +250,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
             if (p >= probabilityThreshold) {
                 list.add(new DetectedLanguage(ngramFrequencyData.getLanguage(j), p));
             }
+        }
             list.sort(
                 new Comparator<DetectedLanguage>() {
                     public int compare(DetectedLanguage a, DetectedLanguage b) {
@@ -257,7 +258,6 @@ public final class LanguageDetectorImpl implements LanguageDetector {
                     }
                 }
             );
-        }
 
         return list;
     }
