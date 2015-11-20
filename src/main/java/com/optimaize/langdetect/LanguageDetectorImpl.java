@@ -248,14 +248,17 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         for (int j=0;j<prob.length;++j) {
             double p = prob[j];
             if (p >= probabilityThreshold) {
-                for (int i=0; i<=list.size(); ++i) {
-                    if (i == list.size() || list.get(i).getProbability() < p) {
-                        list.add(i, new DetectedLanguage(ngramFrequencyData.getLanguage(j), p));
-                        break;
+                list.add(new DetectedLanguage(ngramFrequencyData.getLanguage(j), p));
+            }
+            list.sort(
+                new Comparator<DetectedLanguage>() {
+                    public int compare(DetectedLanguage a, DetectedLanguage b) {
+                        return b.getProbability() > a.getProbability() ? 1 : -1;
                     }
                 }
-            }
+            );
         }
+
         return list;
     }
 
