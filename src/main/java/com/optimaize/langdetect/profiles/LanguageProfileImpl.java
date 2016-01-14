@@ -65,9 +65,9 @@ public final class LanguageProfileImpl implements LanguageProfile {
     }
 
     private static Stats makeStats(Map<Integer, Map<String, Integer>> ngrams) {
-        Map<Integer, Long> numOccurrences = new HashMap<>(6);
-        Map<Integer, Long> minGramCounts = new HashMap<>(6);
-        Map<Integer, Long> maxGramCounts = new HashMap<>(6);
+        Map<Integer, Long> numOccurrences = new HashMap<>(ngrams.size());
+        Map<Integer, Long> minGramCounts = new HashMap<>(ngrams.size());
+        Map<Integer, Long> maxGramCounts = new HashMap<>(ngrams.size());
         for (Map.Entry<Integer, Map<String, Integer>> entry : ngrams.entrySet()) {
             long count = 0;
             Long min = null;
@@ -81,9 +81,10 @@ public final class LanguageProfileImpl implements LanguageProfile {
                     max = (long)integer;
                 }
             }
-            numOccurrences.put(entry.getKey(), count);
-            minGramCounts.put(entry.getKey(), min);
-            maxGramCounts.put(entry.getKey(), max);
+            final Integer key = entry.getKey();
+            numOccurrences.put(key, count);
+            minGramCounts.put(key, min);
+            maxGramCounts.put(key, max);
         }
         return new Stats(numOccurrences, minGramCounts, maxGramCounts);
     }

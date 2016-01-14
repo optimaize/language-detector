@@ -49,6 +49,7 @@ import java.util.List;
  */
 public final class LdLocale {
 
+    public static final Splitter DASH_SPLITTER = Splitter.on('-');
     @NotNull
     private final String language;
     @NotNull
@@ -74,7 +75,7 @@ public final class LdLocale {
         Optional<String> script = null;
         Optional<String> region = null;
 
-        List<String> strings = Splitter.on('-').splitToList(string);
+        List<String> strings = DASH_SPLITTER.splitToList(string);
         for (int i=0; i<strings.size(); i++) {
             String chunk = strings.get(i);
             if (i==0) {

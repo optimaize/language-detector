@@ -21,26 +21,11 @@ public class BackwardsCompatibleNgramFilter implements NgramFilter {
     public boolean use(String ngram) {
         switch (ngram.length()) {
             case 1:
-                if (ngram.charAt(0)==' ') {
-                    return false;
-                }
-                return true;
+                return ngram.charAt(0) != ' ';
             case 2:
-                if (Character.isUpperCase(ngram.charAt(0)) && Character.isUpperCase(ngram.charAt(1))) {
-                    //all upper case
-                    return false;
-                }
-                return true;
+                return !ngram.equals(ngram.toUpperCase());
             case 3:
-                if (Character.isUpperCase(ngram.charAt(0)) && Character.isUpperCase(ngram.charAt(1)) && Character.isUpperCase(ngram.charAt(2))) {
-                    //all upper case
-                    return false;
-                }
-                if (ngram.charAt(1)==' ') {
-                    //middle char is a space
-                    return false;
-                }
-                return true;
+                return ngram.charAt(1) !=' ' && !ngram.equals(ngram.toUpperCase());
             default:
                 throw new UnsupportedOperationException("Unsupported n-gram length: "+ngram.length());
         }

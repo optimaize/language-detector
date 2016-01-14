@@ -112,11 +112,7 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
     }
     private void increment(Map<Character.UnicodeScript, Long> counter, Character.UnicodeScript unicodeScript) {
         Long number = counter.get(unicodeScript);
-        if (number==null) {
-            counter.put(unicodeScript, 1L);
-        } else {
-            counter.put(unicodeScript, number+1);
-        }
+        counter.put(unicodeScript, number == null ? 1L : number+1);
     }
 
 }

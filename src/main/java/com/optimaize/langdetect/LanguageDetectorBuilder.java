@@ -84,6 +84,7 @@ public class LanguageDetectorBuilder {
         suffixFactor(affixFactor);
         return this;
     }
+
     /**
      * To weight n-grams that are on the left border of a word differently from n-grams
      * in the middle of words, assign a value here.
@@ -98,6 +99,7 @@ public class LanguageDetectorBuilder {
         this.prefixFactor = prefixFactor;
         return this;
     }
+
     /**
      * Defaults to 1.0, which means don't use this feature.
      * @param suffixFactor 0.0 to 10.0, a suggested value is 2.0
@@ -154,6 +156,7 @@ public class LanguageDetectorBuilder {
         languageProfiles.add(languageProfile);
         return this;
     }
+
     /**
      * @throws IllegalStateException if a profile for the same language was added already (must be a userland bug).
      */

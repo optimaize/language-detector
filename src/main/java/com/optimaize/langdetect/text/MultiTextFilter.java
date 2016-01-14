@@ -20,11 +20,7 @@ public class MultiTextFilter implements TextFilter {
      * @param filters may be empty by definition
      */
     public MultiTextFilter(@NotNull List<TextFilter> filters) {
-        if (filters.isEmpty()) {
-            this.filters = null;
-        } else {
-            this.filters = ImmutableList.copyOf(filters);
-        }
+        this.filters = filters.isEmpty() ? null : ImmutableList.copyOf(filters);
     }
 
     @Override

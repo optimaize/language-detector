@@ -46,8 +46,8 @@ public final class NgramFrequencyData {
         if (gramLengths.isEmpty()) throw new IllegalArgumentException("No gramLengths provided!");
 
         Map<String, double[]> wordLangProbMap = new HashMap<>();
-        List<LdLocale> langlist = new ArrayList<>();
-        int langsize = languageProfiles.size();
+        final int langsize = languageProfiles.size();
+        List<LdLocale> langlist = new ArrayList<>(langsize);
 
         int index = -1;
         for (LanguageProfile profile : languageProfiles) {

@@ -128,11 +128,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     @Override
     public List<DetectedLanguage> getProbabilities(CharSequence text) {
         double[] langprob = detectBlock(text);
-        if (langprob==null) {
-            return Collections.emptyList();
-        } else {
-            return sortProbability(langprob);
-        }
+        return langprob==null ? Collections.<DetectedLanguage>emptyList() : sortProbability(langprob);
     }
 
 
@@ -143,12 +139,10 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private double[] detectBlock(CharSequence text) {
         if (text.length() <= shortTextAlgorithm) {
             Map<String, Integer> ngrams = ngramExtractor.extractCountedGrams(text);
-            if (ngrams.isEmpty()) return null;
-            return detectBlockShortText(ngrams);
+            return ngrams.isEmpty() ? null : detectBlockShortText(ngrams);
         } else {
             List<String> strings = ngramExtractor.extractGrams(text);
-            if (strings.isEmpty()) return null;
-            return detectBlockLongText(strings);
+            return strings.isEmpty() ? null : detectBlockLongText(strings);
         }
     }
 
@@ -171,8 +165,11 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     private double[] detectBlockLongText(List<String> ngrams) {
         assert !ngrams.isEmpty();
+        final boolean traceEnabled = logger.isTraceEnabled();
+
         double[] langprob = new double[ngramFrequencyData.getLanguageList().size()];
         Random rand = new Random(seed.or(DEFAULT_SEED));
+
         for (int t = 0; t < N_TRIAL; ++t) {
             double[] prob = initProbability();
             double alpha = this.alpha + (rand.nextGaussian() * ALPHA_WIDTH);
@@ -182,11 +179,11 @@ public final class LanguageDetectorImpl implements LanguageDetector {
                 updateLangProb(prob, ngrams.get(r), 1, alpha);
                 if (i % 5 == 0) {
                     if (Util.normalizeProb(prob) > CONV_THRESHOLD) break; //this looks like an optimization to return quickly when sure. TODO document what's the plan.
-                    if (logger.isTraceEnabled()) logger.trace("> " + sortProbability(prob));
+                    if (traceEnabled) logger.trace("> " + sortProbability(prob));
                 }
             }
             for(int j=0;j<langprob.length;++j) langprob[j] += prob[j] / N_TRIAL;
-            if (logger.isDebugEnabled()) logger.debug("==> " + sortProbability(prob));
+            if (traceEnabled) logger.trace("==> " + sortProbability(prob));
         }
         return langprob;
     }
@@ -199,11 +196,11 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private double[] initProbability() {
         double[] prob = new double[ngramFrequencyData.getLanguageList().size()];
         if (priorMap != null) {
-            //TODO analyze and optimize this code, looks like double copy.
             System.arraycopy(priorMap, 0, prob, 0, prob.length);
-            for(int i=0;i<prob.length;++i) prob[i] = priorMap[i];
         } else {
-            for(int i=0;i<prob.length;++i) prob[i] = 1.0 / ngramFrequencyData.getLanguageList().size();
+            for(int i=0;i<prob.length;++i) {
+                prob[i] = 1.0 / ngramFrequencyData.getLanguageList().size();
+            }
         }
         return prob;
     }
@@ -244,19 +241,14 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     @NotNull
     private List<DetectedLanguage> sortProbability(double[] prob) {
-        List<DetectedLanguage> list = new ArrayList<>();
+        List<DetectedLanguage> list = new ArrayList<>(prob.length);
         for (int j=0;j<prob.length;++j) {
             double p = prob[j];
             if (p >= probabilityThreshold) {
-                for (int i=0; i<=list.size(); ++i) {
-                    if (i == list.size() || list.get(i).getProbability() < p) {
-                        list.add(i, new DetectedLanguage(ngramFrequencyData.getLanguage(j), p));
-                        break;
-                    }
-                }
+                list.add(new DetectedLanguage(ngramFrequencyData.getLanguage(j), p));
             }
         }
+        Collections.sort(list);
         return list;
     }
-
 }
