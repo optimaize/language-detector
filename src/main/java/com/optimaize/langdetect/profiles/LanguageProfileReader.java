@@ -97,7 +97,7 @@ public class LanguageProfileReader {
 
     @NotNull
     public List<LanguageProfile> readBuiltIn(@NotNull Collection<LdLocale> languages) throws IOException {
-        List<String> profileNames = new ArrayList<>();
+        List<String> profileNames = new ArrayList<>(languages.size());
         for (LdLocale locale : languages) {
             profileNames.add(makeProfileFileName(locale));
         }
@@ -110,12 +110,14 @@ public class LanguageProfileReader {
     public List<LanguageProfile> readAll() throws IOException {
         return readAllBuiltIn();
     }
+
     /**
      * Reads all built-in language profiles from the "languages" folder (shipped with the jar).
      */
     public List<LanguageProfile> readAllBuiltIn() throws IOException {
-        List<LanguageProfile> loaded = new ArrayList<>();
-        for (LdLocale locale : BuiltInLanguages.getLanguages()) {
+        final List<LdLocale> languages = BuiltInLanguages.getLanguages();
+        List<LanguageProfile> loaded = new ArrayList<>(languages.size());
+        for (LdLocale locale : languages) {
             loaded.add(readBuiltIn(locale));
         }
         return loaded;
@@ -148,20 +150,17 @@ public class LanguageProfileReader {
 
         List<LanguageProfile> profiles = new ArrayList<>(listFiles.length);
         for (File file: listFiles) {
-            if (!looksLikeLanguageProfileFile(file)) {
-                continue;
+            if (looksLikeLanguageProfileFile(file)) {
+                profiles.add(read(file));
             }
-            profiles.add(read(file));
         }
         return profiles;
     }
 
     private boolean looksLikeLanguageProfileFile(File file) {
-        if (!file.isFile()) {
-            return false;
-        }
-        return looksLikeLanguageProfileName(file.getName());
+        return file.isFile() ? looksLikeLanguageProfileName(file.getName()) : false;
     }
+
     private boolean looksLikeLanguageProfileName(String fileName) {
         if (fileName.contains(".")) {
             return false;
@@ -173,5 +172,4 @@ public class LanguageProfileReader {
             return false;
         }
     }
-
 }

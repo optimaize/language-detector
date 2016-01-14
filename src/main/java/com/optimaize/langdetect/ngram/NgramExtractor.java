@@ -81,12 +81,12 @@ public class NgramExtractor {
             return Collections.emptyList();
         }
         List<String> grams = new ArrayList<>(totalNumGrams);
-
+        String textAsString = text.toString();
         for (Integer gramLength : gramLengths) {
             int numGrams = len - (gramLength -1);
             if (numGrams >= 1) { //yes can be negative
                 for (int pos=0; pos<numGrams; pos++) {
-                    String gram = text.subSequence(pos, pos + gramLength).toString();
+                    String gram = textAsString.substring(pos, pos + gramLength);
                     if (filter==null || filter.use(gram)) {
                         grams.add(gram);
                     }

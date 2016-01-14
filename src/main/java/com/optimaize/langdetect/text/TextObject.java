@@ -40,7 +40,6 @@ public class TextObject implements CharSequence, Appendable {
 
     private final int maxTextLength;
 
-
     /**
      * @param maxTextLength 0 for no limit
      */

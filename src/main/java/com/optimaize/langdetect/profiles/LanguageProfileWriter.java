@@ -28,12 +28,13 @@ public class LanguageProfileWriter {
             for (Map.Entry<String, Integer> entry : languageProfile.iterateGrams()) {
                 if (!first) {
                     writer.write(',');
+                } else {
+                    first = false;
                 }
                 writer.write('"');
                 writer.write(entry.getKey());
                 writer.write("\":");
                 writer.write(entry.getValue().toString());
-                first = false;
             }
             writer.write("},\"n_words\":[");
             first = true;

@@ -46,10 +46,8 @@ public class OldNgramExtractor {
             ngram.addChar(text.charAt(i));
             for(int n=1;n<=NGram.N_GRAM;++n){
                 String w = ngram.get(n);
-                if (w!=null) { //TODO this null check is ugly
-                    if (filter==null || filter.use(w)) {
-                        list.add(w);
-                    }
+                if (w!=null && (filter==null || filter.use(w))) {
+                    list.add(w);
                 }
             }
         }
