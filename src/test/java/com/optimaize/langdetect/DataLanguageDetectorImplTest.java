@@ -44,6 +44,7 @@ public class DataLanguageDetectorImplTest {
         assertEquals(detector.getProbabilities(text("Dit is een Nederlandse tekst.")).get(0).getLocale().getLanguage(), "nl");
         assertEquals(detector.getProbabilities(text("Dies ist eine deutsche Text")).get(0).getLocale().getLanguage(), "de");
         assertEquals(detector.getProbabilities(text("សព្វវចនាធិប្បាយសេរីសម្រាប់អ្នកទាំងអស់គ្នា។" +"នៅក្នុងវិគីភីឌាភាសាខ្មែរឥឡូវនេះមាន ១១៩៨រូបភាព សមាជិក១៥៣៣៣នាក់ និងមាន៤៥៨៣អត្ថបទ។")).get(0).getLocale().getLanguage(), "km");
+        assertEquals(detector.getProbabilities(text("Европа не трябва да стартира нов конкурентен маратон и изход с приватизация")).get(0).getLocale().getLanguage(), "bg");
     }
 
     private CharSequence text(CharSequence text) {

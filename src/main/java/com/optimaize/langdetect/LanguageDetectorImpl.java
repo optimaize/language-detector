@@ -21,7 +21,6 @@ import java.util.*;
  * @author Elmer Garduno
  */
 public final class LanguageDetectorImpl implements LanguageDetector {
-
     private static final Logger logger = LoggerFactory.getLogger(LanguageDetectorImpl.class);
 
     /**
@@ -159,6 +158,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         double alpha = this.alpha; //TODO I don't understand what this does.
         for (Map.Entry<String, Integer> gramWithCount : ngrams.entrySet()) {
             updateLangProb(prob, gramWithCount.getKey(), gramWithCount.getValue(), alpha);
+            if (Util.normalizeProb(prob) > CONV_THRESHOLD) break; //this break ensures that we quit the loop before all probabilities reach 0
         }
         Util.normalizeProb(prob);
         if (logger.isDebugEnabled()) logger.debug("==> " + sortProbability(prob));
@@ -181,7 +181,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
                 int r = rand.nextInt(ngrams.size());
                 updateLangProb(prob, ngrams.get(r), 1, alpha);
                 if (i % 5 == 0) {
-                    if (Util.normalizeProb(prob) > CONV_THRESHOLD) break; //this looks like an optimization to return quickly when sure. TODO document what's the plan.
+                    if (Util.normalizeProb(prob) > CONV_THRESHOLD) break; //this break ensures that we quit the loop before all probabilities reach 0
                     if (logger.isTraceEnabled()) logger.trace("> " + sortProbability(prob));
                 }
             }
@@ -218,7 +218,6 @@ public final class LanguageDetectorImpl implements LanguageDetector {
         if (langProbMap==null) {
             return false;
         }
-
         if (logger.isTraceEnabled()) logger.trace(ngram + "(" + Util.unicodeEncode(ngram) + "):" + Util.wordProbToString(langProbMap, ngramFrequencyData.getLanguageList()));
 
         double weight = alpha / BASE_FREQ;
@@ -230,9 +229,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
             }
         }
         for (int i=0; i<prob.length; ++i) {
-            for (int amount=0; amount<count; amount++) {
-                prob[i] *= (weight + langProbMap[i]);
-            }
+        	prob[i] *= Math.pow(weight + langProbMap[i], 1);
         }
         return true;
     }
