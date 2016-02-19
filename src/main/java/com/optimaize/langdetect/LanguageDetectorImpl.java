@@ -229,7 +229,9 @@ public final class LanguageDetectorImpl implements LanguageDetector {
             }
         }
         for (int i=0; i<prob.length; ++i) {
-        	prob[i] *= Math.pow(weight + langProbMap[i], count);
+            for (int amount=0; amount<count; amount++) {
+                prob[i] *= (weight + langProbMap[i]);
+            }
         }
         return true;
     }
