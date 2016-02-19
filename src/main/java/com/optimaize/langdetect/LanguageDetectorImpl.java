@@ -58,6 +58,12 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     private static final long DEFAULT_SEED = 41L;
 
+    private static final Comparator<DetectedLanguage> PROBABILITY_SORTING_COMPARATOR = new Comparator<DetectedLanguage>() {
+        public int compare(DetectedLanguage a, DetectedLanguage b) {
+            return Double.compare(b.getProbability(), a.getProbability());
+        }
+    };
+
     @NotNull
     private final NgramFrequencyData ngramFrequencyData;
 
@@ -244,20 +250,17 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     @NotNull
     private List<DetectedLanguage> sortProbability(double[] prob) {
         List<DetectedLanguage> list = new ArrayList<>();
+        //step 1: add all that have reached a minimal probability:
         for (int j=0;j<prob.length;++j) {
             double p = prob[j];
             if (p >= probabilityThreshold) {
                 list.add(new DetectedLanguage(ngramFrequencyData.getLanguage(j), p));
             }
         }
-            list.sort(
-                new Comparator<DetectedLanguage>() {
-                    public int compare(DetectedLanguage a, DetectedLanguage b) {
-                        return b.getProbability() > a.getProbability() ? 1 : -1;
-                    }
-                }
-            );
-
+        //step 2: sort in descending order
+        if (list.size() >= 2) {
+            Collections.sort(list, PROBABILITY_SORTING_COMPARATOR);
+        }
         return list;
     }
 
