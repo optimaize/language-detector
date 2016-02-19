@@ -7,13 +7,18 @@ import com.optimaize.langdetect.text.CommonTextObjectFactories;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * Uses all built-in language profiles and tests some simple clean phrases against them with expected outcome.
+ * Uses all built-in language profiles and tests some simple clean phrases as well as longer texts  against them
+ * with expected outcome.
  *
  * @author Fabian Kessler
  */
@@ -36,37 +41,68 @@ public class DataLanguageDetectorImplTest {
                 .build();
     }
 
-    @Test(dataProvider = "texts")
+    @Test(dataProvider = "shortCleanTexts")
     public void shortTextAlgo(String expectedLanguage, CharSequence text) throws IOException {
         assertEquals(shortDetector.getProbabilities(text).get(0).getLocale().getLanguage(), expectedLanguage);
-
-        //not all are confident enough for the detect() method.
-        //assertEquals(shortDetector.detect(text).get().getLanguage(), expectedLanguage);
+        //the detect() method doesn't have enough confidence for all these short texts.
     }
 
-    @Test(dataProvider = "texts")
-    public void longTextAlgo(String expectedLanguage, CharSequence text) throws IOException {
+    @Test(dataProvider = "shortCleanTexts")
+    public void longTextAlgoWorkingOnShortText(String expectedLanguage, CharSequence text) throws IOException {
         assertEquals(longDetector.getProbabilities(text).get(0).getLocale().getLanguage(), expectedLanguage);
+        //the detect() method doesn't have enough confidence for all these short texts.
+    }
 
-        //not all are confident enough for the detect() method.
-        //assertEquals(longDetector.detect(text).get().getLanguage(), expectedLanguage);
+    @Test(dataProvider = "longerWikipediaTexts")
+    public void longTextAlgoWorkingOnLongText(String expectedLanguage, CharSequence text) throws IOException {
+        assertEquals(longDetector.getProbabilities(text).get(0).getLocale().getLanguage(), expectedLanguage);
+        assertEquals(longDetector.detect(text).get().getLanguage(), expectedLanguage);
     }
 
     @DataProvider
-    protected Object[][] texts() {
+    protected Object[][] shortCleanTexts() {
         return new Object[][] {
-                {"en", text("This is some English text.")},
-                {"fr", text("Ceci est un texte français.")},
-                {"nl", text("Dit is een Nederlandse tekst.")},
-                {"de", text("Dies ist eine deutsche Text")},
-                {"km", text("សព្វវចនាធិប្បាយសេរីសម្រាប់អ្នកទាំងអស់គ្នា។" +"នៅក្នុងវិគីភីឌាភាសាខ្មែរឥឡូវនេះមាន ១១៩៨រូបភាព សមាជិក១៥៣៣៣នាក់ និងមាន៤៥៨៣អត្ថបទ។")},
-                {"bg", text("Европа не трябва да стартира нов конкурентен маратон и изход с приватизация")},
+                {"en", shortCleanText("This is some English text.")},
+                {"fr", shortCleanText("Ceci est un texte français.")},
+                {"nl", shortCleanText("Dit is een Nederlandse tekst.")},
+                {"de", shortCleanText("Dies ist eine deutsche Text")},
+                {"km", shortCleanText("សព្វវចនាធិប្បាយសេរីសម្រាប់អ្នកទាំងអស់គ្នា។" + "នៅក្នុងវិគីភីឌាភាសាខ្មែរឥឡូវនេះមាន ១១៩៨រូបភាព សមាជិក១៥៣៣៣នាក់ និងមាន៤៥៨៣អត្ថបទ។")},
+                {"bg", shortCleanText("Европа не трябва да стартира нов конкурентен маратон и изход с приватизация")},
+        };
+    }
+    private CharSequence shortCleanText(CharSequence text) {
+        return CommonTextObjectFactories.forDetectingShortCleanText().forText( text );
+    }
+
+    @DataProvider
+    protected Object[][] longerWikipediaTexts() {
+        return new Object[][] {
+                {"de", largeText(readText("/texts/de-wikipedia-Deutschland.txt"))},
+                {"fr", largeText(readText("/texts/fr-wikipedia-France.txt"))},
+                {"it", largeText(readText("/texts/it-wikipedia-Italia.txt"))},
         };
     }
 
-
-    private CharSequence text(CharSequence text) {
-        return CommonTextObjectFactories.forDetectingShortCleanText().forText( text );
+    private CharSequence readText(String path) {
+        try (InputStream inputStream = DataLanguageDetectorImplTest.class.getResourceAsStream(path)) {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                StringBuilder sb = new StringBuilder();
+                String str;
+                while ((str = in.readLine()) != null) {
+                    sb.append(str);
+                }
+                return sb.toString();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    private CharSequence largeText(CharSequence text) {
+        return CommonTextObjectFactories.forDetectingOnLargeText().forText( text );
+    }
+
+
+
 
 }
