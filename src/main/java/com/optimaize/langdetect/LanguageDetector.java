@@ -21,6 +21,11 @@ import java.util.List;
 public interface LanguageDetector {
 
     /**
+     * Returns the best detected language if the algorithm is very confident.
+     *
+     * <p>Note: you may want to use getProbabilities() instead. This here is very strict, and sometimes returns
+     * absent even though the first choice in getProbabilities() is correct.</p>
+     *
      * @param text You probably want a {@link com.optimaize.langdetect.text.TextObject}.
      * @return The language if confident, absent if unknown or not confident enough.
      */

@@ -18,7 +18,7 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
     private final double threshold;
 
     /**
-     * If a script has less than this percent of content compared to the most used one, its text is removed.
+     * If a script has less than this fraction of content compared to the most used one, its text is removed.
      *
      * Example: Latin 10%, Cyrillic 80%, Common 10% (punctuation n'stuff). Now 10 is put in relation to 80.
      *
