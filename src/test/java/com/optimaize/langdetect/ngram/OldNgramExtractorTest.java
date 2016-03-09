@@ -33,7 +33,8 @@ public class OldNgramExtractorTest {
     @Test
     public void stressTestAlgo1() {
         String text = "Foo bar hello world and so on nana nunu dada dudu asdf asdf akewf köjvnawer aisdfj awejfr iajdsöfj ewi adjsköfjwei ajsdökfj ief asd";
-        Stopwatch stopwatch = Stopwatch.createStarted();
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.start();
         for (int i=0; i<100000; i++) {
             OldNgramExtractor.extractNGrams(text, null); //2.745s
         }
