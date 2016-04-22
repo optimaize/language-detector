@@ -68,6 +68,7 @@ public class DataLanguageDetectorImplTest {
                 {"de", shortCleanText("Dies ist eine deutsche Text")},
                 {"km", shortCleanText("សព្វវចនាធិប្បាយសេរីសម្រាប់អ្នកទាំងអស់គ្នា។" + "នៅក្នុងវិគីភីឌាភាសាខ្មែរឥឡូវនេះមាន ១១៩៨រូបភាព សមាជិក១៥៣៣៣នាក់ និងមាន៤៥៨៣អត្ថបទ។")},
                 {"bg", shortCleanText("Европа не трябва да стартира нов конкурентен маратон и изход с приватизация")},
+                {"wa", shortCleanText("Çouchal c' est on tecse pår e walon.")},
         };
     }
     private CharSequence shortCleanText(CharSequence text) {

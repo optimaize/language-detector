@@ -11,7 +11,7 @@ Language Detection Library for Java
 
 ## Language Support
 
-### 70 Built-in Language Profiles
+### 71 Built-in Language Profiles
 
 1. af Afrikaans
 1. an Aragonese
@@ -80,6 +80,7 @@ Language Detection Library for Java
 1. uk Ukrainian
 1. ur Urdu
 1. vi Vietnamese
+1. wa Walloon
 1. yi Yiddish
 1. zh-cn Simplified Chinese
 1. zh-tw Traditional Chinese
