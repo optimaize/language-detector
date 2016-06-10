@@ -138,7 +138,7 @@ library you can get at this time. If it doesn't need to be Java, you may want to
 
     //query:
     TextObject textObject = textObjectFactory.forText("my text");
-    Optional<String> lang = languageDetector.detect(textObject);
+    Optional<LdLocale> lang = languageDetector.detect(textObject);
 
 
 #### Creating Language Profiles for your Training Text
