@@ -2,10 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.optimaize.languagedetector</groupId>
+    <!-- FORKED FROM <groupId>com.optimaize.languagedetector</groupId> -->
+    <groupId>com.zignallabs</groupId>
     <artifactId>language-detector</artifactId>
     <name>language-detector</name>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6.1</version>
     <packaging>jar</packaging>
 
     <url>https://github.com/optimaize/language-detector</url>
@@ -49,6 +50,28 @@
       <tag>HEAD</tag>
   </scm>
 
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>jcenter</id>
+            <name>bintray</name>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>jcenter</id>
+            <name>bintray-plugins</name>
+            <url>http://jcenter.bintray.com</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <!-- Include the README and LICENSE files: -->
         <resources>
@@ -65,6 +88,29 @@
         </resources>
 
         <plugins>
+            <plugin>
+                <groupId>org.jfrog.buildinfo</groupId>
+                <artifactId>artifactory-maven-plugin</artifactId>
+                <version>2.4.1</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>publish</goal>
+                        </goals>
+                        <configuration>
+                            <publisher>
+                                <contextUrl>https://zignal.artifactoryonline.com/zignal</contextUrl>
+                                <username>buildserver</username>
+                                <password>buildserver</password>
+                                <repoKey>zignal</repoKey>
+                                <snapshotRepoKey>zignal</snapshotRepoKey>
+                            </publisher>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -104,6 +150,9 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -1,0 +1,25 @@
+machine:
+  java:
+    version: oraclejdk8
+
+deployment:
+  patch:
+    branch: /patch_.*/
+    commands:
+      -  mvn deploy
+  feature:
+    branch: /feature_.*/
+    commands:
+      -  mvn deploy
+  release:
+    branch: /release_.*/
+    commands:
+      -  mvn deploy
+  develop:
+    branch: develop
+    commands:
+      -  mvn deploy
+  master:
+    branch: master
+    commands:
+      -  mvn deploy
