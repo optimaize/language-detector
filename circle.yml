@@ -19,7 +19,3 @@ deployment:
     branch: develop
     commands:
       -  mvn deploy
-  master:
-    branch: master
-    commands:
-      -  mvn deploy
