@@ -16,9 +16,9 @@ import java.util.Set;
  */
 public class RemoveMinorityScriptsTextFilter implements TextFilter {
 
-    private static final UnicodeScript[] SCRIPTS = new UnicodeScript[65535];
+    private static final UnicodeScript[] SCRIPTS = new UnicodeScript[65536];
     static {
-        for (char c = 0; c < 65535; c++) {
+        for (int c = 0; c < SCRIPTS.length; c++) {
             SCRIPTS[c] = Character.UnicodeScript.of(c);
         }
     }
