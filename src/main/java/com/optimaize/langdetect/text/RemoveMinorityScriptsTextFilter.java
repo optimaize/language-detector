@@ -1,5 +1,6 @@
 package com.optimaize.langdetect.text;
 
+import java.lang.Character.UnicodeScript;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,6 +15,13 @@ import java.util.Set;
  * @author Fabian Kessler
  */
 public class RemoveMinorityScriptsTextFilter implements TextFilter {
+
+    private static final UnicodeScript[] SCRIPTS = new UnicodeScript[65535];
+    static {
+        for (char c = 0; c < 65535; c++) {
+            SCRIPTS[c] = Character.UnicodeScript.of(c);
+        }
+    }
 
     private final double threshold;
 
@@ -61,7 +69,7 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
         Character.UnicodeScript last = null;
         for (int i=0; i<text.length(); i++) {
             char c = text.charAt(i);
-            Character.UnicodeScript unicodeScript = Character.UnicodeScript.of(c);
+            Character.UnicodeScript unicodeScript = SCRIPTS[c];
             if (unicodeScript == Character.UnicodeScript.INHERITED) {
                 if (toRemove.contains(last)) {
                     //remove, don't update 'last'
@@ -87,16 +95,16 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
     }
 
     private Map<Character.UnicodeScript, Long> countByScript(CharSequence text) {
-        Map<Character.UnicodeScript, Long> counter = new HashMap<>();
         Character.UnicodeScript last = null;
+        long[] counter = new long[UnicodeScript.values().length];
         for (int i=0; i<text.length(); i++) {
             char c = text.charAt(i);
-            Character.UnicodeScript unicodeScript = Character.UnicodeScript.of(c);
+            Character.UnicodeScript unicodeScript = SCRIPTS[c];
             switch (unicodeScript) {
                 case INHERITED:
                     //counts as what the last was.
                     if (last!=null) { //really shouldn't be null
-                        increment(counter, last);
+                        counter[last.ordinal()]++;
                     }
                     break;
                 case COMMON:
@@ -104,19 +112,19 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
                     //don't count it
                     break;
                 default:
-                    increment(counter, unicodeScript);
+                    counter[unicodeScript.ordinal()]++;
                     last = unicodeScript;
             }
         }
-        return counter;
-    }
-    private void increment(Map<Character.UnicodeScript, Long> counter, Character.UnicodeScript unicodeScript) {
-        Long number = counter.get(unicodeScript);
-        if (number==null) {
-            counter.put(unicodeScript, 1L);
-        } else {
-            counter.put(unicodeScript, number+1);
-        }
-    }
 
+        Map<Character.UnicodeScript, Long> result = new HashMap<>();
+        for (int i = 0; i < counter.length; i++) {
+            long value = counter[i];
+            if(value > 0){
+                result.put(UnicodeScript.values()[i], value);
+            }
+        }
+
+        return result;
+    }
 }
