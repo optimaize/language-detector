@@ -34,6 +34,7 @@ public class TechnicalLanguageDetectorImplTest {
     private static final String TRAINING_EN = "a a a b b c c d e";
     private static final String TRAINING_FR = "a b b c c c d d d";
     private static final String TRAINING_JA = "\u3042 \u3042 \u3042 \u3044 \u3046 \u3048 \u3048";
+    private static final String TRAINING_MS = "a a e e e m m n n";
 
 
     private LanguageDetector makeDetector() {
@@ -50,6 +51,9 @@ public class TechnicalLanguageDetectorImplTest {
 
         profileBuilder = new LanguageProfileBuilder(LdLocale.fromString("ja"));
         add(detectorBuilder, profileBuilder, TRAINING_JA);
+
+        profileBuilder = new LanguageProfileBuilder(LdLocale.fromString("ms"));
+        add(detectorBuilder, profileBuilder, TRAINING_MS);
 
         return detectorBuilder.build();
     }
@@ -84,4 +88,11 @@ public class TechnicalLanguageDetectorImplTest {
         LanguageDetector languageDetector = makeDetector();
         assertEquals(languageDetector.detect("\u3042\u3042\u3042\u3042a").get().getLanguage(), "ja");
     }
+
+    @Test
+    public final void testDetector5() {
+        LanguageDetector languageDetector = makeDetector();
+        assertEquals(languageDetector.detect("a e").get().getLanguage(), "ms");
+    }
+
 }
