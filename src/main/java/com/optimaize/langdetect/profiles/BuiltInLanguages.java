@@ -94,23 +94,55 @@ public class BuiltInLanguages {
 
     static {
         List<String> texts = new ArrayList<>();
+
+        texts.add("ar");
+        texts.add("bg");
+        texts.add("bn");
+        texts.add("ca");
         texts.add("cs");
         texts.add("da");
         texts.add("de");
+        texts.add("el");
         texts.add("en");
         texts.add("es");
+        texts.add("et");
+        texts.add("fa");
         texts.add("fi");
         texts.add("fr");
+        texts.add("gu");
+        texts.add("he");
+        texts.add("hi");
+        texts.add("hr");
+        texts.add("hu");
         texts.add("id");
         texts.add("it");
+        texts.add("ja");
+        texts.add("ko");
+        texts.add("lt");
+        texts.add("lv");
+        texts.add("mk");
+        texts.add("ml");
         texts.add("nl");
         texts.add("no");
+        texts.add("pa");
         texts.add("pl");
         texts.add("pt");
         texts.add("ro");
+        texts.add("ru");
+        texts.add("si");
+        texts.add("sq");
         texts.add("sv");
+        texts.add("ta");
+        texts.add("te");
+        texts.add("th");
+        texts.add("tl");
         texts.add("tr");
+        texts.add("uk");
+        texts.add("ur");
         texts.add("vi");
+        texts.add("zh-cn");
+        texts.add("zh-tw");
+
         shortTextLanguages = ImmutableList.copyOf(texts);
     }
 
