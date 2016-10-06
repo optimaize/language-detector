@@ -44,5 +44,7 @@ dependencies {
 }
 
 test {
+    //useJUnit() // enable this to test JUnit test classes
+    useTestNG()  // enable this to test TestNG test classes
     systemProperty "file.encoding", "utf-8"
 }

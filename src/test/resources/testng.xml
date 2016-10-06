@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="TestAll">
+
+    <test name="langdetect">
+        <classes>
+            <class name="com.optimaize.langdetect.DataLanguageDetectorImplTest" />
+            <class name="com.optimaize.langdetect.LanguageDetectorImplTest" />
+        </classes>
+    </test>
+
+</suite>

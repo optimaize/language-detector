@@ -4,6 +4,10 @@ import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.profiles.LanguageProfile;
 import com.optimaize.langdetect.profiles.LanguageProfileReader;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
+
+//import org.junit.BeforeClass;
+//import org.junit.Test;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -24,10 +28,12 @@ import static org.junit.Assert.assertEquals;
  */
 public class DataLanguageDetectorImplTest {
 
-    private final LanguageDetector shortDetector;
-    private final LanguageDetector longDetector;
+    private static LanguageDetector shortDetector;
+    private static LanguageDetector longDetector;
 
-    public DataLanguageDetectorImplTest() throws IOException {
+    @BeforeTest
+    //public DataLanguageDetectorImplTest() throws IOException {
+    public void init() throws IOException {
         List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAllBuiltIn();
 
         shortDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
@@ -68,6 +74,11 @@ public class DataLanguageDetectorImplTest {
                 {"de", shortCleanText("Dies ist eine deutsche Text")},
                 {"km", shortCleanText("សព្វវចនាធិប្បាយសេរីសម្រាប់អ្នកទាំងអស់គ្នា។" + "នៅក្នុងវិគីភីឌាភាសាខ្មែរឥឡូវនេះមាន ១១៩៨រូបភាព សមាជិក១៥៣៣៣នាក់ និងមាន៤៥៨៣អត្ថបទ។")},
                 {"bg", shortCleanText("Европа не трябва да стартира нов конкурентен маратон и изход с приватизация")},
+                {"it", shortCleanText("Persone nate a padova")},
+                {"it", shortCleanText("attori canada")},
+                {"de", shortCleanText("Was ist die hauptstadt von kanada")},
+                {"pl", shortCleanText("I Kanadyjczycy")},
+                {"en", shortCleanText("actors from Canada")},
         };
     }
     private CharSequence shortCleanText(CharSequence text) {
