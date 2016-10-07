@@ -85,6 +85,7 @@ public class BuiltInLanguages {
         names.add(LdLocale.fromString("uk"));
         names.add(LdLocale.fromString("ur"));
         names.add(LdLocale.fromString("vi"));
+        names.add(LdLocale.fromString("wa"));
         names.add(LdLocale.fromString("yi"));
         names.add(LdLocale.fromString("zh-CN"));
         names.add(LdLocale.fromString("zh-TW"));
