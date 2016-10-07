@@ -63,6 +63,14 @@ public class LanguageProfileBuilder {
     }
 
     /**
+     * Clear already added text in order to make the {@link LanguageProfileBuilder} reusable.
+     */
+    public LanguageProfileBuilder clearText(){
+        this.ngrams.clear();
+        return this;
+    }
+
+    /**
      * Shortcut for addGram(ngram, 1).
      */
     public LanguageProfileBuilder addGram(String ngram) {
