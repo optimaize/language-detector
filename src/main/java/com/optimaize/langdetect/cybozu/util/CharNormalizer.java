@@ -17,7 +17,12 @@ public class CharNormalizer {
      * Character Normalization (and exclusion).
      * @return Normalized character, the space to exclude the character.
      */
-    public static char normalize(char ch) {
+    public static char normalize(char ch){
+        Character result = NORMALIZE_MAP.get(ch);
+        return result == null ? ch : result;
+    }
+
+    private static char normalize0(char ch) {
         Character.UnicodeBlock block = Character.UnicodeBlock.of(ch);
         if (block == Character.UnicodeBlock.BASIC_LATIN) {
             if (ch<'A' || (ch<'a' && ch >'Z') || ch>'z') ch = ' ';
@@ -36,7 +41,7 @@ public class CharNormalizer {
         } else if (block == Character.UnicodeBlock.BOPOMOFO || block == Character.UnicodeBlock.BOPOMOFO_EXTENDED) {
             ch = '\u3105';
         } else if (block == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
-            if (cjk_map.containsKey(ch)) ch = cjk_map.get(ch);
+            if (CJK_MAP.containsKey(ch)) ch = CJK_MAP.get(ch);
         } else if (block == Character.UnicodeBlock.HANGUL_SYLLABLES) {
             ch = '\uac00';
         }
@@ -44,8 +49,8 @@ public class CharNormalizer {
     }
 
     private static final String LATIN1_EXCLUDED = Messages.getString("NGram.LATIN1_EXCLUDE");
-    private static final Map<Character, Character> cjk_map;
-
+    private static final Map<Character, Character> CJK_MAP;
+    private static final Map<Character,Character> NORMALIZE_MAP;
 
     /**
      * CJK Kanji Normalization Mapping
@@ -178,14 +183,22 @@ public class CharNormalizer {
             Messages.getString("NGram.KANJI_7_35"),
             Messages.getString("NGram.KANJI_7_37"),
     };
+
     static {
-        cjk_map = new HashMap<>();
+        CJK_MAP = new HashMap<>();
         for (String cjk_list : CJK_CLASS) {
             char representative = cjk_list.charAt(0);
             for (int i=0;i<cjk_list.length();++i) {
-                cjk_map.put(cjk_list.charAt(i), representative);
+                CJK_MAP.put(cjk_list.charAt(i), representative);
+            }
+        }
+
+        NORMALIZE_MAP = new HashMap<>();
+        for(char c=0;c<65536;c++){
+            char x = normalize0(c);
+            if(c != x){
+                NORMALIZE_MAP.put(c, x);
             }
         }
     }
-
 }
