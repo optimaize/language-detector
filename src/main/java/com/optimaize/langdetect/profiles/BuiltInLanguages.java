@@ -116,12 +116,18 @@ public class BuiltInLanguages {
     }
 
     /**
+     * Returns the languages for which the library provides full profiles.
+     * Full provides are generated from regular text, usually Wikipedia abstracts.
      * @return immutable
      */
     public static List<LdLocale> getLanguages() {
         return languages;
     }
+
     /**
+     * Returns the languages for which the library provides profiles created from short text.
+     * Twitter was used as source by @shuyo.
+     * Much less languages have short text profiles as of now.
      * @return immutable
      */
     public static List<String> getShortTextLanguages() {
