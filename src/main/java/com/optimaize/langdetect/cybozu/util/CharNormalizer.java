@@ -10,6 +10,7 @@ import java.util.Map;
  *
  * @author Nakatani Shuyo
  * @author Fabian Kessler
+ * @author aoking
  */
 public class CharNormalizer {
 
@@ -18,13 +19,22 @@ public class CharNormalizer {
      * @return Normalized character, the space to exclude the character.
      */
     public static char normalize(char ch){
+        //this is even cheaper than the hashmap lookup. because it covers most use cases, it's worth the check.
+        if (ch <= 127) { //ascii (basic latin)
+            if (ch < 'A' || (ch < 'a' && ch > 'Z') || ch > 'z') {
+                return ' ';
+            } else {
+                return ch;
+            }
+        }
+
         Character result = NORMALIZE_MAP.get(ch);
         return result == null ? ch : result;
     }
 
-    private static char normalize0(char ch) {
+    private static char normalize0(char ch){
         Character.UnicodeBlock block = Character.UnicodeBlock.of(ch);
-        if (block == Character.UnicodeBlock.BASIC_LATIN) {
+        if (block == Character.UnicodeBlock.BASIC_LATIN) { //see https://en.wikipedia.org/wiki/Basic_Latin_(Unicode_block)
             if (ch<'A' || (ch<'a' && ch >'Z') || ch>'z') ch = ' ';
         } else if (block == Character.UnicodeBlock.LATIN_1_SUPPLEMENT) {
             if (LATIN1_EXCLUDED.indexOf(ch)>=0) ch = ' ';
@@ -49,8 +59,11 @@ public class CharNormalizer {
     }
 
     private static final String LATIN1_EXCLUDED = Messages.getString("NGram.LATIN1_EXCLUDE");
-    private static final Map<Character, Character> CJK_MAP;
-    private static final Map<Character,Character> NORMALIZE_MAP;
+    private static final Map<Character, Character> CJK_MAP = new HashMap<>();;
+    /**
+     * Has mappings for overrides. What's not in the map means keep the original.
+     */
+    private static final Map<Character,Character> NORMALIZE_MAP = new HashMap<>();;
 
     /**
      * CJK Kanji Normalization Mapping
@@ -185,7 +198,6 @@ public class CharNormalizer {
     };
 
     static {
-        CJK_MAP = new HashMap<>();
         for (String cjk_list : CJK_CLASS) {
             char representative = cjk_list.charAt(0);
             for (int i=0;i<cjk_list.length();++i) {
@@ -193,11 +205,11 @@ public class CharNormalizer {
             }
         }
 
-        NORMALIZE_MAP = new HashMap<>();
-        for(char c=0;c<65536;c++){
-            char x = normalize0(c);
+        //using int because char would loop infinitely thanks to resetting to 0 after 65535
+        for (int c=0;c<=65535;c++) {
+            char x = normalize0((char)c);
             if(c != x){
-                NORMALIZE_MAP.put(c, x);
+                NORMALIZE_MAP.put((char)c, x);
             }
         }
     }
