@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Fabian Kessler
+ * Copyright 2011 Nakatani Shuyo
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * A place for sharing code.
  *
- * @author Fabian Kessler
+ * @author Nakatani Shuyo
  */
 public class Util {
 
