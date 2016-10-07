@@ -5,7 +5,7 @@ Language Detection Library for Java
     <dependency>
         <groupId>com.optimaize.languagedetector</groupId>
         <artifactId>language-detector</artifactId>
-        <version>0.5</version>
+        <version>0.6</version>
     </dependency>
 
 
@@ -312,5 +312,5 @@ The project is in Maven central http://search.maven.org/#artifactdetails%7Ccom.o
     <dependency>
         <groupId>com.optimaize.languagedetector</groupId>
         <artifactId>language-detector</artifactId>
-        <version>0.5</version>
+        <version>0.6</version>
     </dependency>
