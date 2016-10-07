@@ -46,8 +46,8 @@
         <connection>scm:git:https://github.com/optimaize/language-detector</connection>
         <developerConnection>scm:git:https://github.com/optimaize/language-detector</developerConnection>
         <url>https://github.com/optimaize/language-detector</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <!-- Include the README and LICENSE files: -->
@@ -220,12 +220,12 @@
             <artifactId>jsonic</artifactId>
             <version>1.2.11</version>
         </dependency>
-        <dependency>
+        <dependency><!-- used for the @NotNull and @Nullable annotations -->
             <groupId>com.intellij</groupId>
             <artifactId>annotations</artifactId>
             <version>12.0</version>
         </dependency>
-        <dependency>
+        <dependency><!-- used for the Optional and other things -->
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>18.0</version>
@@ -236,13 +236,17 @@
             <version>1.7.6</version>
         </dependency>
 
-        <dependency>
+
+
+        <!-- test dependencies: -->
+
+        <dependency><!-- used for newly added tests -->
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.9.9</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <dependency><!-- was used in the past, there are still many tests -->
             <groupId>junit</groupId>
             <artifactId>junit-dep</artifactId>
             <version>4.11</version>
