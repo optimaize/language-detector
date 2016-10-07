@@ -23,17 +23,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Performs k-fold cross-validation.
+ * See https://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation
+ *
+ * This is meant to be run as a maintenance program, or for debugging. It's not used in production by this library.
+ * Use the unit test.
+ *
  * @author Robert Erdin
- *         https://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation
  */
 public class LanguageProfileValidator {
 
     private final TextObjectFactory textObjectFactory = CommonTextObjectFactories.forIndexingCleanText();
 
     private int k = 10;
-
     private boolean breakWords = false;
 
+    /**
+     * All loaded language profiles.
+     */
     private final List<LanguageProfile> languageProfiles = new ArrayList<>();
     private LanguageProfileBuilder languageProfileBuilder;
     private TextObject inputSample;
@@ -41,22 +48,18 @@ public class LanguageProfileValidator {
 
     /**
      * Set the k parameter to select into how many parts to partition the original sample. Default is 10.
-     * Minimum: 3
-     *
-     * @param k
-     * @return
+     * @param k Minimum: 3
      */
     public LanguageProfileValidator setK(int k) {
-        if( k <= 2 )
-            System.err.println("k hast to be at least 3");
+        if( k <= 2 ) {
+            throw new IllegalArgumentException("k hast to be at least 3 but was: "+k);
+        }
         this.k = k;
         return this;
     }
 
     /**
      * Adds all {@link LanguageProfile}s that are available when calling {@link LanguageProfileReader#readAllBuiltIn()}.
-     * @return
-     * @throws IOException
      */
     public LanguageProfileValidator loadAllBuiltInLanguageProfiles() throws IOException {
         this.languageProfiles.addAll(new LanguageProfileReader().readAllBuiltIn());
@@ -64,9 +67,7 @@ public class LanguageProfileValidator {
     }
 
     /**
-     * Load a custom {@link LanguageProfile}
-     * @param languageProfile
-     * @return
+     * Load the given {@link LanguageProfile}.
      */
     public LanguageProfileValidator loadLanguageProfile(LanguageProfile languageProfile) {
         this.languageProfiles.add(languageProfile);
@@ -74,9 +75,7 @@ public class LanguageProfileValidator {
     }
 
     /**
-     * Load custom {@link LanguageProfile}s.
-     * @param languageProfiles
-     * @return
+     * Load the given {@link LanguageProfile}s.
      */
     public LanguageProfileValidator loadLanguageProfiles(Collection<LanguageProfile> languageProfiles) {
         this.languageProfiles.addAll(languageProfiles);
@@ -84,19 +83,15 @@ public class LanguageProfileValidator {
     }
 
     /**
-     * Load the {@link LanguageProfileBuilder} which should be used to create the {@link LanguageProfile} during the validation.
-     * @param languageProfileBuilder
-     * @return
+     * Sets the {@link LanguageProfileBuilder} which will be used to create the {@link LanguageProfile} during the validation.
      */
-    public LanguageProfileValidator loadLanguageProfileBuilder(LanguageProfileBuilder languageProfileBuilder) {
+    public LanguageProfileValidator setLanguageProfileBuilder(LanguageProfileBuilder languageProfileBuilder) {
         this.languageProfileBuilder = languageProfileBuilder;
         return this;
     }
 
     /**
      * The sample to be used in the validation.
-     * @param inputSample
-     * @return
      */
     public LanguageProfileValidator loadInputSample(TextObject inputSample) {
         this.inputSample = inputSample;
@@ -105,11 +100,10 @@ public class LanguageProfileValidator {
 
     /**
      * Use for languages that don't use whitespaces to denominate word boundaries.
-     *
+     * Default is false.
      * @param breakWords set true is you want to break sample into truly equal sizes.
-     * @return
      */
-    public LanguageProfileValidator breakWords(boolean breakWords) {
+    public LanguageProfileValidator setBreakWords(boolean breakWords) {
         this.breakWords = breakWords;
         return this;
     }
@@ -117,7 +111,6 @@ public class LanguageProfileValidator {
     /**
      * Remove potential LanguageProfiles, e.g. in combination with {@link #loadAllBuiltInLanguageProfiles()}.
      * @param isoString the ISO string of the LanguageProfile to be removed.
-     * @return
      */
     public LanguageProfileValidator removeLanguageProfile(final String isoString) {
         Iterables.removeIf(this.languageProfiles, new Predicate<LanguageProfile>() {
@@ -134,7 +127,6 @@ public class LanguageProfileValidator {
      * @return the average probability over all runs.
      */
     public double validate() {
-
         // remove a potential duplicate LanguageProfile
         this.removeLanguageProfile(this.languageProfileBuilder.build().getLocale().getLanguage());
 
@@ -145,15 +137,15 @@ public class LanguageProfileValidator {
 
         for (int i = 0; i < this.k; i++) {
             System.out.println(" ----------------- Run " + (i + 1) + " -------------------");
-            this.languageProfileBuilder.clearText();
+            LanguageProfileBuilder lpb = new LanguageProfileBuilder(this.languageProfileBuilder);
             TextObject testSample = partitionedInput.get(i);
 
             List<TextObject> trainingSamples = new ArrayList<>(partitionedInput);
             trainingSamples.remove(i);
             for (TextObject token : trainingSamples) {
-                this.languageProfileBuilder.addText(token);
+                lpb.addText(token);
             }
-            final LanguageProfile languageProfile = this.languageProfileBuilder.build();
+            final LanguageProfile languageProfile = lpb.build();
 
             this.languageProfiles.add(languageProfile);
 
@@ -182,11 +174,11 @@ public class LanguageProfileValidator {
             }
         }
 
-        Double sum = 0D;
+        double sum = 0D;
         for (Double token : probabilities) {
             sum += token;
         }
-        Double avg = sum / this.k;
+        double avg = sum / this.k;
 
         System.out.println("The average probability over all runs is: " + avg);
 
@@ -202,9 +194,8 @@ public class LanguageProfileValidator {
             while (m.find())
                 result.add(textObjectFactory.create().append(m.group(1)));
         } else {
-            for (String token : Splitter
-                    .fixedLength(this.k)
-                    .split(this.inputSample.toString())) {
+            Splitter splitter = Splitter.fixedLength(this.k);
+            for (String token : splitter.split(this.inputSample.toString())) {
                 result.add(textObjectFactory.create().append(token));
             }
         }

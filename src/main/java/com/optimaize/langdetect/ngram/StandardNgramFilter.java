@@ -3,6 +3,8 @@ package com.optimaize.langdetect.ngram;
 /**
  * Filters what is generally not desired.
  *
+ * Impl is immutable.
+ *
  * @author Fabian Kessler
  */
 public class StandardNgramFilter implements NgramFilter {

@@ -32,6 +32,16 @@ public class LanguageProfileBuilder {
         this.locale = LdLocale.fromString(locale);
     }
 
+    /**
+     * Copy constructor.
+     */
+    public LanguageProfileBuilder(@NotNull LanguageProfileBuilder languageProfileBuilder) {
+        this.locale = languageProfileBuilder.locale;
+        this.minimalFrequency = languageProfileBuilder.minimalFrequency;
+        this.ngramExtractor = languageProfileBuilder.ngramExtractor;
+        this.ngrams.putAll(languageProfileBuilder.ngrams);
+    }
+
     public LanguageProfileBuilder ngramExtractor(@NotNull NgramExtractor ngramExtractor) {
         this.ngramExtractor = ngramExtractor;
         return this;
@@ -59,14 +69,6 @@ public class LanguageProfileBuilder {
         for (Map.Entry<String, Integer> entry : ngramExtractor.extractCountedGrams(text).entrySet()) {
             addGram(entry.getKey(), entry.getValue());
         }
-        return this;
-    }
-
-    /**
-     * Clear already added text in order to make the {@link LanguageProfileBuilder} reusable.
-     */
-    public LanguageProfileBuilder clearText(){
-        this.ngrams.clear();
         return this;
     }
 

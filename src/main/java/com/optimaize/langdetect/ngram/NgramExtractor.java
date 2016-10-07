@@ -9,12 +9,14 @@ import java.util.*;
 /**
  * Class for extracting n-grams out of a text.
  *
+ * This class is immutable.
+ *
  * @author Fabian Kessler
  */
 public class NgramExtractor {
 
     @NotNull
-    private final List<Integer> gramLengths = new ArrayList<>(4);
+    private final List<Integer> gramLengths;
     @Nullable
     private final NgramFilter filter;
     @Nullable
@@ -47,13 +49,13 @@ public class NgramExtractor {
 
     private NgramExtractor(@NotNull List<Integer> gramLengths, @Nullable NgramFilter filter, @Nullable Character textPadding) {
         if (gramLengths.isEmpty()) throw new IllegalArgumentException();
-        this.gramLengths.addAll(gramLengths);
+        this.gramLengths = ImmutableList.copyOf(gramLengths);
         this.filter = filter;
         this.textPadding = textPadding;
     }
 
     public List<Integer> getGramLengths() {
-        return Collections.unmodifiableList(gramLengths);
+        return gramLengths;
     }
 
     /**
