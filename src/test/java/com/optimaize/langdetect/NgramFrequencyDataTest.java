@@ -35,7 +35,7 @@ public class NgramFrequencyDataTest {
     @Test
     public void size() throws Exception {
         //update the number when adding built-in languages
-        assertEquals(allThreeGrams.getLanguageList().size(), 70);
+        assertEquals(allThreeGrams.getLanguageList().size(), 71);
     }
 
     @Test
