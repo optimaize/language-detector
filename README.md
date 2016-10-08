@@ -161,6 +161,12 @@ text. We might then be able to improve detection for your language.
 If you're a programmer, dig in the source and see what you can improve. Check the open tasks.
 
 
+## Memory Consumption
+
+Loading all 71 language profiles uses 74MB ram to store the data in memory.
+For memory considerations see https://github.com/optimaize/language-detector/wiki/Memory-Consumption
+
+
 ## History and Changes
 
 This project is a fork of a fork, the original author is Nakatani Shuyo.
