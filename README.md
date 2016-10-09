@@ -189,10 +189,7 @@ Apache 2 (business friendly)
 
 ## Authors
 
-Nakatani Shuyo
-Fabian Kessler
-Francois ROLAND
-Robert Theis
+Nakatani Shuyo, Fabian Kessler, Francois ROLAND, Robert Theis
 
 For detail see https://github.com/optimaize/language-detector/wiki/Authors
 
