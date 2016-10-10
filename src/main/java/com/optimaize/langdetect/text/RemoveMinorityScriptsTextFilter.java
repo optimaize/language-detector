@@ -16,6 +16,7 @@
 
 package com.optimaize.langdetect.text;
 
+import java.lang.Character.UnicodeScript;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,6 +32,16 @@ import java.util.Set;
  */
 public class RemoveMinorityScriptsTextFilter implements TextFilter {
 
+    private static final int INHERITED = UnicodeScript.INHERITED.ordinal();
+    private static final int COMMON = UnicodeScript.COMMON.ordinal();
+    private static final int UNKNOWN = UnicodeScript.UNKNOWN.ordinal();
+
+    private static final int[] SCRIPT_IDS = new int[65536];
+    static {
+        for (int c = 0; c < SCRIPT_IDS.length; c++) {
+            SCRIPT_IDS[c] = Character.UnicodeScript.of(c).ordinal();
+        }
+    }
     private final double threshold;
 
     /**
@@ -50,14 +61,14 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
 
     @Override
     public String filter(CharSequence text) {
-        Map<Character.UnicodeScript, Long> counts = countByScript(text);
+        Map<Integer, Long> counts = countByScript(text);
         if (counts.size()<=1) {
             //nothing to do
             return text.toString();
         } else {
             long most = findMost(counts);
-            Set<Character.UnicodeScript> toRemove = new HashSet<>();
-            for (Map.Entry<Character.UnicodeScript, Long> entry : counts.entrySet()) {
+            Set<Integer> toRemove = new HashSet<>();
+            for (Map.Entry<Integer, Long> entry : counts.entrySet()) {
                 if (entry.getValue()==most) continue;
                 double ratio = entry.getValue().doubleValue() / most;
                 if (ratio <= threshold) {
@@ -72,20 +83,20 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
         }
     }
 
-    private String remove(CharSequence text, Set<Character.UnicodeScript> toRemove) {
+    private String remove(CharSequence text, Set<Integer> toRemove) {
         StringBuilder remaining = new StringBuilder();
-        Character.UnicodeScript last = null;
+        int last = -1;
         for (int i=0; i<text.length(); i++) {
             char c = text.charAt(i);
-            Character.UnicodeScript unicodeScript = Character.UnicodeScript.of(c);
-            if (unicodeScript == Character.UnicodeScript.INHERITED) {
+            int id = SCRIPT_IDS[c];
+            if (id == INHERITED) {
                 if (toRemove.contains(last)) {
                     //remove, don't update 'last'
                     continue;
                 }
             }
-            last = unicodeScript;
-            if (toRemove.contains(unicodeScript)) {
+            last = id;
+            if (toRemove.contains(id)) {
                 continue; //remove it
             }
             //if we get here then we keep it.
@@ -94,7 +105,7 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
         return remaining.toString();
     }
 
-    private long findMost(Map<Character.UnicodeScript, Long> counts) {
+    private long findMost(Map<Integer, Long> counts) {
         long max = 0L;
         for (Long aLong : counts.values()) {
             if (aLong > max) max = aLong;
@@ -102,37 +113,31 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
         return max;
     }
 
-    private Map<Character.UnicodeScript, Long> countByScript(CharSequence text) {
-        Map<Character.UnicodeScript, Long> counter = new HashMap<>();
-        Character.UnicodeScript last = null;
+    private Map<Integer, Long> countByScript(CharSequence text) {
+        int last = -1;
+        long[] counter = new long[UnicodeScript.values().length];
         for (int i=0; i<text.length(); i++) {
             char c = text.charAt(i);
-            Character.UnicodeScript unicodeScript = Character.UnicodeScript.of(c);
-            switch (unicodeScript) {
-                case INHERITED:
-                    //counts as what the last was.
-                    if (last!=null) { //really shouldn't be null
-                        increment(counter, last);
-                    }
-                    break;
-                case COMMON:
-                case UNKNOWN:
-                    //don't count it
-                    break;
-                default:
-                    increment(counter, unicodeScript);
-                    last = unicodeScript;
+            int id = SCRIPT_IDS[c];
+            if (id == INHERITED) {
+                //counts as what the last was.
+                if (last >= 0) { //really shouldn't be null
+                    counter[last]++;
+                }
+            } else if(id != COMMON && id != UNKNOWN) {
+                counter[id]++;
+                last = id;
             }
         }
-        return counter;
-    }
-    private void increment(Map<Character.UnicodeScript, Long> counter, Character.UnicodeScript unicodeScript) {
-        Long number = counter.get(unicodeScript);
-        if (number==null) {
-            counter.put(unicodeScript, 1L);
-        } else {
-            counter.put(unicodeScript, number+1);
-        }
-    }
 
+        Map<Integer, Long> result = new HashMap<>();
+        for (int i = 0; i < counter.length; i++) {
+            long value = counter[i];
+            if (value > 0) {
+                result.put(i, value);
+            }
+        }
+
+        return result;
+    }
 }
