@@ -49,4 +49,10 @@ public class CommonTextObjectFactories {
                 .build();
     }
 
+    public static TextObjectFactory forInstagramPosts() {
+        return new TextObjectFactoryBuilder()
+                .withTextFilter(UrlTextFilter.getInstance())
+                .build();
+    }
+
 }
