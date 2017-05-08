@@ -228,7 +228,7 @@
         <dependency><!-- used for the Optional and other things -->
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0</version>
+            <version>14.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
