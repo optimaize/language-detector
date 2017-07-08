@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.optimaize.langdetect.text;
 
-import java.util.regex.Pattern;
+import org.nibor.autolink.*;
+
+import java.util.EnumSet;
 
 /**
  * Removes URLs and email addresses from the text.
@@ -25,8 +26,9 @@ import java.util.regex.Pattern;
  */
 public class UrlTextFilter implements TextFilter {
 
-    private static final Pattern URL_REGEX = Pattern.compile("https?://[-_.?&~;+=/#0-9A-Za-z]+");
-    private static final Pattern MAIL_REGEX = Pattern.compile("[-_.0-9A-Za-z]+@[-_0-9A-Za-z]+[-_.0-9A-Za-z]+");
+    private static final LinkExtractor linkExtractor = LinkExtractor.builder()
+            .linkTypes(EnumSet.of(LinkType.URL, LinkType.WWW, LinkType.EMAIL))
+            .build();
 
     private static final UrlTextFilter INSTANCE = new UrlTextFilter();
 
@@ -38,9 +40,16 @@ public class UrlTextFilter implements TextFilter {
     }
 
     @Override
-    public String filter(CharSequence text) {
-        String modified = URL_REGEX.matcher(text).replaceAll(" ");
-        return MAIL_REGEX.matcher(modified).replaceAll(" ");
+    public String filter(CharSequence originalText) {
+        return Autolink.renderLinks(originalText, linkExtractor.extractLinks(originalText), new NullRenderer());
+    }
+
+    private class NullRenderer implements LinkRenderer {
+
+        @Override
+        public void render(LinkSpan link, CharSequence text, StringBuilder sb) {
+            sb.append(" ");
+        }
     }
 
 }
