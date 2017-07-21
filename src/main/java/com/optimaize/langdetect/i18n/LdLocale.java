@@ -34,8 +34,9 @@ import java.util.List;
  *
  * <p>The java.util.Locale cannot be used because it has issues for historical reasons, notably the
  * script code conversion for Hebrew, Yiddish and Indonesian, and more. If one needs a Locale,
- * it is simple to create one based on this object.<br/>
- * The ICU ULocale cannot be used because a) it has issues too (for our use case) and b) we're not
+ * it is simple to create one based on this object.</p>
+ *
+ * <p>The ICU ULocale cannot be used because a) it has issues too (for our use case) and b) we're not
  * using ICU in here [yet].</p>
  *
  * <p>This class does not perform any modifications on the input. The input is used as is, and the getters
