@@ -77,7 +77,7 @@ public class NgramExtractor {
     /**
      * Creates the n-grams for a given text in the order they occur.
      *
-     * <p>Example: extractSortedGrams("Foo bar", 2) => [Fo,oo,o , b,ba,ar]</p>
+     * <p>Example: extractSortedGrams("Foo bar", 2) =&gt; [Fo,oo,o , b,ba,ar]</p>
      *
      * @param  text
      * @return The grams, empty if the input was empty or if none for that gramLength fits.
