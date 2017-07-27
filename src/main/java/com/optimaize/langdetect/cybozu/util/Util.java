@@ -120,12 +120,13 @@ public class Util {
             LdLocale lang = langlist.get(i);
             if (langWeightingMap.containsKey(lang)) {
                 double p = langWeightingMap.get(lang);
-                assert p>=0 : "Prior probability must be non-negative!";
+                if (p < 0 || Double.isNaN(p)) throw new IllegalArgumentException("Prior probability must be non-negative!");
                 priorMap[i] = p;
                 sump += p;
             }
         }
-        assert sump > 0 : "Sum must be greater than zero!";
+        if(sump <= 0 || Double.isNaN(sump)) throw new IllegalArgumentException("Sum of probabilities must be greater than zero!");
+        if(Double.isInfinite(sump)) throw new IllegalArgumentException("Sum of probabilities must be finite!");
         for (int i=0;i<priorMap.length;++i) priorMap[i] /= sump;
         return priorMap;
     }

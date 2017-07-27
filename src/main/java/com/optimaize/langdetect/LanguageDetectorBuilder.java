@@ -145,9 +145,10 @@ public class LanguageDetectorBuilder {
 
 
     /**
-     * TODO document exactly. Also explain how it influences the results.
-     * Maybe check for unsupported languages at some point, or not, but document whether it does throw or ignore.
-     * String key = language, Double value = priority (probably 0-1).
+     * Accepts a list of relative a priori probabilities of each language.
+     * The values passed have to be nonnegative. Passing a zero for a language (or not passing it at all)
+     * means this language will never be returned by detection.
+     * Languages that are not on profile list are ignored.
      */
     public LanguageDetectorBuilder languagePriorities(@Nullable Map<LdLocale, Double> langWeightingMap) {
         this.langWeightingMap = langWeightingMap;
