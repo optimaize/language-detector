@@ -16,8 +16,8 @@
 
 package com.optimaize.langdetect.text;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,7 +56,7 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
             return text.toString();
         } else {
             long most = findMost(counts);
-            Set<Character.UnicodeScript> toRemove = new HashSet<>();
+            Set<Character.UnicodeScript> toRemove = EnumSet.noneOf(Character.UnicodeScript.class);
             for (Map.Entry<Character.UnicodeScript, Long> entry : counts.entrySet()) {
                 if (entry.getValue()==most) continue;
                 double ratio = entry.getValue().doubleValue() / most;
@@ -103,7 +103,7 @@ public class RemoveMinorityScriptsTextFilter implements TextFilter {
     }
 
     private Map<Character.UnicodeScript, Long> countByScript(CharSequence text) {
-        Map<Character.UnicodeScript, Long> counter = new HashMap<>();
+        Map<Character.UnicodeScript, Long> counter = new EnumMap<>(Character.UnicodeScript.class);
         Character.UnicodeScript last = null;
         for (int i=0; i<text.length(); i++) {
             char c = text.charAt(i);
