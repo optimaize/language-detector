@@ -98,14 +98,15 @@ public class Util {
 
 
     public static String wordProbToString(double[] prob, List<LdLocale> langlist) {
-        Formatter formatter = new Formatter();
-        for(int j=0;j<prob.length;++j) {
-            double p = prob[j];
-            if (p>=0.00001) {
-                formatter.format(" %s:%.5f", langlist.get(j), p);
+        try (Formatter formatter = new Formatter()) {
+            for(int j=0;j<prob.length;++j) {
+                double p = prob[j];
+                if (p>=0.00001) {
+                    formatter.format(" %s:%.5f", langlist.get(j), p);
+                }
             }
+            return formatter.toString();
         }
-        return formatter.toString();
     }
 
 

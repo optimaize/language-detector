@@ -20,8 +20,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This is just a utility to update the code with the existing languages.
@@ -43,17 +43,11 @@ class LanguageLister {
     }
 
     private static List<String> readFilesFromClassPathFolder(String resourceNameFolder) throws IOException {
-        List<String> files = new ArrayList<>();
         ClassLoader loader = LanguageLister.class.getClassLoader();
-        try (InputStream in = loader.getResourceAsStream(resourceNameFolder)) {
-            BufferedReader rdr = new BufferedReader(new InputStreamReader(in));
-            String line;
-            while ((line = rdr.readLine()) != null) {
-                files.add(line);
-            }
-            rdr.close();
+        try (InputStream in = loader.getResourceAsStream(resourceNameFolder);
+             BufferedReader rdr = new BufferedReader(new InputStreamReader(in))) {
+            return rdr.lines().collect(Collectors.toList());
         }
-        return files;
     }
 
 }
