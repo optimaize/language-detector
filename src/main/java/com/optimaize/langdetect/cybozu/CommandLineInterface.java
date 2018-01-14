@@ -18,7 +18,6 @@ package com.optimaize.langdetect.cybozu;
 
 import com.optimaize.langdetect.frma.LangProfileWriter;
 import com.optimaize.langdetect.cybozu.util.LangProfile;
-import com.google.common.base.Optional;
 import com.optimaize.langdetect.DetectedLanguage;
 import com.optimaize.langdetect.LanguageDetector;
 import com.optimaize.langdetect.LanguageDetectorBuilder;
@@ -286,7 +285,7 @@ public class CommandLineInterface {
     private LanguageDetector makeDetector() throws IOException {
         double alpha = getParamDouble("alpha", DEFAULT_ALPHA);
         String profileDirectory = requireParamString("directory") + "/";
-        Optional<Long> seed = Optional.fromNullable(getParamLongOrNull("seed"));
+        Optional<Long> seed = Optional.ofNullable(getParamLongOrNull("seed"));
 
         List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAll(new File(profileDirectory));
 

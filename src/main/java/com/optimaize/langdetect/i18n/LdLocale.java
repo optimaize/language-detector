@@ -16,8 +16,8 @@
 
 package com.optimaize.langdetect.i18n;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -106,8 +106,8 @@ public final class LdLocale {
             }
         }
         assert language != null;
-        if (script==null) script = Optional.absent();
-        if (region==null) region = Optional.absent();
+        if (script==null) script = Optional.empty();
+        if (region==null) region = Optional.empty();
         return new LdLocale(language, script, region);
     }
 

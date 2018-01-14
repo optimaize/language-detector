@@ -17,7 +17,6 @@
 package com.optimaize.langdetect;
 
 import com.optimaize.langdetect.cybozu.util.Util;
-import com.google.common.base.Optional;
 import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import org.jetbrains.annotations.NotNull;
@@ -135,13 +134,13 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     public Optional<LdLocale> detect(CharSequence text) {
         List<DetectedLanguage> probabilities = getProbabilities(text);
         if (probabilities.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         } else {
             DetectedLanguage best = probabilities.get(0);
             if (best.getProbability() >= minimalConfidence) {
                 return Optional.of(best.getLocale());
             } else {
-                return Optional.absent();
+                return Optional.empty();
             }
         }
     }
@@ -194,7 +193,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
     private double[] detectBlockLongText(List<String> ngrams) {
         assert !ngrams.isEmpty();
         double[] langprob = new double[ngramFrequencyData.getLanguageList().size()];
-        Random rand = new Random(seed.or(DEFAULT_SEED));
+        Random rand = new Random(seed.orElse(DEFAULT_SEED));
         for (int t = 0; t < N_TRIAL; ++t) {
             double[] prob = initProbability();
             double alpha = this.alpha + (rand.nextGaussian() * ALPHA_WIDTH);
