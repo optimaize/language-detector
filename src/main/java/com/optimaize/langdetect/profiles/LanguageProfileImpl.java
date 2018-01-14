@@ -129,7 +129,7 @@ public final class LanguageProfileImpl implements LanguageProfile {
 
     @Override
     public int getNumGrams(int gramLength) {
-        if (gramLength<1) throw new IllegalArgumentException(""+gramLength);
+        if (gramLength<1) throw new IllegalArgumentException(String.valueOf(gramLength));
         Map<String, Integer> map = ngrams.get(gramLength);
         if (map==null) return 0;
         return map.size();
