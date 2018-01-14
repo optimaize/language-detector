@@ -19,7 +19,7 @@ package com.optimaize.langdetect.profiles;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -38,7 +38,7 @@ public class LanguageProfileWriter {
      * @throws java.io.IOException
      */
     public void write(@NotNull LanguageProfile languageProfile, @NotNull OutputStream outputStream) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, Charset.forName("utf-8")))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))) {
             writer.write("{\"freq\":{");
             boolean first = true;
             for (Map.Entry<String, Integer> entry : languageProfile.iterateGrams()) {

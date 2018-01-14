@@ -152,12 +152,7 @@ public class LanguageProfileReader {
         if (!path.canRead()) {
             throw new IOException("Folder not readable: "+path);
         }
-        File[] listFiles = path.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return looksLikeLanguageProfileFile(pathname);
-            }
-        });
+        File[] listFiles = path.listFiles(this::looksLikeLanguageProfileFile);
         if (listFiles == null) {
             throw new IOException("Failed reading from folder: " + path);
         }

@@ -23,7 +23,7 @@ import com.optimaize.langdetect.text.TextObject;
 import com.optimaize.langdetect.text.TextObjectFactory;
 
 import java.io.*;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -52,7 +52,7 @@ public class GenProfile {
             is = new BufferedInputStream(new FileInputStream(textFile));
             if (textFile.getName().endsWith(".gz")) is = new GZIPInputStream(is);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null) {
                 TextObject textObject = textObjectFactory.forText(" "+line+" ");

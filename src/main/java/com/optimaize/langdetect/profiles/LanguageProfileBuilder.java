@@ -21,7 +21,6 @@ import com.optimaize.langdetect.ngram.NgramExtractor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -98,11 +97,7 @@ public class LanguageProfileBuilder {
      * If the builder already has this ngram, the given frequency is added to the current count.
      */
     public LanguageProfileBuilder addGram(String ngram, int frequency) {
-        Map<String, Integer> map = ngrams.get(ngram.length());
-        if (map==null) {
-            map = new HashMap<>();
-            ngrams.put(ngram.length(), map);
-        }
+        Map<String, Integer> map = ngrams.computeIfAbsent(ngram.length(), k -> new HashMap<>());
         Integer total = map.get(ngram);
         if (total==null) total = 0;
         total += frequency;
@@ -121,13 +116,7 @@ public class LanguageProfileBuilder {
 
     private void removeNgramsWithLessFrequency() {
         for (Map<String, Integer> map : ngrams.values()) {
-            Iterator<Map.Entry<String, Integer>> iterator = map.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, Integer> next = iterator.next();
-                if (next.getValue() < minimalFrequency) {
-                    iterator.remove();
-                }
-            }
+            map.entrySet().removeIf(next -> next.getValue() < minimalFrequency);
         }
     }
 

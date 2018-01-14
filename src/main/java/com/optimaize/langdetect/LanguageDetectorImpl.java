@@ -73,11 +73,7 @@ public final class LanguageDetectorImpl implements LanguageDetector {
      */
     private static final long DEFAULT_SEED = 41L;
 
-    private static final Comparator<DetectedLanguage> PROBABILITY_SORTING_COMPARATOR = new Comparator<DetectedLanguage>() {
-        public int compare(DetectedLanguage a, DetectedLanguage b) {
-            return Double.compare(b.getProbability(), a.getProbability());
-        }
-    };
+    private static final Comparator<DetectedLanguage> PROBABILITY_SORTING_COMPARATOR = (a, b) -> Double.compare(b.getProbability(), a.getProbability());
 
     @NotNull
     private final NgramFrequencyData ngramFrequencyData;
