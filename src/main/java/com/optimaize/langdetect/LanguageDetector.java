@@ -16,10 +16,10 @@
 
 package com.optimaize.langdetect;
 
-import com.google.common.base.Optional;
 import com.optimaize.langdetect.i18n.LdLocale;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Guesses the language of an input string or text.

@@ -87,7 +87,7 @@ public class Util {
      */
     public static double normalizeProb(double[] prob) {
         double maxp = 0, sump = 0;
-        for(int i=0;i<prob.length;++i) sump += prob[i];
+        for(double aProb : prob) sump += aProb;
         for(int i=0;i<prob.length;++i) {
             double p = prob[i] / sump;
             if (maxp < p) maxp = p;
@@ -98,14 +98,15 @@ public class Util {
 
 
     public static String wordProbToString(double[] prob, List<LdLocale> langlist) {
-        Formatter formatter = new Formatter();
-        for(int j=0;j<prob.length;++j) {
-            double p = prob[j];
-            if (p>=0.00001) {
-                formatter.format(" %s:%.5f", langlist.get(j), p);
+        try (Formatter formatter = new Formatter()) {
+            for(int j=0;j<prob.length;++j) {
+                double p = prob[j];
+                if (p>=0.00001) {
+                    formatter.format(" %s:%.5f", langlist.get(j), p);
+                }
             }
+            return formatter.toString();
         }
-        return formatter.toString();
     }
 
 

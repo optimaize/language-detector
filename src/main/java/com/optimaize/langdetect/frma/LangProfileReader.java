@@ -19,7 +19,7 @@ package com.optimaize.langdetect.frma;
 import com.optimaize.langdetect.cybozu.util.LangProfile;
 
 import java.io.*;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,7 +54,7 @@ public class LangProfileReader {
      */
 	public LangProfile read(InputStream inputStream) throws IOException {
 		StringBuilder buffer = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("utf-8")))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             while((line = reader.readLine()) != null) {
                 if (buffer.length() > 0) {

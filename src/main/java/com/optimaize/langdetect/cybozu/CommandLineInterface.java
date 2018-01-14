@@ -18,7 +18,6 @@ package com.optimaize.langdetect.cybozu;
 
 import com.optimaize.langdetect.frma.LangProfileWriter;
 import com.optimaize.langdetect.cybozu.util.LangProfile;
-import com.google.common.base.Optional;
 import com.optimaize.langdetect.DetectedLanguage;
 import com.optimaize.langdetect.LanguageDetector;
 import com.optimaize.langdetect.LanguageDetectorBuilder;
@@ -242,7 +241,7 @@ public class CommandLineInterface {
 
                     TextObject textObject = textObjectFactory.forText(text);
                     Optional<LdLocale> lang = languageDetector.detect(textObject);
-                    if (!result.containsKey(correctLang)) result.put(correctLang, new ArrayList<String>());
+                    if (!result.containsKey(correctLang)) result.put(correctLang, new ArrayList<>());
                     if (lang.isPresent()) {
                         result.get(correctLang).add(lang.toString());
                     } else {
@@ -268,7 +267,7 @@ public class CommandLineInterface {
                         resultCount.put(detectedLang, 1);
                     }
                 }
-                int correct = resultCount.containsKey(lang)?resultCount.get(lang):0;
+                int correct = resultCount.getOrDefault(lang, 0);
                 double rate = correct / (double)count;
                 System.out.println(String.format("%s (%d/%d=%.2f): %s", lang, correct, count, rate, resultCount));
                 totalCorrect += correct;
@@ -286,7 +285,7 @@ public class CommandLineInterface {
     private LanguageDetector makeDetector() throws IOException {
         double alpha = getParamDouble("alpha", DEFAULT_ALPHA);
         String profileDirectory = requireParamString("directory") + "/";
-        Optional<Long> seed = Optional.fromNullable(getParamLongOrNull("seed"));
+        Optional<Long> seed = Optional.ofNullable(getParamLongOrNull("seed"));
 
         List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAll(new File(profileDirectory));
 

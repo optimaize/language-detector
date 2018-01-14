@@ -16,7 +16,6 @@
 
 package com.optimaize.langdetect.profiles.util;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.optimaize.langdetect.DetectedLanguage;
@@ -129,12 +128,7 @@ public class LanguageProfileValidator {
      * @param isoString the ISO string of the LanguageProfile to be removed.
      */
     public LanguageProfileValidator removeLanguageProfile(final String isoString) {
-        Iterables.removeIf(this.languageProfiles, new Predicate<LanguageProfile>() {
-            @Override
-            public boolean apply(LanguageProfile languageProfile) {
-                return languageProfile.getLocale().getLanguage().equals(isoString);
-            }
-        });
+        Iterables.removeIf(this.languageProfiles, languageProfile -> languageProfile.getLocale().getLanguage().equals(isoString));
         return this;
     }
 
@@ -175,11 +169,7 @@ public class LanguageProfileValidator {
             List<DetectedLanguage> detectedLanguages = languageDetector.getProbabilities(testSample);
 
             try{
-                DetectedLanguage kResult = Iterables.find(detectedLanguages, new Predicate<DetectedLanguage>() {
-                    public boolean apply(DetectedLanguage language) {
-                        return language.getLocale().getLanguage().equals(languageProfile.getLocale().getLanguage());
-                    }
-                });
+                DetectedLanguage kResult = Iterables.find(detectedLanguages, language -> language.getLocale().getLanguage().equals(languageProfile.getLocale().getLanguage()));
 
                 probabilities.add(kResult.getProbability());
                 System.out.println("Probability: " + kResult.getProbability());
