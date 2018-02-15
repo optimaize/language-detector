@@ -21,6 +21,7 @@ import com.google.common.base.Splitter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Arrays;
 
 /**
  * A language-detector implementation of a Locale, similar to the java.util.Locale.
@@ -90,7 +91,7 @@ public final class LdLocale {
         Optional<String> script = null;
         Optional<String> region = null;
 
-        List<String> strings = Splitter.on('-').splitToList(string);
+        List<String> strings = Arrays.asList(string.split("-"));
         for (int i=0; i<strings.size(); i++) {
             String chunk = strings.get(i);
             if (i==0) {
