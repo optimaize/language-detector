@@ -16,7 +16,6 @@
 
 package com.optimaize.langdetect.ngram;
 
-import com.google.common.base.Stopwatch;
 import org.junit.Test;
 
 import java.util.*;
@@ -74,7 +73,7 @@ public class NgramExtractorTest {
     }
 
 
-
+/*
     @Test
     public void stressTestAlgo2() {
         NgramExtractor ngramExtractor = NgramExtractor.gramLengths(1, 2, 3);
@@ -85,7 +84,7 @@ public class NgramExtractorTest {
         }
         System.out.println(stopwatch); //876.6ms
     }
-
+*/
 
     @Test
     public void extractGrams_threeSizesAtOnce() {
