@@ -16,6 +16,8 @@
 
 package com.optimaize.langdetect.ngram;
 
+import java.io.Serializable;
+
 /**
  * Filters out some undesired n-grams.
  *
@@ -23,7 +25,7 @@ package com.optimaize.langdetect.ngram;
  *
  * @author Fabian Kessler
  */
-public interface NgramFilter {
+public interface NgramFilter extends Serializable {
 
     boolean use(String ngram);
 

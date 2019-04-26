@@ -19,6 +19,7 @@ package com.optimaize.langdetect;
 import com.google.common.base.Optional;
 import com.optimaize.langdetect.i18n.LdLocale;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ import java.util.List;
  *
  * @author Fabian Kessler
  */
-public interface LanguageDetector {
+public interface LanguageDetector extends Serializable {
 
     /**
      * Returns the best detected language if the algorithm is very confident.

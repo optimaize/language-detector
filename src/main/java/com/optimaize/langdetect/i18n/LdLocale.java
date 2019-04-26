@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -63,7 +64,7 @@ import java.util.List;
  *
  * @author fabian kessler
  */
-public final class LdLocale {
+public final class LdLocale implements Serializable {
 
     @NotNull
     private final String language;
