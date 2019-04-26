@@ -21,6 +21,7 @@ import com.optimaize.langdetect.profiles.LanguageProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -33,7 +34,7 @@ import java.util.*;
  *
  * @author Fabian Kessler
  */
-public final class NgramFrequencyData {
+public final class NgramFrequencyData implements Serializable {
 
     /**
      * Key   = ngram

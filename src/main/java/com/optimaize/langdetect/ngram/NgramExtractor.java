@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -29,7 +30,7 @@ import java.util.*;
  *
  * @author Fabian Kessler
  */
-public class NgramExtractor {
+public class NgramExtractor implements Serializable {
 
     @NotNull
     private final List<Integer> gramLengths;

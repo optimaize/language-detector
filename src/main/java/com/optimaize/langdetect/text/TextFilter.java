@@ -16,6 +16,8 @@
 
 package com.optimaize.langdetect.text;
 
+import java.io.Serializable;
+
 /**
  * Allows to filter content from a text to be ignored for the n-gram analysis.
  *
@@ -23,7 +25,7 @@ package com.optimaize.langdetect.text;
  *
  * @author Fabian Kessler
  */
-public interface TextFilter {
+public interface TextFilter extends Serializable {
 
     String filter(CharSequence text);
 

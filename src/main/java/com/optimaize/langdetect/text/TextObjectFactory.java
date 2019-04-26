@@ -16,12 +16,14 @@
 
 package com.optimaize.langdetect.text;
 
+import java.io.Serializable;
+
 /**
  * Factory for {@link TextObject}s.
  *
  * @author Fabian Kessler
  */
-public class TextObjectFactory {
+public class TextObjectFactory implements Serializable {
 
     private final TextFilter textFilter;
     private final int maxTextLength;
