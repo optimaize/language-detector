@@ -56,7 +56,7 @@ public class TagExtractor {
         }
     }
     public void closeTag(LangProfile profile) {
-        if ((profile != null) && tag_.equals(target_) && (buf_.length() > threshold_) && !isSpace()) {
+        if ((profile != null) && (tag_ != null )&& tag_.equals(target_) && (buf_.length() > threshold_) && !isSpace()) {
             Util.addCharSequence(profile, textObjectFactory.forText(buf_));
             ++count_;
         }
