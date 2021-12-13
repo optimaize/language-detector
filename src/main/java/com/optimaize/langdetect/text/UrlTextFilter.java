@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 public class UrlTextFilter implements TextFilter {
 
     private static final Pattern URL_REGEX = Pattern.compile("https?://[-_.?&~;+=/#0-9A-Za-z]+");
-    private static final Pattern MAIL_REGEX = Pattern.compile("[-_.0-9A-Za-z]+@[-_0-9A-Za-z]+[-_.0-9A-Za-z]+");
+    private static final Pattern MAIL_REGEX = Pattern.compile("(?<![-+_.0-9A-Za-z])[-+_.0-9A-Za-z]+@[-0-9A-Za-z]+[-.0-9A-Za-z]+");
 
     private static final UrlTextFilter INSTANCE = new UrlTextFilter();
 
