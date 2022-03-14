@@ -11,7 +11,7 @@ Language Detection Library for Java
 
 ## Language Support
 
-### 71 Built-in Language Profiles
+### 72 Built-in Language Profiles
 
 1. af Afrikaans
 1. an Aragonese
