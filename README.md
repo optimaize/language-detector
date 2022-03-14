@@ -75,6 +75,7 @@ Language Detection Library for Java
 1. ta Tamil
 1. te Telugu
 1. th Thai
+1. ti Tigrinya
 1. tl Tagalog
 1. tr Turkish
 1. uk Ukrainian
