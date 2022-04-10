@@ -85,8 +85,10 @@ public class DataLanguageDetectorImplTest {
                 {"km", shortCleanText("សព្វវចនាធិប្បាយសេរីសម្រាប់អ្នកទាំងអស់គ្នា។" + "នៅក្នុងវិគីភីឌាភាសាខ្មែរឥឡូវនេះមាន ១១៩៨រូបភាព សមាជិក១៥៣៣៣នាក់ និងមាន៤៥៨៣អត្ថបទ។")},
                 {"bg", shortCleanText("Европа не трябва да стартира нов конкурентен маратон и изход с приватизация")},
                 {"wa", shortCleanText("Çouchal c' est on tecse pår e walon.")},
+                {"ti", shortCleanText("እዚ ብትግርኛ እተጻሕፈ ጽሑፍ እዩ።")},
         };
     }
+
     private CharSequence shortCleanText(CharSequence text) {
         return CommonTextObjectFactories.forDetectingShortCleanText().forText( text );
     }
@@ -97,6 +99,7 @@ public class DataLanguageDetectorImplTest {
                 {"de", largeText(readText("/texts/de-wikipedia-Deutschland.txt"))},
                 {"fr", largeText(readText("/texts/fr-wikipedia-France.txt"))},
                 {"it", largeText(readText("/texts/it-wikipedia-Italia.txt"))},
+                {"ti", largeText(readText("/texts/ti-Haddas-Ertra-Tigrinya.txt"))}
         };
     }
 

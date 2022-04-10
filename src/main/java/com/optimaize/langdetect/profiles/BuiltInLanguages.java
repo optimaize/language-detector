@@ -96,6 +96,7 @@ public class BuiltInLanguages {
         names.add(LdLocale.fromString("ta"));
         names.add(LdLocale.fromString("te"));
         names.add(LdLocale.fromString("th"));
+        names.add(LdLocale.fromString("ti"));
         names.add(LdLocale.fromString("tl"));
         names.add(LdLocale.fromString("tr"));
         names.add(LdLocale.fromString("uk"));
