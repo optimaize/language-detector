@@ -26,7 +26,10 @@ jobs:
     - name: Step 3 - Build with Maven
       run: mvn -B package --file pom.xml
       
-    - name: Step 4 - What is in the larget folder?
+    - name: Step 4 - What is in the current folder?
+      run: ls -ltr
+
+    - name: Step 5 - What is in the larget folder?
       run: |
         cd target
         ls -ltr
