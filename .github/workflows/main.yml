@@ -35,7 +35,7 @@ jobs:
         ls -ltr
 
     - name: Step 6 - Deploy
-      run: mvn -B -Pgithub deploy --file pom.xml
+      run: mvn -B -Pgithub deploy -Dmaven.javadoc.skip=true --file pom.xml
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
