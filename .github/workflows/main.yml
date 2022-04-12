@@ -22,6 +22,9 @@ jobs:
         java-version: 8.0.322+6
         distribution: 'temurin'
         cache: maven
+        server-id: github # value of repository/id field of the pom.xml
+        server-username: GITHUB_USER_REF  # env variable name for username
+        server-password: GITHUB_TOKEN_REF # env variable name for GitHub Perso        
         
     - name: Step 3 - Build with Maven
       run: mvn -B package --file pom.xml
@@ -37,5 +40,6 @@ jobs:
     - name: Step 6 - Deploy
       run: mvn -B -Pgithub deploy -Dmaven.javadoc.skip=true --file pom.xml
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_USER_REF: ${{ secrets.GH_PACKAGE_REPO_USERNAME }}
+        GITHUB_TOKEN_REF: ${{ secrets.GH_PACKAGE_REPO_PASSWORD }}
       
