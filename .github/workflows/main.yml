@@ -25,7 +25,7 @@ jobs:
         
     - name: Step 3 - Build with Maven
       run: mvn -B package --file pom.xml
-      
+
     - name: Step 4 - What is in the current folder?
       run: ls -ltr
 
@@ -33,3 +33,9 @@ jobs:
       run: |
         cd target
         ls -ltr
+
+    - name: Step 6 - Deploy
+      run: mvn -B -Pgithub deploy --file pom.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
