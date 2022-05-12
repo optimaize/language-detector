@@ -16,18 +16,21 @@
 
 package com.optimaize.langdetect;
 
+import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.profiles.LanguageProfile;
+import com.optimaize.langdetect.profiles.LanguageProfileBuilder;
 import com.optimaize.langdetect.profiles.LanguageProfileReader;
+import com.optimaize.langdetect.profiles.LanguageProfileWriter;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
+import com.optimaize.langdetect.text.TextObjectFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -85,6 +88,7 @@ public class DataLanguageDetectorImplTest {
                 {"km", shortCleanText("សព្វវចនាធិប្បាយសេរីសម្រាប់អ្នកទាំងអស់គ្នា។" + "នៅក្នុងវិគីភីឌាភាសាខ្មែរឥឡូវនេះមាន ១១៩៨រូបភាព សមាជិក១៥៣៣៣នាក់ និងមាន៤៥៨៣អត្ថបទ។")},
                 {"bg", shortCleanText("Европа не трябва да стартира нов конкурентен маратон и изход с приватизация")},
                 {"wa", shortCleanText("Çouchal c' est on tecse pår e walon.")},
+                {"tig", shortCleanText("ከሰፍሐት ፈን ወዓዳት እሊ እት አክትበት በዲር ለህለ ርዝቅ ህግያነ ክሉ አዳም ጀላብ እግል ልርከቡ፡ እትሊ ዓሙድ እሊ ምነ ብዞሕ ጽበጥለ አክትበት ዲብ ለሐሬ ቀድም እኩም ህለ።")}
         };
     }
     private CharSequence shortCleanText(CharSequence text) {
@@ -97,6 +101,7 @@ public class DataLanguageDetectorImplTest {
                 {"de", largeText(readText("/texts/de-wikipedia-Deutschland.txt"))},
                 {"fr", largeText(readText("/texts/fr-wikipedia-France.txt"))},
                 {"it", largeText(readText("/texts/it-wikipedia-Italia.txt"))},
+                {"tig", largeText(readText("/texts/tig-EritreaHaddas-Tigre.txt"))},
         };
     }
 
