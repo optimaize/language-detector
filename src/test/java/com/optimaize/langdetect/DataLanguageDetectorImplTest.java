@@ -86,6 +86,7 @@ public class DataLanguageDetectorImplTest {
                 {"bg", shortCleanText("Европа не трябва да стартира нов конкурентен маратон и изход с приватизация")},
                 {"wa", shortCleanText("Çouchal c' est on tecse pår e walon.")},
                 {"ti", shortCleanText("እዚ ብትግርኛ እተጻሕፈ ጽሑፍ እዩ።")},
+                {"tig", shortCleanText("ከሰፍሐት ፈን ወዓዳት እሊ እት አክትበት በዲር ለህለ ርዝቅ ህግያነ ክሉ አዳም ጀላብ እግል ልርከቡ፡ እትሊ ዓሙድ እሊ ምነ ብዞሕ ጽበጥለ አክትበት ዲብ ለሐሬ ቀድም እኩም ህለ።")}
         };
     }
 
@@ -99,7 +100,8 @@ public class DataLanguageDetectorImplTest {
                 {"de", largeText(readText("/texts/de-wikipedia-Deutschland.txt"))},
                 {"fr", largeText(readText("/texts/fr-wikipedia-France.txt"))},
                 {"it", largeText(readText("/texts/it-wikipedia-Italia.txt"))},
-                {"ti", largeText(readText("/texts/ti-Haddas-Ertra-Tigrinya.txt"))}
+                {"ti", largeText(readText("/texts/ti-Haddas-Ertra-Tigrinya.txt"))},
+                {"tig", largeText(readText("/texts/tig-EritreaHaddas-Tigre.txt"))}
         };
     }
 
