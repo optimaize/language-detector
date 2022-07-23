@@ -100,8 +100,8 @@ public class DataLanguageDetectorImplTest {
                 {"de", largeText(readText("/texts/de-wikipedia-Deutschland.txt"))},
                 {"fr", largeText(readText("/texts/fr-wikipedia-France.txt"))},
                 {"it", largeText(readText("/texts/it-wikipedia-Italia.txt"))},
-                {"ti", largeText(readText("/texts/ti-Haddas-Ertra-Tigrinya.txt"))}
-                {"tig", largeText(readText("/texts/tig-EritreaHaddas-Tigre.txt"))},
+                {"ti", largeText(readText("/texts/ti-Haddas-Ertra-Tigrinya.txt"))},
+                {"tig", largeText(readText("/texts/tig-EritreaHaddas-Tigre.txt"))}
         };
     }
 
