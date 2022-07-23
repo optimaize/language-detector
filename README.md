@@ -11,7 +11,7 @@ Language Detection Library for Java
 
 ## Language Support
 
-### 72 Built-in Language Profiles
+### 73 Built-in Language Profiles
 
 1. af Afrikaans
 2. an Aragonese
@@ -77,14 +77,15 @@ Language Detection Library for Java
 62. th Thai
 63. tl Tagalog
 64. tig Tigre
-65. tr Turkish
-66. uk Ukrainian
-67. ur Urdu
-68. vi Vietnamese
-69. wa Walloon
-70. yi Yiddish
-71. zh-cn Simplified Chinese
-72. zh-tw Traditional Chinese
+65. ti Tigrinya
+66. tr Turkish
+67. uk Ukrainian
+68. ur Urdu
+69. vi Vietnamese
+70. wa Walloon
+71. yi Yiddish
+72. zh-cn Simplified Chinese
+73. zh-tw Traditional Chinese
 
 User danielnaber has made available a profile for Esperanto on his website, see open tasks.
 
