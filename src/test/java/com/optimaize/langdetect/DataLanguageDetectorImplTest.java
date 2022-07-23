@@ -16,21 +16,18 @@
 
 package com.optimaize.langdetect;
 
-import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractors;
 import com.optimaize.langdetect.profiles.LanguageProfile;
-import com.optimaize.langdetect.profiles.LanguageProfileBuilder;
 import com.optimaize.langdetect.profiles.LanguageProfileReader;
-import com.optimaize.langdetect.profiles.LanguageProfileWriter;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
-import com.optimaize.langdetect.text.TextObjectFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
